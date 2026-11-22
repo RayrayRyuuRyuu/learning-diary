@@ -1335,7 +1335,7 @@ function renderHeader(){
     ? esc(nm)+(gr? ' <small>('+esc(gr)+')</small>' : '')
     : '나의 학습노트';
   $('mascot').textContent = nm? nm.charAt(0) : '✏️';
-  document.title = (nm? nm+(gr?' ('+gr+')':'')+' · ' : '')+'학습 · 성장 다이어리';
+  document.title = (nm && CLOUD.session) ? nm+(gr?' ('+gr+')':'')+' · 학습 · 성장 다이어리' : '학습 · 성장 다이어리';
 }
 
 /* ────────────────────────────── render: calendar ────────────────────────────── */
@@ -2218,6 +2218,7 @@ function openSettings(){
       +'</div>'
       +'<button class="btn-line danger" id="cloudLogoutAll" style="margin-top:8px">🚪 모든 기기에서 로그아웃</button>'
       +'<p class="hint" style="margin-top:8px">로그인한 본인만 자기 기록을 열 수 있어요. 사진은 비공개 저장소에 보관돼요.</p>'
+      +'<p class="hint" style="margin-top:4px">🚪 모든 기기 로그아웃은 다른 기기의 로그인을 끊어요(그 기기가 바로 쓰고 있으면 최대 1시간 안에 끊깁니다).</p>'
     +'</div>'
     +'<div class="sheet-block"><h3>📦 저장 현황</h3><div id="storeInfo"><div class="stat-line"><span>확인 중…</span><b></b></div></div>'
       +'<p class="hint" style="margin-top:8px">기록은 이 기기에 먼저 저장되고, 로그인하면 클라우드에도 함께 저장돼요. 한 달에 한 번 백업해 두면 더 안전해요.</p>'
@@ -2272,7 +2273,7 @@ async function fillStorageInfo(el){
     +'<div class="stat-line"><span>기록한 날</span><b>'+days+'일</b></div>'
     +'<div class="stat-line"><span>사진</span><b>'+photos+'장 · '+(bytes/1048576).toFixed(1)+' MB</b></div>'
     +'<div class="stat-line"><span>저장 방식</span><b>'+(idb? 'IndexedDB (든든)' : 'localStorage (간이)')+'</b></div>'
-    +'<div class="stat-line"><span>클라우드</span><b>'+(Cloud.signedIn()? '동기화 중' : '로그인 안 됨')+'</b></div>'
+    +'<div class="stat-line"><span>클라우드</span><b>'+(Cloud.signedIn()? '로그인됨 · 자동 동기화' : '로그인 안 됨')+'</b></div>'
     +(usage? '<div class="stat-line"><span>브라우저 전체 사용량</span><b>'+usage+'</b></div>' : '');
 }
 
@@ -3275,6 +3276,7 @@ async function doSignOutRemote(global){
 async function cloudLogout(){
   if(!CLOUD.session){ openGate(false); return; }
   if(!window.confirm('로그아웃할까요?\n\n이 기기에 저장된 사본은 지우고 로그인 화면으로 돌아가요.\n기록과 사진은 클라우드에 그대로 있고, 다시 로그인하면 그대로 불러옵니다.')) return;
+  $('appRoot').hidden=true; $('authGate').hidden=false; document.title='학습 · 성장 다이어리';
   var ok=await doSignOutRemote(false);
   sbSaveSession(null);
   try{ localStorage.setItem(LS_OWNER,''); }catch(e){}
@@ -3286,6 +3288,7 @@ async function cloudLogout(){
 async function cloudLogoutAll(){
   if(!CLOUD.session){ openGate(false); return; }
   if(!window.confirm('모든 기기에서 로그아웃할까요?\n\n폰·컴퓨터·다른 브라우저까지 모두 로그아웃되고, 이 기기에 저장된 사본도 지워집니다.\n기록은 클라우드에 그대로 있고, 다시 로그인하면 그대로 불러옵니다.')) return;
+  $('appRoot').hidden=true; $('authGate').hidden=false; document.title='학습 · 성장 다이어리';
   var ok=await doSignOutRemote(true);
   sbSaveSession(null);
   try{ localStorage.setItem(LS_OWNER,''); }catch(e){}
@@ -3390,6 +3393,7 @@ function setGateMode(m){
 function openGate(fromApp,msg,kind){
   $('authGate').hidden=false;
   $('appRoot').hidden=true;
+  document.title='학습 · 성장 다이어리';
   $('gateClose').hidden=!fromApp;
   if(!fromApp){ $('gateEmail').value=''; $('gatePw').value=''; }
   if(!pendingRecovery) setGateMode(gateMode==='reset'||gateMode==='up'? gateMode : 'in');
@@ -3401,6 +3405,7 @@ function showApp(){
   $('appRoot').hidden=false;
   setPill();
   updateCloudUI();
+  try{ syncStickyTop(); }catch(e){}
 }
 function startGuest(){
   $('authGate').hidden=true;
@@ -3417,7 +3422,7 @@ async function submitGate(e){
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ setGateMsg('이메일 주소를 정확히 입력해 주세요','err'); $('gateEmail').focus(); return; }
   if(gateMode==='reset'){
     gateBusy=true;
-    var b0=$('gateSubmit'); var l0=b0.textContent;
+    var b0=$('gateSubmit');
     b0.disabled=true; b0.textContent='보내는 중…';
     setGateMsg('재설정 메일을 보내는 중이에요…','ok');
     try{
@@ -3425,7 +3430,7 @@ async function submitGate(e){
       setGateMode('in');
       setGateMsg('재설정 메일을 보냈어요! 메일함(스팸함 포함)에서 링크를 눌러 새 비밀번호를 정해 주세요.','ok');
     }catch(err){ setGateMsg(err.message||'메일을 보내지 못했어요','err'); }
-    finally{ gateBusy=false; b0.disabled=false; b0.textContent=l0; }
+    finally{ gateBusy=false; b0.disabled=false; setGateMode(gateMode); }
     return;
   }
   if(pw.length<6){ setGateMsg('비밀번호는 6자 이상으로 해 주세요','err'); $('gatePw').focus(); return; }
