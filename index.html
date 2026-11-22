@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#0d7a70">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="description" content="래니래니의 학습·성장 다이어리 — 영역별 학습 기록, 사진, 시간 분석">
-<title>래니래니 (초2) 학습·성장 다이어리</title>
+<meta name="description" content="학습·성장 다이어리 — 영역별 학습 기록, 사진, 시간 분석. 로그인한 본인만 자기 기록을 열 수 있습니다.">
+<title>학습 · 성장 다이어리</title>
 <style>
 :root{
   color-scheme:only light;
@@ -732,18 +732,106 @@ table.tbl{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-nume
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.01ms !important;transition-duration:.01ms !important}
 }
+
+/* ── 클라우드 상태 알약 ─────────────────── */
+.cloud-pill{
+  flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:4px;
+  height:32px;padding:0 9px;border-radius:10px;background:rgba(255,255,255,.16);
+  color:#fff;font-size:11px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;
+  transition:background .15s ease,transform .15s ease;
+}
+.cloud-pill:active{transform:scale(.96);background:rgba(255,255,255,.26)}
+.cloud-pill.syncing{background:rgba(255,255,255,.3)}
+.cloud-pill.err{background:#ffe3e3;color:#8c2f2f}
+
+/* ── 🔒 로그인 게이트 ───────────────────── */
+.gate{
+  position:fixed;inset:0;z-index:60;display:flex;align-items:flex-start;justify-content:center;
+  padding:calc(18px + env(safe-area-inset-top,0px)) 16px calc(18px + env(safe-area-inset-bottom,0px));
+  overflow-y:auto;overscroll-behavior:contain;
+  background:linear-gradient(165deg,#0b6a63 0%,#0e8478 48%,#12a394 100%);
+}
+.gate-card{
+  position:relative;width:100%;max-width:400px;margin:auto;background:var(--card);
+  border-radius:22px;padding:20px 17px 16px;box-shadow:0 26px 60px -32px rgba(0,0,0,.7);
+}
+.gate-lock{
+  width:54px;height:54px;border-radius:17px;margin:0 auto 11px;display:grid;place-items:center;
+  font-size:25px;background:linear-gradient(160deg,#fff6d8,#ffe08a);
+  box-shadow:0 10px 22px -14px rgba(0,0,0,.65);
+}
+.gate h1{font-size:19px;font-weight:900;text-align:center;letter-spacing:-.02em}
+.gate .sub{font-size:12.5px;color:var(--ink-2);text-align:center;margin-top:4px;line-height:1.5;font-weight:600}
+.gate-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--bg-2);border-radius:12px;padding:4px;margin:14px 0 12px}
+.gate-tab{height:37px;border-radius:9px;font-size:13.5px;font-weight:800;color:var(--ink-2)}
+.gate-tab.on{background:#fff;color:var(--teal-3);box-shadow:var(--shadow-sm)}
+.gate .field{margin-bottom:10px}
+.gate .inp{height:44px;font-size:15px}
+.gate .btn{width:100%;flex:none;margin-top:2px}
+.gate-msg{
+  margin-top:10px;border-radius:11px;padding:9px 11px;font-size:12px;font-weight:700;line-height:1.5;
+  background:var(--teal-soft);color:var(--teal-3);border:1px solid var(--teal-soft-2);
+}
+.gate-msg.err{background:#fdf2f2;color:#a83b3b;border-color:#f3dada}
+.gate-note{margin-top:12px;font-size:11.5px;color:var(--muted);line-height:1.6}
+.gate-note b{color:var(--ink-2)}
+.gate-guest{
+  display:block;width:100%;margin-top:10px;padding:9px 0 2px;text-align:center;
+  font-size:12px;font-weight:800;color:var(--ink-2);text-decoration:underline;text-underline-offset:3px;
+}
+.gate-link{display:block;margin:9px auto 0;font-size:12px;font-weight:800;color:var(--teal);text-decoration:underline;text-underline-offset:3px}
+.gate-close{
+  position:absolute;top:9px;right:9px;width:32px;height:32px;border-radius:10px;
+  display:grid;place-items:center;color:var(--muted);font-size:15px;background:var(--bg-2);
+}
+.thumb.loading{display:grid;place-items:center;background:#f2f4f2;color:#9aa8a3;font-size:16px;border:1px solid var(--line)}
 </style>
 </head>
 <body>
-<div class="app">
+
+<!-- 🔒 로그인 게이트: 로그인하기 전에는 앱 화면도, 이름·학년도 보이지 않습니다. -->
+<div class="gate" id="authGate">
+  <div class="gate-card">
+    <button class="gate-close" id="gateClose" aria-label="닫기" hidden>✕</button>
+    <div class="gate-lock" aria-hidden="true">🔒</div>
+    <h1>학습 · 성장 다이어리</h1>
+    <div class="sub" id="gateSub">로그인하면 폰과 컴퓨터가 자동으로 동기화돼요.</div>
+    <div class="gate-tabs" role="tablist" aria-label="로그인 또는 회원가입">
+      <button class="gate-tab on" id="gateTabIn" type="button" role="tab" aria-selected="true">로그인</button>
+      <button class="gate-tab" id="gateTabUp" type="button" role="tab" aria-selected="false">회원가입</button>
+    </div>
+    <form id="gateForm" novalidate>
+      <div class="field"><label for="gateEmail">이메일</label>
+        <input class="inp" id="gateEmail" type="email" inputmode="email" autocomplete="username" placeholder="you@example.com" required></div>
+      <div class="field" id="gatePwField"><label for="gatePw">비밀번호</label>
+        <input class="inp" id="gatePw" type="password" autocomplete="current-password" placeholder="6자 이상" required></div>
+      <button class="btn primary" id="gateSubmit" type="submit">로그인</button>
+      <button class="gate-link" id="gateForgot" type="button">비밀번호를 잊으셨나요?</button>
+    </form>
+    <form id="gateRecoverForm" hidden novalidate>
+      <p class="hint" style="margin-bottom:10px">새로 쓸 비밀번호를 입력해 주세요. (6자 이상)</p>
+      <div class="field"><label for="recPw">새 비밀번호</label>
+        <input class="inp" id="recPw" type="password" autocomplete="new-password" placeholder="6자 이상"></div>
+      <div class="field"><label for="recPw2">새 비밀번호 확인</label>
+        <input class="inp" id="recPw2" type="password" autocomplete="new-password" placeholder="한 번 더"></div>
+      <button class="btn primary" id="recSubmit" type="submit">비밀번호 바꾸기</button>
+    </form>
+    <div class="gate-msg" id="gateMsg" hidden role="status" aria-live="polite"></div>
+    <p class="gate-note" id="gateNote">처음 쓰실 때는 <b>회원가입</b> 탭에서 이메일과 비밀번호(6자 이상)를 입력해 주세요. 로그인하면 폰과 컴퓨터가 자동으로 동기화됩니다!</p>
+    <button class="gate-guest" id="gateGuest" type="button">로그인 없이 이 기기에서만 쓰기</button>
+  </div>
+</div>
+
+<div class="app" id="appRoot" hidden>
 
   <header class="topbar">
     <div class="brand">
-      <div class="mascot" id="mascot" aria-hidden="true">래</div>
+      <div class="mascot" id="mascot" aria-hidden="true">✏️</div>
       <div class="brand-text">
         <div class="kicker">학습 · 성장 다이어리</div>
-        <h1 id="childTitle">래니래니 <small>(초2)</small></h1>
+        <h1 id="childTitle">나의 학습노트</h1>
       </div>
+      <button class="cloud-pill" id="cloudPill" type="button" aria-label="클라우드 동기화 상태">☁️ 로그인</button>
       <button class="icon-btn" id="btnSettings" aria-label="설정 및 백업">⚙️</button>
     </div>
     <div class="tabs" role="tablist" aria-label="학습노트 모드">
@@ -776,7 +864,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-nume
     </section>
 
     <div class="tip" id="tipBanner">
-      <div class="tx">💡 <b>사진은 자동으로 가볍게 압축</b>되고, 기록은 이 기기에 저장돼요. 폰을 바꾸기 전엔 <b>⚙️ 설정 → 백업 내보내기</b>로 꼭 저장해 두세요.</div>
+      <div class="tx">💡 <b>사진은 자동으로 가볍게 압축</b>되고, 기록은 이 기기에 먼저 저장돼요. 로그인하면 <b>클라우드에도 함께 저장</b>되어 폰을 바꿔도 그대로 불러옵니다.</div>
       <button class="x" id="tipClose" aria-label="안내 닫기">✕</button>
     </div>
 
@@ -920,10 +1008,11 @@ function defaultState(){
   return {
     v:1,
     savedAt:0,
-    child:{ name:'래니래니', grade:'초2' },
+    child:{ name:'', grade:'' },
     categories: clone(DEFAULT_CATS).map(function(c,i){ c.hidden=false; c.order=i; return c; }),
     entries:{},
     drafts:{},
+    photoRefs:{},
     settings:{ calCollapsed:false, tipDismissed:false, lastBackupAt:0 }
   };
 }
@@ -1039,7 +1128,7 @@ var PhotoStore = {
     if(rec && rec.url && rec.url.indexOf('blob:')===0){ try{ URL.revokeObjectURL(rec.url); }catch(e){} }
     PhotoCache.delete(id);
   },
-  url: function(id){ var r=PhotoCache.get(id); return r? r.url : ''; },
+  url: function(id){ return photoUrl(id); },
   count: function(){ return PhotoCache.size; }
 };
 
@@ -1120,7 +1209,7 @@ function normalizeSections(raw, dropEmpty){
 function normalizeState(s){
   var out=defaultState();
   if(!s) return out;
-  if(s.child) out.child={ name:String(s.child.name||'래니래니'), grade:String(s.child.grade||'초2') };
+  if(s.child) out.child={ name:String(s.child.name||''), grade:String(s.child.grade||'') };
   if(Array.isArray(s.categories) && s.categories.length){
     out.categories = s.categories.map(function(c,i){
       return {
@@ -1152,6 +1241,14 @@ function normalizeState(s){
     });
   }
   out.drafts=dr;
+  var prs={};
+  if(s.photoRefs && typeof s.photoRefs==='object'){
+    Object.keys(s.photoRefs).forEach(function(id){
+      var r=s.photoRefs[id];
+      if(r && typeof r.path==='string' && r.path) prs[id]={path:r.path, storage:'supabase'};
+    });
+  }
+  out.photoRefs=prs;
   out.settings = Object.assign({}, out.settings, s.settings||{});
   out.savedAt = Number(s.savedAt)||0;
   return out;
@@ -1192,7 +1289,10 @@ function weekStartOf(ds){
   d.setDate(d.getDate()-diff);
   return ymd(d);
 }
-function childLabel(){ return state.child.name+' ('+state.child.grade+')'; }
+function childLabel(){
+  var nm=state.child.name||'나의 학습노트';
+  return state.child.grade? nm+' ('+state.child.grade+')' : nm;
+}
 
 /* ────────────────────────────── editor buffer ────────────────────────────── */
 function loadEditor(date){
@@ -1229,11 +1329,13 @@ function toast(msg, ms){
 
 /* ────────────────────────────── render: header ────────────────────────────── */
 function renderHeader(){
-  var nm=state.child.name||'래니래니';
+  var nm=state.child.name||'';
   var gr=state.child.grade||'';
-  $('childTitle').innerHTML = esc(nm)+(gr? ' <small>('+esc(gr)+')</small>' : '');
-  $('mascot').textContent = nm.charAt(0)||'래';
-  document.title = nm+(gr?' ('+gr+')':'')+' 학습·성장 다이어리';
+  $('childTitle').innerHTML = nm
+    ? esc(nm)+(gr? ' <small>('+esc(gr)+')</small>' : '')
+    : '나의 학습노트';
+  $('mascot').textContent = nm? nm.charAt(0) : '✏️';
+  document.title = (nm? nm+(gr?' ('+gr+')':'')+' · ' : '')+'학습 · 성장 다이어리';
 }
 
 /* ────────────────────────────── render: calendar ────────────────────────────── */
@@ -1297,7 +1399,7 @@ function photosEditHTML(sec){
   var pids=(sec.p||[]).filter(function(id){ return PhotoCache.has(id); });
   if(!pids.length) return '';
   return pids.map(function(id,i){
-    return '<div class="thumb"><img src="'+PhotoCache.get(id).url+'" alt="첨부 사진 '+(i+1)+'" data-act="viewphoto" data-pids="'+esc(pids.join(','))+'" data-idx="'+i+'">'
+    return '<div class="thumb">'+photoImgHTML(id,'첨부 사진 '+(i+1),'data-act="viewphoto" data-pids="'+esc(pids.join(','))+'" data-idx="'+i+'"')
       +'<button class="del" data-act="delphoto" data-pid="'+id+'" aria-label="사진 삭제">✕</button></div>';
   }).join('');
 }
@@ -1469,7 +1571,7 @@ function readSectionHTML(c, s){
   if(s.t && s.t.trim()) body+='<div class="txt">'+linkify(s.t)+'</div>';
   if(pids.length){
     body+='<div class="photo-grid">'+pids.map(function(id,i){
-      return '<button data-act="viewphoto" data-pids="'+esc(pids.join(','))+'" data-idx="'+i+'"><img src="'+PhotoCache.get(id).url+'" alt="사진 '+(i+1)+'"></button>';
+      return '<button data-act="viewphoto" data-pids="'+esc(pids.join(','))+'" data-idx="'+i+'">'+photoImgHTML(id,'사진 '+(i+1))+'</button>';
     }).join('')+'</div>';
   }
   var tm = c.timer
@@ -2109,8 +2211,16 @@ function openSettings(){
       +'</div>'
       +'<p class="hint" style="margin-top:8px">백업 파일(.json)에는 사진까지 다 담겨요. 새 폰에서 ‘불러오기’만 누르면 그대로 복원돼요.</p>'
     +'</div>'
+    +'<div class="sheet-block"><h3>☁️ 클라우드 동기화</h3><div id="cloudInfo"></div>'
+      +'<div class="two-btns" style="margin-top:9px">'
+        +'<button class="btn-line teal" id="cloudSyncNow">지금 동기화</button>'
+        +'<button class="btn-line" id="cloudLogout">로그아웃</button>'
+      +'</div>'
+      +'<button class="btn-line danger" id="cloudLogoutAll" style="margin-top:8px">🚪 모든 기기에서 로그아웃</button>'
+      +'<p class="hint" style="margin-top:8px">로그인한 본인만 자기 기록을 열 수 있어요. 사진은 비공개 저장소에 보관돼요.</p>'
+    +'</div>'
     +'<div class="sheet-block"><h3>📦 저장 현황</h3><div id="storeInfo"><div class="stat-line"><span>확인 중…</span><b></b></div></div>'
-      +'<p class="hint" style="margin-top:8px">기록은 이 브라우저에만 저장돼요. 즐겨찾기/홈 화면에 추가해 두고, 한 달에 한 번 백업해 두면 안전해요.</p>'
+      +'<p class="hint" style="margin-top:8px">기록은 이 기기에 먼저 저장되고, 로그인하면 클라우드에도 함께 저장돼요. 한 달에 한 번 백업해 두면 더 안전해요.</p>'
       +(idb? '' : '<p class="hint" style="margin-top:6px;color:#a06a1c">이 브라우저에서는 간이 저장소를 써요. 사진은 20장 안팎까지만 담기니 백업을 자주 해 주세요.</p>')
     +'</div>'
     +'<div class="sheet-block"><h3>💡 화면</h3>'
@@ -2121,11 +2231,11 @@ function openSettings(){
     +'</div>';
   openSheet(html, function(root){
     root.querySelector('#setSave').addEventListener('click', function(){
-      var nm=root.querySelector('#setName').value.trim() || '래니래니';
+      var nm=root.querySelector('#setName').value.trim();
       var gr=root.querySelector('#setGrade').value.trim();
       state.child.name=nm; state.child.grade=gr;
-      saveNow(); renderHeader(); closeSheet();
-      toast('아이 정보를 저장했어요');
+      saveNow(); renderHeader(); closeSheet(); Cloud.pushProfile();
+      toast(nm? '이름 · 학년을 저장했어요' : '이름을 비웠어요');
     });
     root.querySelector('#openCat').addEventListener('click', function(){ openCatManager(); });
     root.querySelector('#btnExport').addEventListener('click', function(){ exportBackup(); });
@@ -2135,6 +2245,10 @@ function openSettings(){
       toast('사용 안내를 다시 켰어요');
     });
     root.querySelector('#btnCloseSheet').addEventListener('click', function(){ closeSheet(); });
+    root.querySelector('#cloudSyncNow').addEventListener('click', function(){ Cloud.sync(); toast('동기화를 시작했어요'); });
+    root.querySelector('#cloudLogout').addEventListener('click', cloudLogout);
+    root.querySelector('#cloudLogoutAll').addEventListener('click', cloudLogoutAll);
+    updateCloudUI();
     fillStorageInfo(root.querySelector('#storeInfo'));
   });
 }
@@ -2158,6 +2272,7 @@ async function fillStorageInfo(el){
     +'<div class="stat-line"><span>기록한 날</span><b>'+days+'일</b></div>'
     +'<div class="stat-line"><span>사진</span><b>'+photos+'장 · '+(bytes/1048576).toFixed(1)+' MB</b></div>'
     +'<div class="stat-line"><span>저장 방식</span><b>'+(idb? 'IndexedDB (든든)' : 'localStorage (간이)')+'</b></div>'
+    +'<div class="stat-line"><span>클라우드</span><b>'+(Cloud.signedIn()? '동기화 중' : '로그인 안 됨')+'</b></div>'
     +(usage? '<div class="stat-line"><span>브라우저 전체 사용량</span><b>'+usage+'</b></div>' : '');
 }
 
@@ -2234,6 +2349,7 @@ function persistCats(root){
   saveNow();
   renderCatList(root);
   refreshAfterCatChange();
+  Cloud.pushProfile();
 }
 function refreshAfterCatChange(){
   if(!current) return;
@@ -2317,6 +2433,9 @@ async function exportBackup(){
       try{
         if(rec.blob) photos[id]=await blobToDataURL(rec.blob);
         else if(rec.url && rec.url.indexOf('data:')===0) photos[id]=rec.url;
+        else if(rec.url && /^https?:/.test(rec.url)){
+          var resp=await fetch(rec.url); var b=await resp.blob(); photos[id]=await blobToDataURL(b);
+        }
       }catch(e){}
     }
     state.settings.lastBackupAt=Date.now();
@@ -2325,7 +2444,7 @@ async function exportBackup(){
     var url=URL.createObjectURL(blob);
     var a=document.createElement('a');
     a.href=url;
-    a.download=state.child.name+'-학습다이어리-'+todayStr()+'.json';
+    a.download=(state.child.name||'학습')+'-다이어리-'+todayStr()+'.json';
     document.body.appendChild(a);
     a.click();
     setTimeout(function(){ a.remove(); URL.revokeObjectURL(url); }, 1500);
@@ -2364,6 +2483,7 @@ function importBackupFile(file){
         viewY=parseYmd(selected).getFullYear(); viewM=parseYmd(selected).getMonth();
         renderAll();
         closeSheet();
+        Cloud.pushAll();
         toast('백업을 불러왔어요 · 기록 '+n+'일, 사진 '+restored+'장');
       }catch(e){
         console.warn(e);
@@ -2428,6 +2548,7 @@ function applyTip(){
 /* ────────────────────────────── editing actions ────────────────────────────── */
 async function doSave(){
   if(!current) return;
+  var saveDate=current.date;
   var secs=normalizeSections(current.sections, true);
   var n=Object.keys(secs).length;
   if(!n){
@@ -2436,6 +2557,7 @@ async function doSave(){
     current.sections={}; current.isDraft=false;
     await saveNow();
     renderAll();
+    Cloud.pushEntry(saveDate);
     toast('저장할 내용이 없어 빈 날로 두었어요');
     return;
   }
@@ -2445,6 +2567,7 @@ async function doSave(){
   current.sections=secs; current.isDraft=false;
   await saveNow();
   renderAll();
+  Cloud.pushEntry(saveDate);
   toast('저장 완료 · '+n+'개 영역'+(tot.all? ' · '+fmtMin(tot.all):''));
 }
 async function doDraft(){
@@ -2515,6 +2638,7 @@ async function removePhoto(cid, pid){
   markEdited();
   renderSections();
   try{ await PhotoStore.del(pid); }catch(e){}
+  Cloud.deletePhoto(pid);
   toast('사진을 지웠어요');
 }
 async function handlePhotoFiles(files){
@@ -2805,6 +2929,640 @@ function syncStickyTop(){
   }
 }
 
+/* ══════════════════════════ ☁️ 클라우드 (Supabase) ══════════════════════════
+   - 로그인하기 전에는 앱 화면을 열지 않는다(게이트).
+   - 로그인한 본인 행만 읽고 쓸 수 있다(RLS). 사진은 비공개 버킷의 서명 URL로만 본다.
+   - 서버가 없거나 오프라인이어도 이 기기 저장소만으로 계속 기록할 수 있다.
+*/
+var SB_URL='https://qnvtnbeoqnbykwmqlasp.supabase.co';
+var SB_KEY='sb_publishable_g6ueqIKFG3WiRBcqoHUvYg_YDoqb9tQ';
+var LS_SB='ldyCloudSessionV1', LS_OWNER='ldyCloudOwnerV1';
+var CLOUD={session:null, uid:'', email:'', lastOk:0, err:'', pulled:false};
+var photoRefreshBusy={}, photoRerenderTimer=null, refreshPromise=null;
+var gateMode='in', gateBusy=false, pendingRecovery=null;
+
+/* ── 세션 ── */
+function sbSaveSession(s){
+  CLOUD.session=s||null;
+  if(s){
+    CLOUD.uid=(s.user&&s.user.id)||CLOUD.uid||'';
+    CLOUD.email=(s.user&&s.user.email)||CLOUD.email||'';
+    try{ localStorage.setItem(LS_SB, JSON.stringify(s)); }catch(e){}
+  } else {
+    CLOUD.uid=''; CLOUD.email='';
+    try{ localStorage.removeItem(LS_SB); }catch(e){}
+  }
+  setPill();
+}
+function sbLoadSession(){
+  try{
+    var s=JSON.parse(localStorage.getItem(LS_SB)||'null');
+    if(s && s.access_token && s.refresh_token) return s;
+  }catch(e){}
+  return null;
+}
+function authErrText(j){
+  if(!j) return '연결에 문제가 생겼어요. 잠시 뒤 다시 해보세요';
+  var code=String(j.error_code||j.code||'');
+  var msg=String(j.msg||j.error_description||j.message||'');
+  var low=msg.toLowerCase();
+  if(code==='email_not_confirmed'||low.indexOf('not confirmed')>=0) return '이메일 인증 메일을 확인해 주세요! (스팸함도 함께 봐 주세요)';
+  if(code==='invalid_credentials'||low.indexOf('invalid login')>=0) return '이메일 또는 비밀번호가 맞지 않아요';
+  if(code==='user_already_exists'||code==='email_exists'||low.indexOf('already registered')>=0) return '이미 가입된 이메일이에요. 로그인 탭에서 로그인해 주세요';
+  if(code==='weak_password'||low.indexOf('password should be')>=0||low.indexOf('at least 6')>=0) return '비밀번호는 6자 이상이어야 해요';
+  if(code==='email_address_invalid'||low.indexOf('invalid email')>=0||low.indexOf('valid email')>=0) return '이메일 주소를 다시 확인해 주세요';
+  if(code==='over_email_send_rate_limit'||low.indexOf('rate limit')>=0) return '메일을 너무 자주 보냈어요. 잠시 뒤 다시 해보세요';
+  if(code==='signup_disabled') return '지금은 새 가입이 잠겨 있어요';
+  if(code==='same_password') return '지금 쓰는 비밀번호와 같아요. 다른 비밀번호로 바꿔 주세요';
+  return msg||'문제가 생겼어요';
+}
+function sbErrText(r){
+  var m=(r&&r.data&&(r.data.message||r.data.msg))||'';
+  if(/permission denied/i.test(m)) return '클라우드 저장 권한이 아직 준비되지 않았어요';
+  if(r&&r.status===401) return '로그인이 만료됐어요';
+  return m? String(m).slice(0,140) : '클라우드 연결에 문제가 생겼어요';
+}
+function authLost(){
+  if(!CLOUD.session) return;
+  sbSaveSession(null);
+  if($('appRoot') && !$('appRoot').hidden) openGate(false,'로그인이 만료됐어요. 다시 로그인해 주세요.','err');
+}
+function sbRefresh(){
+  if(refreshPromise) return refreshPromise;
+  var s=CLOUD.session;
+  if(!s||!s.refresh_token) return Promise.reject(new Error('로그인이 필요해요'));
+  var p=fetch(SB_URL+'/auth/v1/token?grant_type=refresh_token',{
+    method:'POST',
+    headers:{apikey:SB_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify({refresh_token:s.refresh_token})
+  }).then(function(res){
+    return res.text().then(function(t){
+      var j=null; try{ j=t?JSON.parse(t):null; }catch(e){}
+      if(!res.ok){ var e=new Error(authErrText(j)); e.auth=true; throw e; }
+      return j;
+    });
+  }).then(function(j){
+    sbSaveSession({
+      access_token:j.access_token,
+      refresh_token:j.refresh_token||s.refresh_token,
+      expires_at:j.expires_at|| (Math.floor(Date.now()/1000)+(j.expires_in||3600)),
+      user:j.user||s.user||{}
+    });
+    return CLOUD.session;
+  }).catch(function(e){
+    if(!e.auth) e.network=true;
+    if(e.auth) authLost();
+    throw e;
+  });
+  refreshPromise=p;
+  p.then(function(){ refreshPromise=null; }, function(){ refreshPromise=null; });
+  return p;
+}
+async function sbToken(){
+  var s=CLOUD.session;
+  if(!s) throw new Error('로그인이 필요해요');
+  var now=Math.floor(Date.now()/1000);
+  if(!s.expires_at || s.expires_at-120<now) await sbRefresh();
+  return CLOUD.session.access_token;
+}
+async function sbApi(path, opts){
+  opts=opts||{};
+  var attempt=0;
+  while(attempt<3){
+    attempt++;
+    var token=await sbToken();
+    var headers={apikey:SB_KEY, Authorization:'Bearer '+token};
+    if(opts.headers) Object.keys(opts.headers).forEach(function(k){ headers[k]=opts.headers[k]; });
+    var body=opts.body;
+    if(body!==undefined && body!==null && !(body instanceof Blob)){
+      if(typeof body!=='string') body=JSON.stringify(body);
+      if(!headers['Content-Type']) headers['Content-Type']='application/json';
+    }
+    var res, text;
+    try{
+      res=await fetch(SB_URL+path,{method:opts.method||'GET', headers:headers, body:body});
+      text=await res.text();
+    }catch(e){
+      var ne=new Error('인터넷 연결을 확인해 주세요'); ne.network=true; throw ne;
+    }
+    var data=null; try{ data=text?JSON.parse(text):null; }catch(e){}
+    if(res.status===401 && attempt===1){
+      try{ await sbRefresh(); }catch(e){ if(e.auth){ authLost(); throw e; } }
+      continue;
+    }
+    return {ok:res.ok, status:res.status, data:data, text:text};
+  }
+  return {ok:false, status:401, data:null, text:''};
+}
+async function sbAuthPost(path, payload){
+  var res, text;
+  try{
+    res=await fetch(SB_URL+path,{method:'POST', headers:{apikey:SB_KEY,'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+    text=await res.text();
+  }catch(e){ throw new Error('인터넷 연결을 확인해 주세요'); }
+  var j=null; try{ j=text?JSON.parse(text):null; }catch(e){}
+  if(!res.ok) throw new Error(authErrText(j));
+  return j;
+}
+
+/* ── 로그인 / 가입 / 비밀번호 재설정 ── */
+async function cloudSignIn(email,pw){
+  var j=await sbAuthPost('/auth/v1/token?grant_type=password',{email:email,password:pw});
+  if(!j||!j.access_token) throw new Error('로그인하지 못했어요');
+  await adoptSession(j);
+}
+async function cloudSignUp(email,pw){
+  var j=await sbAuthPost('/auth/v1/signup',{email:email,password:pw});
+  if(j&&j.access_token){ await adoptSession(j); return 'in'; }
+  return 'confirm';
+}
+function recoveryRedirect(){
+  try{ if(/^https?:$/.test(location.protocol)) return location.origin+location.pathname; }catch(e){}
+  return undefined;
+}
+async function cloudSendRecovery(email){
+  var payload={email:email};
+  var r=recoveryRedirect(); if(r) payload.redirect_to=r;
+  await sbAuthPost('/auth/v1/recover', payload);
+}
+async function adoptSession(j){
+  sbSaveSession({
+    access_token:j.access_token,
+    refresh_token:j.refresh_token,
+    expires_at:j.expires_at|| (Math.floor(Date.now()/1000)+(j.expires_in||3600)),
+    user:j.user||{}
+  });
+  var owner='';
+  try{ owner=localStorage.getItem(LS_OWNER)||''; }catch(e){}
+  if(owner && owner!=='guest' && CLOUD.uid && owner!==CLOUD.uid && Object.keys(state.entries||{}).length){
+    if(!window.confirm('이 기기에 다른 계정으로 쓴 기록이 남아 있어요.\n지우고 이 계정의 기록을 불러올까요?')){
+      sbSaveSession(null);
+      throw new Error('로그인을 취소했어요');
+    }
+    await clearLocalData();
+  }
+  try{ localStorage.setItem(LS_OWNER, CLOUD.uid); }catch(e){}
+  showApp();
+  queueSync(function(){ return cloudSync(); });
+}
+
+/* ── 동기화 ── */
+var syncQ=Promise.resolve();
+function queueSync(fn){
+  syncQ=syncQ.then(function(){ return fn(); }).catch(function(e){
+    if(e && !e.network){ CLOUD.err=e.message||'동기화에 문제가 생겼어요'; }
+    setPill('error', CLOUD.err||'동기화 오류'); updateCloudUI();
+  });
+  return syncQ;
+}
+async function pushProfileNow(){
+  if(!CLOUD.session) return;
+  var cats=state.categories.map(function(c){
+    return {id:c.id, name:c.name, timer:!!c.timer, group:c.group, hidden:!!c.hidden, order:c.order};
+  });
+  var body={user_id:CLOUD.uid, settings:{child:{name:state.child.name||'', grade:state.child.grade||''}, categories:cats}, updated_at:new Date().toISOString()};
+  var r=await sbApi('/rest/v1/diary_profiles?on_conflict=user_id',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},body:body});
+  if(!r.ok) throw new Error(sbErrText(r));
+  CLOUD.lastOk=Date.now(); CLOUD.err=''; setPill('synced'); updateCloudUI();
+}
+async function uploadPhoto(id, date){
+  var rec=PhotoCache.get(id);
+  if(!rec || !rec.blob) return state.photoRefs[id]||null;
+  var path=CLOUD.uid+'/'+date+'/'+id+'.jpg';
+  var enc=path.split('/').map(encodeURIComponent).join('/');
+  var r=await sbApi('/storage/v1/object/diary-photos/'+enc,{
+    method:'POST',
+    headers:{'Content-Type':'image/jpeg','x-upsert':'true','cache-control':'max-age=3600'},
+    body:rec.blob
+  });
+  if(!r.ok) throw new Error('사진을 클라우드에 올리지 못했어요');
+  var ref={path:path, storage:'supabase'};
+  state.photoRefs[id]=ref;
+  scheduleSave();
+  return ref;
+}
+async function pushEntry(date){
+  if(!CLOUD.session) return;
+  setPill('syncing');
+  try{
+    var en=state.entries[date];
+    if(!en){
+      var dr=await sbApi('/rest/v1/diary_entries?user_id=eq.'+encodeURIComponent(CLOUD.uid)+'&entry_date=eq.'+encodeURIComponent(date),{method:'DELETE'});
+      if(!dr.ok) throw new Error(sbErrText(dr));
+      CLOUD.lastOk=Date.now(); setPill('synced'); updateCloudUI();
+      return;
+    }
+    var sections=clone(en.sections), ids=[];
+    Object.keys(sections).forEach(function(cid){ (sections[cid].p||[]).forEach(function(id){ ids.push(id); }); });
+    var refs={};
+    for(var i=0;i<ids.length;i++){
+      var id=ids[i], ref=state.photoRefs[id];
+      if(!ref){ try{ ref=await uploadPhoto(id,date); }catch(e){ ref=null; } }
+      if(ref && ref.path) refs[id]={id:id, path:ref.path, storage:'supabase'};
+    }
+    var body={
+      user_id:CLOUD.uid,
+      entry_date:date,
+      data:{sections:sections, savedAt:en.savedAt, photoRefs:refs},
+      updated_at:new Date().toISOString()
+    };
+    var r=await sbApi('/rest/v1/diary_entries?on_conflict=user_id,entry_date',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},body:body});
+    if(!r.ok) throw new Error(sbErrText(r));
+    saveNow();
+    CLOUD.lastOk=Date.now(); CLOUD.err=''; setPill('synced'); updateCloudUI();
+  }catch(e){
+    CLOUD.err=e.message||'저장하지 못했어요';
+    setPill('error', CLOUD.err); updateCloudUI();
+  }
+}
+async function pushAllEntries(){
+  if(!CLOUD.session) return;
+  setPill('syncing');
+  var dates=Object.keys(state.entries);
+  for(var i=0;i<dates.length;i++){ await pushEntry(dates[i]); }
+  try{ await pushProfileNow(); }catch(e){}
+  CLOUD.lastOk=Date.now(); setPill('synced'); updateCloudUI();
+}
+async function mergeCloud(profRow, rows){
+  var cloudDates={}, push=[];
+  if(profRow && profRow.settings && typeof profRow.settings==='object'){
+    var cs=profRow.settings;
+    if(cs.child && typeof cs.child==='object'){
+      state.child={name:String(cs.child.name||''), grade:String(cs.child.grade||'')};
+    }
+    if(Array.isArray(cs.categories) && cs.categories.length){
+      state.categories=normalizeState({categories:cs.categories}).categories;
+    }
+  } else {
+    try{ await pushProfileNow(); }catch(e){}
+  }
+  (rows||[]).forEach(function(row){
+    var d=String(row.entry_date||'');
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(d)) return;
+    cloudDates[d]=true;
+    var data=(row.data&&typeof row.data==='object')? row.data : {};
+    if(data.photoRefs && typeof data.photoRefs==='object'){
+      Object.keys(data.photoRefs).forEach(function(id){
+        var ref=data.photoRefs[id];
+        if(ref && ref.path){
+          state.photoRefs[id]={path:String(ref.path), storage:'supabase'};
+          if(!PhotoCache.has(id)) PhotoCache.set(id,{url:'', remote:true});
+        }
+      });
+    }
+    var secs=normalizeSections(data.sections, true);
+    if(!Object.keys(secs).length) return;
+    var cloudSaved=Number(data.savedAt)|| (row.updated_at? Date.parse(row.updated_at):0) || 0;
+    var local=state.entries[d];
+    var localSaved=local? (Number(local.savedAt)||0) : 0;
+    if(!local || cloudSaved>=localSaved) state.entries[d]={sections:secs, savedAt:cloudSaved};
+    else push.push(d);
+  });
+  Object.keys(state.entries).forEach(function(d){ if(!cloudDates[d]) push.push(d); });
+  state.savedAt=Date.now();
+  await saveNow();
+  /* 편집 중인 임시저장 내용은 건드리지 않는다 */
+  renderHeader(); renderCalendar(); loadView(); renderCatChips(); syncRangeUI(); renderRead(); applyTip();
+  if(!current || !state.drafts[current.date]){ loadEditor(selected); renderWrite(); updateDraftBadge(); }
+  for(var i=0;i<push.length;i++){ await pushEntry(push[i]); }
+}
+async function cloudSync(){
+  if(!CLOUD.session) return;
+  setPill('syncing');
+  try{
+    var uid=encodeURIComponent(CLOUD.uid);
+    var pr=await sbApi('/rest/v1/diary_profiles?select=settings,updated_at&user_id=eq.'+uid);
+    if(!pr.ok) throw new Error(sbErrText(pr));
+    var er=await sbApi('/rest/v1/diary_entries?select=entry_date,data,updated_at&user_id=eq.'+uid);
+    if(!er.ok) throw new Error(sbErrText(er));
+    await mergeCloud(Array.isArray(pr.data)? pr.data[0]:null, Array.isArray(er.data)? er.data:[]);
+    CLOUD.lastOk=Date.now(); CLOUD.err=''; CLOUD.pulled=true;
+    setPill('synced'); updateCloudUI();
+  }catch(e){
+    CLOUD.err=e.message||'동기화하지 못했어요';
+    setPill('error', CLOUD.err); updateCloudUI();
+  }
+}
+async function clearLocalData(){
+  state=defaultState();
+  PhotoCache.forEach(function(r){ if(r&&r.url&&r.url.indexOf('blob:')===0){ try{ URL.revokeObjectURL(r.url); }catch(e){} } });
+  PhotoCache.clear();
+  try{ localStorage.removeItem(LS_STATE); localStorage.removeItem(LS_PHOTOS); }catch(e){}
+  if(idb){
+    try{ await idbDel('kv','state'); }catch(e){}
+    try{
+      var rows=await idbGetAll('photos');
+      for(var i=0;i<(rows||[]).length;i++){ try{ await idbDel('photos', rows[i].id); }catch(e){} }
+    }catch(e){}
+  }
+  selected=todayStr();
+  var d=parseYmd(selected); viewY=d.getFullYear(); viewM=d.getMonth();
+  loadEditor(selected);
+  renderAll();
+}
+
+/* ── 로그아웃(이 기기 / 모든 기기) ── */
+async function doSignOutRemote(global){
+  if(!CLOUD.session) return true;
+  var token=CLOUD.session.access_token;
+  try{
+    var r=await fetch(SB_URL+'/auth/v1/logout'+(global?'?scope=global':''),{
+      method:'POST', headers:{apikey:SB_KEY, Authorization:'Bearer '+token}
+    });
+    return r.ok;
+  }catch(e){ return false; }
+}
+async function cloudLogout(){
+  if(!CLOUD.session){ openGate(false); return; }
+  if(!window.confirm('로그아웃할까요?\n\n이 기기에 저장된 사본은 지우고 로그인 화면으로 돌아가요.\n기록과 사진은 클라우드에 그대로 있고, 다시 로그인하면 그대로 불러옵니다.')) return;
+  var ok=await doSignOutRemote(false);
+  sbSaveSession(null);
+  try{ localStorage.setItem(LS_OWNER,''); }catch(e){}
+  closeSheet();
+  await clearLocalData();
+  openGate(false, ok? '로그아웃했어요. 다시 로그인하면 클라우드에서 그대로 불러옵니다.' : '로그아웃했어요(서버 응답은 확인하지 못했어요).', ok?'ok':'err');
+  toast('로그아웃했어요');
+}
+async function cloudLogoutAll(){
+  if(!CLOUD.session){ openGate(false); return; }
+  if(!window.confirm('모든 기기에서 로그아웃할까요?\n\n폰·컴퓨터·다른 브라우저까지 모두 로그아웃되고, 이 기기에 저장된 사본도 지워집니다.\n기록은 클라우드에 그대로 있고, 다시 로그인하면 그대로 불러옵니다.')) return;
+  var ok=await doSignOutRemote(true);
+  sbSaveSession(null);
+  try{ localStorage.setItem(LS_OWNER,''); }catch(e){}
+  closeSheet();
+  await clearLocalData();
+  openGate(false, ok? '모든 기기에서 로그아웃되었습니다. 다시 로그인하면 클라우드에서 그대로 불러옵니다.' : '이 기기에서는 로그아웃했지만, 다른 기기 해제는 서버 응답을 받지 못했어요. 잠시 뒤 다시 시도해 주세요.', ok?'ok':'err');
+  toast(ok? '모든 기기에서 로그아웃되었습니다':'로그아웃했어요');
+}
+
+/* ── 사진 URL (비공개 버킷 서명 URL, 메모리 캐시) ── */
+function photoUrl(id){
+  var r=PhotoCache.get(id);
+  if(r && r.url && !(r.exp && Date.now()>r.exp-300000)) return r.url;
+  if(state.photoRefs[id] && CLOUD.session) refreshPhotoUrl(id);
+  return r? (r.url||'') : '';
+}
+function photoImgHTML(id, alt, attrs){
+  var u=photoUrl(id);
+  if(!u) return '<div class="thumb loading" role="img" aria-label="사진 불러오는 중">⏳</div>';
+  return '<img src="'+esc(u)+'" alt="'+esc(alt)+'"'+(attrs? ' '+attrs : '')+'>';
+}
+function refreshPhotoUrl(id){
+  var ref=state.photoRefs[id];
+  if(!ref||!CLOUD.session||photoRefreshBusy[id]) return;
+  photoRefreshBusy[id]=true;
+  var enc=String(ref.path).split('/').map(encodeURIComponent).join('/');
+  sbApi('/storage/v1/object/sign/diary-photos/'+enc,{method:'POST',body:{expiresIn:3600}})
+    .then(function(r){
+      if(r.ok && r.data && r.data.signedURL){
+        var prev=PhotoCache.get(id)||{};
+        PhotoCache.set(id,{url:SB_URL+'/storage/v1'+r.data.signedURL, blob:prev.blob, exp:Date.now()+3300*1000, remote:true});
+        schedulePhotoRerender();
+      }
+    })
+    .catch(function(){})
+    .then(function(){ delete photoRefreshBusy[id]; });
+}
+function schedulePhotoRerender(){
+  clearTimeout(photoRerenderTimer);
+  photoRerenderTimer=setTimeout(function(){
+    if($('appRoot').hidden) return;
+    if(activeTab==='read') renderRead(); else renderSections();
+  }, 350);
+}
+
+/* ── 상태 표시 ── */
+function setPill(kind,msg){
+  var el=$('cloudPill'); if(!el) return;
+  if(!CLOUD.session){
+    el.textContent='☁️ 로그인'; el.className='cloud-pill';
+    el.title='로그인하면 폰과 컴퓨터가 자동으로 동기화돼요';
+    return;
+  }
+  if(kind==='syncing'){ el.textContent='⏳ 저장 중'; el.className='cloud-pill syncing'; el.title='클라우드에 저장하는 중'; }
+  else if(kind==='error'){ el.textContent='⚠️ 동기화 오류'; el.className='cloud-pill err'; el.title=msg||'동기화 오류'; }
+  else { el.textContent='☁️ 동기화됨'; el.className='cloud-pill'; el.title=(CLOUD.email||'')+' · 마지막 '+fmtStamp(CLOUD.lastOk); }
+}
+function updateCloudUI(){
+  var el=document.getElementById('cloudInfo');
+  if(!el) return;
+  if(CLOUD.session){
+    el.innerHTML='<div class="stat-line"><span>로그인</span><b>'+esc(CLOUD.email||'')+'</b></div>'
+      +'<div class="stat-line"><span>동기화</span><b>'+(CLOUD.err? '오류' : '자동 동기화 켜짐')+'</b></div>'
+      +'<div class="stat-line"><span>마지막 동기화</span><b>'+esc(fmtStamp(CLOUD.lastOk))+'</b></div>'
+      +(CLOUD.err? '<p class="hint" style="margin-top:7px;color:#a83b3b">'+esc(CLOUD.err)+'</p>' : '');
+  } else {
+    el.innerHTML='<div class="stat-line"><span>상태</span><b>로그인 안 됨</b></div>'
+      +'<p class="hint" style="margin-top:7px">로그인하면 폰과 컴퓨터가 같은 기록을 봐요. 지금은 이 기기에만 저장되고 있어요.</p>';
+  }
+}
+
+/* ── 게이트 ── */
+function setGateMsg(text,kind){
+  var el=$('gateMsg'); if(!el) return;
+  el.hidden=false;
+  el.className='gate-msg'+(kind==='err'?' err':'');
+  el.textContent=text;
+}
+function clearGateMsg(){ var el=$('gateMsg'); if(el){ el.hidden=true; el.textContent=''; } }
+function setGateMode(m){
+  gateMode=m;
+  var isUp=(m==='up'), isReset=(m==='reset'), isRec=(m==='recover');
+  var tabs=document.querySelector('.gate-tabs'); if(tabs) tabs.hidden=isReset||isRec;
+  $('gateForm').hidden=isRec;
+  $('gateRecoverForm').hidden=!isRec;
+  $('gatePwField').hidden=isReset;
+  $('gateNote').hidden=isReset||isRec;
+  $('gateGuest').hidden=isRec;
+  $('gateForgot').hidden=isUp||isRec;
+  $('gateForgot').textContent=isReset? '← 로그인으로 돌아가기' : '비밀번호를 잊으셨나요?';
+  $('gateTabIn').classList.toggle('on', !isUp);
+  $('gateTabUp').classList.toggle('on', isUp);
+  $('gateTabIn').setAttribute('aria-selected', (!isUp&&!isReset&&!isRec)?'true':'false');
+  $('gateTabUp').setAttribute('aria-selected', isUp?'true':'false');
+  $('gateSubmit').textContent = isReset? '재설정 메일 보내기' : (isUp? '회원가입':'로그인');
+  $('gatePw').setAttribute('autocomplete', isUp? 'new-password':'current-password');
+  $('gatePw').placeholder = isUp? '6자 이상' : '비밀번호';
+  $('gateSub').textContent = isRec? '🔑 새 비밀번호 설정'
+    : isReset? '가입한 이메일로 재설정 링크를 보내 드려요'
+    : (isUp? '이메일과 비밀번호만 넣으면 바로 시작할 수 있어요' : '로그인하면 폰과 컴퓨터가 자동으로 동기화돼요');
+}
+function openGate(fromApp,msg,kind){
+  $('authGate').hidden=false;
+  $('appRoot').hidden=true;
+  $('gateClose').hidden=!fromApp;
+  if(!fromApp){ $('gateEmail').value=''; $('gatePw').value=''; }
+  if(!pendingRecovery) setGateMode(gateMode==='reset'||gateMode==='up'? gateMode : 'in');
+  if(msg) setGateMsg(msg, kind==='err'?'err':'ok'); else clearGateMsg();
+  setPill();
+}
+function showApp(){
+  $('authGate').hidden=true;
+  $('appRoot').hidden=false;
+  setPill();
+  updateCloudUI();
+}
+function startGuest(){
+  $('authGate').hidden=true;
+  $('appRoot').hidden=false;
+  try{ if(!localStorage.getItem(LS_OWNER)) localStorage.setItem(LS_OWNER,'guest'); }catch(e){}
+  setPill();
+  toast('로그인 없이 이 기기에만 저장돼요');
+}
+async function submitGate(e){
+  if(e) e.preventDefault();
+  if(gateBusy||gateMode==='recover') return;
+  var email=$('gateEmail').value.trim();
+  var pw=$('gatePw').value;
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ setGateMsg('이메일 주소를 정확히 입력해 주세요','err'); $('gateEmail').focus(); return; }
+  if(gateMode==='reset'){
+    gateBusy=true;
+    var b0=$('gateSubmit'); var l0=b0.textContent;
+    b0.disabled=true; b0.textContent='보내는 중…';
+    setGateMsg('재설정 메일을 보내는 중이에요…','ok');
+    try{
+      await cloudSendRecovery(email);
+      setGateMode('in');
+      setGateMsg('재설정 메일을 보냈어요! 메일함(스팸함 포함)에서 링크를 눌러 새 비밀번호를 정해 주세요.','ok');
+    }catch(err){ setGateMsg(err.message||'메일을 보내지 못했어요','err'); }
+    finally{ gateBusy=false; b0.disabled=false; b0.textContent=l0; }
+    return;
+  }
+  if(pw.length<6){ setGateMsg('비밀번호는 6자 이상으로 해 주세요','err'); $('gatePw').focus(); return; }
+  gateBusy=true;
+  var btn=$('gateSubmit'); var label=btn.textContent;
+  btn.disabled=true; btn.textContent=(gateMode==='up'?'가입 중…':'로그인 중…');
+  setGateMsg(gateMode==='up'?'계정을 만드는 중이에요…':'확인하는 중이에요…','ok');
+  try{
+    if(gateMode==='up'){
+      var r=await cloudSignUp(email,pw);
+      if(r==='confirm'){
+        setGateMode('in');
+        setGateMsg('가입은 됐어요! 이메일로 온 인증 메일의 링크를 눌러 주세요. 그 뒤 이 화면에서 로그인하면 됩니다.','ok');
+        $('gatePw').value='';
+      } else { clearGateMsg(); toast('가입 완료! 이제 폰과 컴퓨터가 자동으로 동기화돼요'); }
+    } else {
+      await cloudSignIn(email,pw);
+      clearGateMsg();
+      toast('로그인했어요 · 기록을 불러오는 중');
+    }
+  }catch(err){ setGateMsg(err.message||'문제가 생겼어요','err'); }
+  finally{ gateBusy=false; btn.disabled=false; setGateMode(gateMode); }
+}
+function parseHashAuth(){
+  var h=String(location.hash||'');
+  if(h.length<2) return null;
+  var q=h.charAt(0)==='#'? h.slice(1):h;
+  var o={};
+  q.split('&').forEach(function(kv){
+    var i=kv.indexOf('='); if(i<0) return;
+    try{ o[decodeURIComponent(kv.slice(0,i))]=decodeURIComponent(kv.slice(i+1).replace(/\+/g,' ')); }catch(e){}
+  });
+  return o;
+}
+function handleRecoveryRedirect(o){
+  pendingRecovery=o;
+  try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){}
+  $('authGate').hidden=false;
+  $('appRoot').hidden=true;
+  $('gateClose').hidden=true;
+  clearGateMsg();
+  setGateMode('recover');
+  setGateMsg('메일 링크로 확인됐어요. 새 비밀번호를 정해 주세요.','ok');
+  setPill();
+  setTimeout(function(){ var el=$('recPw'); if(el) el.focus(); }, 120);
+}
+async function submitRecovery(e){
+  if(e) e.preventDefault();
+  if(gateBusy||!pendingRecovery) return;
+  var p1=$('recPw').value, p2=$('recPw2').value;
+  if(p1.length<6){ setGateMsg('비밀번호는 6자 이상으로 해 주세요','err'); $('recPw').focus(); return; }
+  if(p1!==p2){ setGateMsg('두 비밀번호가 서로 달라요. 다시 확인해 주세요','err'); $('recPw2').focus(); return; }
+  gateBusy=true;
+  var btn=$('recSubmit'); var label=btn.textContent;
+  btn.disabled=true; btn.textContent='바꾸는 중…';
+  setGateMsg('비밀번호를 바꾸는 중이에요…','ok');
+  try{
+    var res, text;
+    try{
+      res=await fetch(SB_URL+'/auth/v1/user',{
+        method:'PUT',
+        headers:{apikey:SB_KEY, Authorization:'Bearer '+pendingRecovery.access_token, 'Content-Type':'application/json'},
+        body:JSON.stringify({password:p1})
+      });
+      text=await res.text();
+    }catch(err){ throw new Error('인터넷 연결을 확인해 주세요'); }
+    var j=null; try{ j=text?JSON.parse(text):null; }catch(err){}
+    if(!res.ok) throw new Error(authErrText(j));
+    var o=pendingRecovery; pendingRecovery=null;
+    $('recPw').value=''; $('recPw2').value='';
+    clearGateMsg();
+    await adoptSession({
+      access_token:o.access_token,
+      refresh_token:o.refresh_token,
+      expires_at:Number(o.expires_at)||undefined,
+      user:j||{}
+    });
+    toast('비밀번호를 바꿨어요 · 새 비밀번호로 로그인됐습니다');
+  }catch(err){ setGateMsg(err.message||'비밀번호를 바꾸지 못했어요','err'); }
+  finally{ gateBusy=false; btn.disabled=false; btn.textContent=label; }
+}
+function startCloudHeartbeat(){
+  setInterval(function(){
+    if(!CLOUD.session) return;
+    var s=CLOUD.session, now=Math.floor(Date.now()/1000);
+    if(s.expires_at && s.expires_at-300<now){ sbRefresh().catch(function(){}); }
+  }, 4*60*1000);
+  window.addEventListener('online', function(){
+    if(CLOUD.session) queueSync(function(){ return cloudSync(); });
+  });
+}
+async function cloudInit(){
+  var o=parseHashAuth();
+  if(o && o.type==='recovery' && o.access_token){ handleRecoveryRedirect(o); return; }
+  var s=sbLoadSession();
+  if(s){
+    CLOUD.session=s;
+    CLOUD.uid=(s.user&&s.user.id)||'';
+    CLOUD.email=(s.user&&s.user.email)||'';
+    showApp();
+    setPill('syncing');
+    queueSync(function(){ return cloudSync(); });
+    return;
+  }
+  openGate(false);
+}
+function bindCloudEvents(){
+  $('gateForm').addEventListener('submit', submitGate);
+  $('gateRecoverForm').addEventListener('submit', submitRecovery);
+  $('gateTabIn').addEventListener('click', function(){ setGateMode('in'); clearGateMsg(); });
+  $('gateTabUp').addEventListener('click', function(){ setGateMode('up'); clearGateMsg(); });
+  $('gateForgot').addEventListener('click', function(){
+    clearGateMsg();
+    setGateMode(gateMode==='reset'? 'in':'reset');
+    var el=$('gateEmail'); if(el) el.focus();
+  });
+  $('gateGuest').addEventListener('click', startGuest);
+  $('gateClose').addEventListener('click', startGuest);
+  $('cloudPill').addEventListener('click', function(){
+    if(CLOUD.session) openSettings(); else openGate(true);
+  });
+}
+var Cloud={
+  signedIn:function(){ return !!CLOUD.session; },
+  pushEntry:function(date){ if(!CLOUD.session) return; queueSync(function(){ return pushEntry(date); }); },
+  pushProfile:function(){ if(!CLOUD.session) return; queueSync(function(){ return pushProfileNow(); }); },
+  pushAll:function(){ if(!CLOUD.session) return; queueSync(function(){ return pushAllEntries(); }); },
+  sync:function(){ if(!CLOUD.session) return; queueSync(function(){ return cloudSync(); }); },
+  deletePhoto:function(id){
+    var ref=state.photoRefs[id];
+    if(!ref||!CLOUD.session) return;
+    delete state.photoRefs[id];
+    var enc=String(ref.path).split('/').map(encodeURIComponent).join('/');
+    queueSync(function(){ return sbApi('/storage/v1/object/diary-photos/'+enc,{method:'DELETE'}); });
+  }
+};
+
 /* ────────────────────────────── boot ────────────────────────────── */
 async function boot(){
   await loadState();
@@ -2814,6 +3572,7 @@ async function boot(){
   loadView();
   loadEditor(selected);
   bindEvents();
+  bindCloudEvents();
   renderHeader();
   renderCalendar();
   renderSections();
@@ -2832,6 +3591,8 @@ async function boot(){
   window.addEventListener('resize', syncStickyTop);
   window.addEventListener('orientationchange', function(){ setTimeout(syncStickyTop, 250); });
   if(!idb) console.info('IndexedDB unavailable — using localStorage');
+  await cloudInit();
+  startCloudHeartbeat();
 }
 boot();
 })();
