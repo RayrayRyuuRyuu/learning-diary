@@ -643,6 +643,19 @@ table.tbl{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-nume
 .stat-line{display:flex;justify-content:space-between;font-size:12.5px;padding:5px 0;color:var(--ink-2);border-bottom:1px dashed var(--line-2)}
 .stat-line:last-child{border-bottom:0}
 .stat-line b{font-weight:800;color:var(--ink)}
+/* ── 백업 기간 선택 ───────────────────── */
+.bk-period{margin-top:11px;padding-top:11px;border-top:1px dashed var(--line)}
+.bk-lab{font-size:11.5px;font-weight:800;color:var(--muted);letter-spacing:.02em;margin-bottom:7px}
+.bk-chips{margin-bottom:7px}
+.bk-period .range-custom[hidden]{display:none !important}
+.bk-period .date-inp{height:38px;font-size:12.5px}
+.bk-prev{
+  font-size:11.5px;font-weight:700;line-height:1.55;margin:9px 0;padding:8px 10px;
+  color:var(--muted);background:#faf8f3;border:1px solid var(--line-2);border-radius:10px;
+}
+.bk-prev b{color:var(--teal-3);font-weight:900}
+.bk-prev.warn{color:#a06a1c;background:#fdf7ea;border-color:#f3e3bd}
+.bk-prev.warn b{color:#a06a1c}
 
 /* ── Lightbox ───────────────────────────── */
 .lightbox{position:fixed;inset:0;z-index:80;background:rgba(12,18,17,.96);display:flex;align-items:center;justify-content:center;animation:fade .16s ease}
@@ -2561,13 +2574,29 @@ function openSettings(){
     +'</div>'
     +'<div class="sheet-block"><h3>💾 백업</h3>'
       +'<div class="two-btns">'
-        +'<button class="btn-line teal" id="btnExport">⬇️ 내보내기</button>'
+        +'<button class="btn-line teal" id="btnExport">⬇️ 전체 내보내기</button>'
         +'<button class="btn-line" id="btnImport">⬆️ 불러오기</button>'
       +'</div>'
-      +'<div style="margin-top:10px">'
-        +'<div class="stat-line"><span>마지막 백업</span><b>'+fmtStamp(state.settings.lastBackupAt)+'</b></div>'
+      +'<div class="bk-period">'
+        +'<div class="bk-lab">기간을 골라 내보내기</div>'
+        +'<div class="range-chips bk-chips" id="bkChips" role="group" aria-label="백업 기간">'
+          +'<button class="rchip on" data-bk="all" aria-pressed="true">전체</button>'
+          +'<button class="rchip" data-bk="month" aria-pressed="false">이번 달</button>'
+          +'<button class="rchip" data-bk="lastmonth" aria-pressed="false">지난 달</button>'
+          +'<button class="rchip" data-bk="custom" aria-pressed="false">기간 지정</button>'
+        +'</div>'
+        +'<div class="range-custom" id="bkCustom" hidden>'
+          +'<input class="date-inp" type="date" id="bkFrom" aria-label="시작일">'
+          +'<span class="tilde" aria-hidden="true">~</span>'
+          +'<input class="date-inp" type="date" id="bkTo" aria-label="끝나는 날">'
+        +'</div>'
+        +'<div class="bk-prev" id="bkPrev" aria-live="polite"></div>'
+        +'<button class="btn-line teal" id="btnExportRange">📤 백업 내보내기</button>'
       +'</div>'
-      +'<p class="hint" style="margin-top:8px">백업 파일(.json)에는 사진까지 다 담겨요. ‘불러오기’는 지금 기록을 지우지 않고 파일에 든 날짜만 더해요(같은 날짜는 파일 내용으로 바뀜).</p>'
+      +'<div style="margin-top:10px">'
+        +'<div class="stat-line"><span>마지막 백업</span><b id="bkLastBackup">'+fmtStamp(state.settings.lastBackupAt)+'</b></div>'
+      +'</div>'
+      +'<p class="hint" style="margin-top:8px">백업 파일(.json)에는 사진까지 다 담겨요. ‘전체’는 이 기기의 기록 전부, ‘기간 지정’은 그 기간 기록과 그 기록이 쓰는 사진만 담아 가볍게 저장해요. ‘불러오기’는 지금 기록을 지우지 않고 파일에 든 날짜만 더해요(같은 날짜는 파일 내용으로 바뀜).</p>'
     +'</div>'
     +'<div class="sheet-block"><h3>☁️ 클라우드 동기화</h3><div id="cloudInfo"></div>'
       +'<div class="two-btns" style="margin-top:9px">'
@@ -2598,6 +2627,8 @@ function openSettings(){
     });
     root.querySelector('#openCat').addEventListener('click', function(){ openCatManager(); });
     root.querySelector('#btnExport').addEventListener('click', function(){ exportBackup(); });
+    root.querySelector('#btnExportRange').addEventListener('click', function(){ exportBackupFromSheet(root); });
+    bindBackupRange(root);
     root.querySelector('#btnImport').addEventListener('click', function(){ $('importInput').value=''; $('importInput').click(); });
     root.querySelector('#btnTipOn').addEventListener('click', function(){
       state.settings.tipDismissed=false; saveNow(); applyTip(); closeSheet();
@@ -2782,37 +2813,226 @@ function openCatManager(){
 }
 
 /* ────────────────────────────── backup ────────────────────────────── */
-async function exportBackup(){
+/* 기간별 백업: opts 없이 부르면 전체, {from,to}를 주면 그 기간만 담는다.
+   기간을 주면 entries·drafts·photoRefs 를 그 날짜만 남기고, photos 에도 그 기간 기록이
+   실제로 쓰는 사진만 넣어 파일을 가볍게 만든다. 불러오기(mergeBackupIntoState)와 같은 형식. */
+var bkRange='all', bkFrom='', bkTo='';
+
+function bkMonthBounds(offset){
+  var now=new Date();
+  var first=new Date(now.getFullYear(), now.getMonth()+offset, 1);
+  var last=new Date(now.getFullYear(), now.getMonth()+offset+1, 0);
+  return {from:ymd(first), to:ymd(last)};
+}
+function bkPeriod(){
+  if(bkRange==='month') return bkMonthBounds(0);
+  if(bkRange==='lastmonth') return bkMonthBounds(-1);
+  if(bkRange==='custom'){
+    var f=bkFrom, t=bkTo;
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(f) || !/^\d{4}-\d{2}-\d{2}$/.test(t)) return null;
+    if(f>t){ var tmp=f; f=t; t=tmp; }
+    return {from:f, to:t};
+  }
+  return null;   /* 전체 */
+}
+function bkDot(ds){
+  if(!ds) return '';
+  return ds.slice(0,4)+'.'+ds.slice(5,7)+'.'+ds.slice(8,10);
+}
+function bkEntryDates(from,to){
+  var out=[];
+  Object.keys(state.entries||{}).sort().forEach(function(d){
+    if(from && d<from) return;
+    if(to && d>to) return;
+    if(dayHasRecord(d)) out.push(d);
+  });
+  return out;
+}
+function bkPhotoIdsOf(dates){
+  var seen={}, out=[];
+  (dates||[]).forEach(function(d){
+    var secs=sectionsOf(d);
+    Object.keys(secs).forEach(function(cid){
+      ((secs[cid]||{}).p||[]).forEach(function(id){
+        if(!seen[id]){ seen[id]=true; out.push(id); }
+      });
+    });
+  });
+  return out;
+}
+/* 클라우드에만 있는 사진(IndexedDB 에 바이트가 없음)을 받기 위한 서명 URL */
+async function bkSignedPhotoUrl(id){
+  var ref=(state.photoRefs||{})[id];
+  if(!ref || !ref.path || !CLOUD.session) return '';
+  var enc=String(ref.path).split('/').map(encodeURIComponent).join('/');
   try{
-    toast('백업 파일을 만드는 중… 사진이 많으면 조금 걸려요', 5000);
-    var photos={};
-    var entries=Array.from(PhotoCache.entries());
-    for(var i=0;i<entries.length;i++){
-      var id=entries[i][0], rec=entries[i][1];
-      try{
-        if(rec.blob) photos[id]=await blobToDataURL(rec.blob);
-        else if(rec.url && rec.url.indexOf('data:')===0) photos[id]=rec.url;
-        else if(rec.url && /^https?:/.test(rec.url)){
-          var resp=await fetch(rec.url); var b=await resp.blob(); photos[id]=await blobToDataURL(b);
-        }
-      }catch(e){}
+    var r=await sbApi('/storage/v1/object/sign/diary-photos/'+enc,{method:'POST',body:{expiresIn:3600}});
+    if(r && r.ok && r.data && r.data.signedURL) return SB_URL+'/storage/v1'+r.data.signedURL;
+  }catch(e){}
+  return '';
+}
+/* 사진 URL 을 받아 data URL 로. 사진이 아닌 응답(JSON·HTML 오류 페이지)은 버린다 */
+async function bkFetchDataUrl(url){
+  var resp=await fetch(url);
+  if(!resp.ok) throw new Error('photo '+resp.status);
+  var b=await resp.blob();
+  var t=String(b.type||'').toLowerCase();
+  if(t && t.indexOf('image/')!==0 && t.indexOf('application/octet-stream')!==0) throw new Error('not image');
+  return await blobToDataURL(b);
+}
+/* 사진 바이트를 JSON 에 넣을 data URL 로 모은다.
+   이 기기(IndexedDB·캐시) → 클라우드 버킷(서명 URL) → 외부 HTTPS 표지 순서. */
+async function bkPhotoData(ids){
+  var photos={}, total=ids.length, signed={};
+  for(var i=0;i<total;i++){
+    var id=ids[i], rec=PhotoCache.get(id), ref=(state.photoRefs||{})[id]||{};
+    try{
+      if(rec && rec.blob){ photos[id]=await blobToDataURL(rec.blob); }
+      else if(rec && rec.url && rec.url.indexOf('data:')===0){ photos[id]=rec.url; }
+      else if(rec && rec.url && /^https?:/.test(rec.url) && !ref.path){
+        photos[id]=await bkFetchDataUrl(rec.url);
+      }
+      else if(ref.path && CLOUD.session){
+        if(!signed[id]) signed[id]=await bkSignedPhotoUrl(id);
+        if(signed[id]) photos[id]=await bkFetchDataUrl(signed[id]);
+      }
+      else if(ref.url && /^https?:/.test(ref.url)){
+        photos[id]=await bkFetchDataUrl(ref.url);
+      }
+      else if(rec && rec.url && /^https?:/.test(rec.url)){
+        photos[id]=await bkFetchDataUrl(rec.url);
+      }
+    }catch(e){}
+    if(total>40 && (i+1)%20===0) toast('사진 담는 중… '+(i+1)+'/'+total, 1400);
+  }
+  return photos;
+}
+async function exportBackup(opts){
+  opts=opts||{};
+  var from=opts.from||'', to=opts.to||'';
+  var ranged=!!(from && to);
+  try{
+    var st=state, ids=[];
+    if(ranged){
+      var dates=bkEntryDates(from,to);
+      if(!dates.length){
+        toast(bkDot(from)+' ~ '+bkDot(to)+' 에는 기록이 없어요. 기간을 바꿔 보세요', 3600);
+        return false;
+      }
+      toast('백업 파일을 만드는 중… '+dates.length+'일치 기록', 5000);
+      st=clone(state);
+      var ents={};
+      dates.forEach(function(d){ ents[d]=state.entries[d]; });
+      st.entries=ents;
+      var dr={};
+      Object.keys(st.drafts||{}).forEach(function(d){
+        if(d>=from && d<=to) dr[d]=st.drafts[d];
+      });
+      st.drafts=dr;
+      ids=bkPhotoIdsOf(dates);
+      var refs={};
+      ids.forEach(function(id){ if(state.photoRefs && state.photoRefs[id]) refs[id]=state.photoRefs[id]; });
+      st.photoRefs=refs;
+    } else {
+      toast('백업 파일을 만드는 중… 사진이 많으면 조금 걸려요', 5000);
+      /* 전체 — 이 기기에 있는 사진 전부 + 기록이 참조하는(기기에 없는) 원격 사진 */
+      var seen={};
+      PhotoCache.forEach(function(rec, id){ if(!seen[id]){ seen[id]=true; ids.push(id); } });
+      bkEntryDates('','').forEach(function(d){
+        bkPhotoIdsOf([d]).forEach(function(id){ if(!seen[id]){ seen[id]=true; ids.push(id); } });
+      });
     }
+    var photos=await bkPhotoData(ids);
     state.settings.lastBackupAt=Date.now();
-    var payload={app:'raeni-diary', v:1, exportedAt:new Date().toISOString(), child:state.child, state:state, photos:photos};
+    if(st!==state) st.settings.lastBackupAt=state.settings.lastBackupAt;
+    var payload={app:'raeni-diary', v:1, exportedAt:new Date().toISOString(), child:st.child, state:st, photos:photos};
+    if(ranged) payload.range={from:from, to:to};
     var blob=new Blob([JSON.stringify(payload)], {type:'application/json'});
     var url=URL.createObjectURL(blob);
     var a=document.createElement('a');
     a.href=url;
-    a.download=(state.child.name||'학습')+'-다이어리-'+todayStr()+'.json';
+    a.download=(state.child.name||'학습')+'-다이어리-'+(ranged? from+'_'+to : todayStr())+'.json';
     document.body.appendChild(a);
     a.click();
     setTimeout(function(){ a.remove(); URL.revokeObjectURL(url); }, 1500);
     await saveNow();
-    toast('백업 파일을 저장했어요 (다운로드 폴더 확인)');
+    toast(ranged? (bkDot(from)+' ~ '+bkDot(to)+' 백업을 저장했어요 (기록 '+Object.keys(st.entries).length+'일 · 사진 '+Object.keys(photos).length+'장)')
+                : '백업 파일을 저장했어요 (다운로드 폴더 확인)', ranged? 4200 : 2400);
+    return true;
   }catch(e){
     console.warn(e);
     toast('백업을 만들지 못했어요: '+(e.message||'오류'));
+    return false;
   }
+}
+/* ── 설정 창의 기간 고르기 ── */
+function bkPrevInfo(){
+  var per=bkPeriod();
+  if(bkRange==='custom' && !per) return {warn:true, html:'시작일과 끝나는 날을 모두 골라 주세요'};
+  var dates=bkEntryDates(per? per.from:'', per? per.to:'');
+  var ids=bkPhotoIdsOf(dates);
+  var photoN=ids.filter(function(id){ return PhotoCache.has(id) || (state.photoRefs||{})[id]; }).length;
+  var head=per? bkDot(per.from)+' ~ '+bkDot(per.to) : '전체';
+  if(!dates.length) return {warn:true, html:'<b>'+esc(head)+'</b>에는 기록이 없어요. 다른 기간을 골라 주세요'};
+  return {warn:false, html:'<b>'+esc(head)+'</b> · 기록 <b>'+dates.length+'일</b> · 사진 <b>'+photoN+'장</b>'};
+}
+function syncBackupRangeUI(root){
+  if(!root) return;
+  Array.prototype.forEach.call(root.querySelectorAll('#bkChips .rchip'), function(b){
+    var on=b.getAttribute('data-bk')===bkRange;
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-pressed', on? 'true':'false');
+  });
+  var box=root.querySelector('#bkCustom');
+  if(box) box.hidden=(bkRange!=='custom');
+  var f=root.querySelector('#bkFrom'), t=root.querySelector('#bkTo');
+  if(f && document.activeElement!==f) f.value=bkFrom||'';
+  if(t && document.activeElement!==t) t.value=bkTo||'';
+  var pv=root.querySelector('#bkPrev');
+  if(pv){ var p=bkPrevInfo(); pv.className='bk-prev'+(p.warn? ' warn':''); pv.innerHTML=p.html; }
+  var btn=root.querySelector('#btnExportRange');
+  if(btn) btn.textContent=(bkRange==='all')? '📤 전체 백업 내보내기' : '📤 기간 백업 내보내기';
+}
+function bindBackupRange(root){
+  if(!root || !root.querySelector('#bkChips')) return;
+  bkRange='all'; bkFrom=''; bkTo='';
+  Array.prototype.forEach.call(root.querySelectorAll('#bkChips .rchip'), function(b){
+    b.addEventListener('click', function(){
+      bkRange=b.getAttribute('data-bk')||'all';
+      if(bkRange==='custom'){
+        var mb=bkMonthBounds(0);
+        if(!bkFrom) bkFrom=mb.from;
+        if(!bkTo) bkTo=mb.to;
+        if(bkFrom>bkTo){ var tmp=bkFrom; bkFrom=bkTo; bkTo=tmp; }
+      }
+      syncBackupRangeUI(root);
+      if(bkRange==='custom'){ var f=root.querySelector('#bkFrom'); if(f) f.focus(); }
+    });
+  });
+  function onDate(){
+    var f=root.querySelector('#bkFrom'), t=root.querySelector('#bkTo');
+    bkFrom=f? f.value : '';
+    bkTo=t? t.value : '';
+    if(bkFrom && bkTo && bkFrom>bkTo){
+      var tmp=bkFrom; bkFrom=bkTo; bkTo=tmp;
+      if(f) f.value=bkFrom;
+      if(t) t.value=bkTo;
+    }
+    syncBackupRangeUI(root);
+  }
+  Array.prototype.forEach.call(root.querySelectorAll('#bkCustom .date-inp'), function(el){
+    el.addEventListener('change', onDate);
+  });
+  syncBackupRangeUI(root);
+}
+async function exportBackupFromSheet(root){
+  var per=bkPeriod();
+  if(bkRange==='custom' && !per){ toast('시작일과 끝나는 날을 모두 골라 주세요'); return; }
+  var ok=per? await exportBackup({from:per.from, to:per.to}) : await exportBackup();
+  if(!ok) return;
+  var lb=root.querySelector('#bkLastBackup');
+  if(lb) lb.textContent=fmtStamp(state.settings.lastBackupAt);
+  syncBackupRangeUI(root);
 }
 /* ── 백업 병합 준비: 기존 기록은 그대로 두고 파일에 든 날짜만 더한다(같은 날짜는 파일 내용으로 갱신) ── */
 function backupMergePlan(src){
