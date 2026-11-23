@@ -2864,8 +2864,13 @@ function mergeBackupIntoState(src, plan){
   /* 3) 사진 참조 — 외부(HTTPS) 그림과, 파일에 내장된 사진의 썸네일 표시.
      버킷 경로(path)는 다른 계정 것이라 가져오지 않는다 */
   Object.keys(src.photoRefs||{}).forEach(function(id){
-    var r=src.photoRefs[id];
-    if(state.photoRefs[id]) return;
+    var r=src.photoRefs[id], cur=state.photoRefs[id];
+    if(cur){
+      /* 이미 있는 참조 — 파일이 썸네일 표시를 갖고 있는데 빠져 있으면 표시만 보탠다
+         (예전 버전에서 병합해 표시를 잃은 기록을 같은 파일로 다시 불러올 때 되살아난다) */
+      if(r && r.thumb===true && cur.thumb!==true){ cur.thumb=true; if(!cur.kind && r.kind) cur.kind=r.kind; }
+      return;
+    }
     if(r && r.url && /^https?:\/\//i.test(r.url)) state.photoRefs[id]=r;
     else if(r && r.thumb) state.photoRefs[id]={ thumb: true, kind: r.kind || 'cover' };
   });
