@@ -4,7 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0d7a70">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="다이어리">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="description" content="학습·성장 다이어리 — 영역별 학습 기록, 사진, 시간 분석. 로그인한 본인만 자기 기록을 열 수 있습니다.">
 <title>학습 · 성장 다이어리</title>
@@ -266,6 +271,7 @@ main{padding:12px 13px 8px;display:flex;flex-direction:column;gap:12px}
   box-shadow:0 1px 0 rgba(0,0,0,.02);
 }
 .photo-btn:active{background:var(--teal-soft)}
+.book-btn{font-size:11px;padding:6px 7px;color:var(--teal-3);background:linear-gradient(180deg,#fff,#f6fbf9)}
 .sec-body{padding:0}
 .time-row{
   display:flex;align-items:center;gap:6px;padding:8px 10px;
@@ -297,8 +303,18 @@ main{padding:12px 13px 8px;display:flex;flex-direction:column;gap:12px}
 }
 .sec-text::placeholder{color:#b9c3bf}
 .sec-text:focus{outline:none}
-.photos{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:0 12px 0}
+.photos{display:flex;flex-direction:column;gap:9px;padding:0 12px 0}
 .photos:not(:empty){padding-bottom:11px;padding-top:2px}
+.photos .pcard{position:relative;border:1px solid var(--line);border-radius:13px;overflow:hidden;background:#fff;box-shadow:var(--shadow-sm)}
+.photos .pcard .pimg{display:block;width:100%;padding:0;border:0;background:#fff;text-align:left}
+.photos .pcard .pimg img{display:block;width:100%;height:auto;object-fit:contain;background:#fff}
+.photos .pcard .pimg .thumb{aspect-ratio:auto;border:0;border-radius:0;min-height:120px}
+.photos .pcard .del{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;background:rgba(22,34,32,.68);color:#fff;font-size:13px;line-height:1;display:grid;place-items:center;backdrop-filter:blur(2px);box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.photos .pbar{display:flex;align-items:center;gap:7px;padding:6px 8px;border-top:1px solid var(--line-2);background:#fbf9f4;flex-wrap:wrap}
+.photos .pbar .pn{font-size:11px;font-weight:800;color:var(--muted)}
+.photos .pbar .pused{font-size:10.5px;font-weight:800;color:var(--teal-3);background:var(--teal-soft);border-radius:6px;padding:2px 6px}
+.photos .pbar .pmark{margin-left:auto;font-size:11px;font-weight:800;color:var(--teal);background:#fff;border:1px solid var(--teal-soft-2);border-radius:8px;padding:5px 8px}
+.photos .pbar .pmark:active{background:var(--teal-soft)}
 .thumb{
   position:relative;aspect-ratio:3/4;border-radius:12px;overflow:hidden;
   background:#fff;border:1px solid var(--line);
@@ -407,6 +423,11 @@ table.tbl{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-nume
 .read-sec .body{padding:11px 13px 13px}
 .read-sec .txt{font-size:15px;line-height:1.7;white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere}
 .read-sec .txt a{color:#2563eb}
+.read-sec .txt .txt-photo{
+  display:block;width:100%;margin:7px 0 10px;padding:0;border:1px solid var(--line);
+  background:#fff;border-radius:12px;overflow:hidden;box-shadow:var(--shadow-sm);text-align:left;
+}
+.read-sec .txt .txt-photo img{display:block;width:100%;height:auto;max-height:none;object-fit:contain;background:#fff}
 .photo-grid{display:flex;flex-direction:column;gap:8px;margin-top:10px}
 .photo-grid button{
   position:relative;display:block;width:100%;padding:0;background:#fff;
@@ -497,6 +518,24 @@ table.tbl{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-nume
 .inp:focus{border-color:var(--teal-2);outline:none;box-shadow:0 0 0 3px var(--teal-soft)}
 .row2{display:grid;grid-template-columns:1.5fr 1fr;gap:8px}
 .hint{font-size:11.5px;color:var(--muted);line-height:1.55}
+/* ── 책 표지 검색 ──────────────────────── */
+.bk-form{display:flex;gap:7px;margin-top:9px}
+.bk-form .inp{flex:1;min-width:0;height:42px}
+.bk-form .btn-line{width:auto;flex:0 0 auto;padding:0 16px}
+.bk-state{padding:20px 10px;text-align:center;color:var(--muted);font-size:12.5px;line-height:1.65}
+.bk-state b{display:block;color:var(--ink-2);font-size:13.5px;margin-bottom:4px}
+.bk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.bk-item{display:flex;flex-direction:column;gap:5px;width:100%;text-align:left;background:transparent;border:0;padding:0}
+.bk-cover{position:relative;width:100%;aspect-ratio:2/3;border-radius:9px;overflow:hidden;background:#efeae1;border:1px solid var(--line);display:grid;place-items:center;color:#b4b0a0;font-size:21px;box-shadow:var(--shadow-sm);transition:transform .13s ease}
+.bk-cover img{width:100%;height:100%;object-fit:cover;background:#fff}
+.bk-item:active .bk-cover{transform:scale(.97)}
+.bk-item.busy{opacity:.5}
+.bk-t{font-size:11.5px;font-weight:800;line-height:1.35;color:var(--ink);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.bk-a{font-size:10.5px;color:var(--muted);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bk-item.nocover .bk-t{color:var(--muted)}
+.bk-hint{font-size:11px;color:var(--muted);line-height:1.55;margin-top:9px}
+.thumb.book{aspect-ratio:2/3}
+.thumb.book img{object-fit:contain;background:#fdfbf6}
 .cat-row{
   display:flex;align-items:center;gap:7px;padding:8px 9px;border:1px solid var(--line);
   border-radius:12px;background:#fff;margin-bottom:6px;
@@ -693,6 +732,15 @@ table.tbl{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-nume
     max-height:205mm !important;object-fit:contain !important;margin:0 auto;
   }
   .read-sec.has-photos{break-inside:auto !important;page-break-inside:auto !important}
+  .read-sec .txt .txt-photo{
+    display:block !important;width:100% !important;margin:2mm 0 2.5mm !important;
+    border:1px solid #ded9cc !important;border-radius:1.5mm !important;box-shadow:none !important;
+    break-inside:avoid;page-break-inside:avoid;
+  }
+  .read-sec .txt .txt-photo img{
+    display:block !important;width:auto !important;height:auto !important;max-width:100% !important;
+    max-height:205mm !important;object-fit:contain !important;margin:0 auto;
+  }
 
   /* 분석 표 */
   .analysis{
@@ -1202,6 +1250,7 @@ async function loadState(){
     Object.keys(pm).forEach(function(id){ if(!PhotoCache.has(id)) PhotoCache.set(id, {url:pm[id]}); });
   }
   if(saved) state = normalizeState(saved);
+  hydratePhotoRefs();
 }
 
 /* ────────────────────────────── model ────────────────────────────── */
@@ -1257,7 +1306,18 @@ function normalizeState(s){
   if(s.photoRefs && typeof s.photoRefs==='object'){
     Object.keys(s.photoRefs).forEach(function(id){
       var r=s.photoRefs[id];
-      if(r && typeof r.path==='string' && r.path) prs[id]={path:r.path, storage:'supabase'};
+      if(!r || typeof r!=='object') return;
+      if(typeof r.path==='string' && r.path){
+        prs[id]={path:r.path, storage:'supabase'};
+        return;
+      }
+      /* 외부(HTTPS) 표지처럼 버킷에 올리지 않은 사진 */
+      if(typeof r.url==='string' && /^https?:\/\//i.test(r.url)){
+        var o={url:r.url, storage:'url'};
+        if(typeof r.fallback==='string' && /^https?:\/\//i.test(r.fallback)) o.fallback=r.fallback;
+        if(typeof r.title==='string' && r.title) o.title=r.title;
+        prs[id]=o;
+      }
     });
   }
   out.photoRefs=prs;
@@ -1327,6 +1387,71 @@ function markEdited(){
   scheduleSave();
   updateTodayAnalysis();
   syncJumpBar();
+}
+
+/* ────────────────────────────── 사진 위치 마커 ────────────────────────────── */
+var caretMem={};
+function caretKey(cid){ return (current? current.date : '')+'|'+cid; }
+function noteCaretFrom(el){
+  if(!el || el.tagName!=='TEXTAREA' || !current) return;
+  var art=el.closest? el.closest('[data-cat]') : null;
+  if(!art) return;
+  var s=el.selectionStart, e=el.selectionEnd;
+  if(typeof s!=='number') return;
+  caretMem[caretKey(art.getAttribute('data-cat'))]={start:s, end:(typeof e==='number'? e:s), at:Date.now()};
+}
+function caretFor(cid){
+  var c=caretMem[caretKey(cid)];
+  return (c && typeof c.start==='number')? c : null;
+}
+/* 사진을 넣을 자리: 마지막 글 커서 → 없으면 글 맨 끝 → 글도 없으면 null(글 아래에 그대로) */
+function markPositionFor(cid, sec){
+  var t=String((sec && sec.t)||'');
+  var c=caretFor(cid);
+  if(c){
+    var s=Math.max(0, Math.min(t.length, c.start));
+    var e=Math.max(s, Math.min(t.length, c.end));
+    return {start:s, end:e};
+  }
+  if(t.trim()) return {start:t.length, end:t.length};
+  return null;
+}
+function insertPhotoMark(cid, n, pos){
+  var sec=ensureSec(cid); if(!sec) return null;
+  var token=photoMark(n);
+  var t=String(sec.t||'');
+  /* 같은 사진 표시가 이미 있으면 그 자리에서 빼고 새 위치로 옮긴다 */
+  var re=new RegExp(PHOTO_MARK_RE.source,'g'), m;
+  while((m=re.exec(t))!==null){
+    if(+m[1]===n){
+      var os=m.index, oe=m.index+m[0].length;
+      t=t.slice(0,os)+t.slice(oe);
+      if(pos && pos.start>oe){ pos={start:pos.start-(oe-os), end:pos.end-(oe-os)}; }
+      else if(pos && pos.start>os){ pos={start:os, end:os}; }
+      break;
+    }
+    if(!m[0].length) re.lastIndex++;
+  }
+  var s=pos? Math.max(0, Math.min(t.length, pos.start)) : t.length;
+  var e=pos? Math.max(s, Math.min(t.length, pos.end)) : s;
+  sec.t=t.slice(0,s)+token+t.slice(e);
+  var after=s+token.length;
+  caretMem[caretKey(cid)]={start:after, end:after, at:Date.now()};
+  return after;
+}
+function focusEditorCaret(cid, pos){
+  var art=document.querySelector('#sections .sec[data-cat="'+String(cid).replace(/"/g,'\\"')+'"]');
+  var ta=art? art.querySelector('textarea') : null;
+  if(!ta) return;
+  try{ ta.focus(); ta.setSelectionRange(pos,pos); autoGrow(ta); }catch(e){}
+}
+function shiftPhotoMarks(text, removed){
+  return String(text||'').replace(/\[\[\s*사진\s*(\d{1,2})\s*\]\]/g, function(all,n){
+    var k=+n;
+    if(k===removed) return '';
+    if(k>removed) return photoMark(k-1);
+    return all;
+  });
 }
 
 /* ────────────────────────────── toast ────────────────────────────── */
@@ -1407,12 +1532,41 @@ function timeRowHTML(c, m){
     +'<div class="chips">'+chips+'</div>'
     +'</div>';
 }
+function photoAlt(id, n){
+  var ref=state.photoRefs[id];
+  if(ref && ref.title) return '책 표지 — '+ref.title;
+  return '사진 '+n;
+}
+function isBookPhoto(id){
+  var ref=state.photoRefs[id];
+  return !!(ref && ref.storage==='url');
+}
+/* 본문 속 사진 위치 표시: [[사진3]] — sec.p 의 3번째 사진 */
+var PHOTO_MARK_RE=/\[\[\s*사진\s*(\d{1,2})\s*\]\]/g;
+function photoMark(n){ return '[[사진'+n+']]'; }
+function stripPhotoMarks(t){ return String(t||'').replace(/\[\[\s*사진\s*\d{1,2}\s*\]\]/g,''); }
+function markIndexes(t){
+  var src=String(t||''), re=new RegExp(PHOTO_MARK_RE.source,'g'), m, out=[];
+  while((m=re.exec(src))!==null){ out.push(+m[1]); if(!m[0].length) re.lastIndex++; }
+  return out;
+}
+function hasPhotoMark(t,n){ return markIndexes(t).indexOf(n)>=0; }
 function photosEditHTML(sec){
-  var pids=(sec.p||[]).filter(function(id){ return PhotoCache.has(id); });
+  var all=(sec.p||[]).slice();
+  var pids=all.filter(function(id){ return PhotoCache.has(id); });
   if(!pids.length) return '';
+  var txt=String(sec.t||'');
   return pids.map(function(id,i){
-    return '<div class="thumb">'+photoImgHTML(id,'첨부 사진 '+(i+1),'data-act="viewphoto" data-pids="'+esc(pids.join(','))+'" data-idx="'+i+'"')
-      +'<button class="del" data-act="delphoto" data-pid="'+id+'" aria-label="사진 삭제">✕</button></div>';
+    var n=all.indexOf(id)+1;
+    var used=hasPhotoMark(txt,n);
+    return '<div class="pcard" data-pid="'+id+'">'
+      +'<button class="pimg" type="button" data-act="viewphoto" data-pids="'+esc(pids.join(','))+'" data-idx="'+i+'" aria-label="'+esc(photoAlt(id,n))+' 크게 보기">'+photoImgHTML(id, photoAlt(id,n))+'</button>'
+      +'<button class="del" data-act="delphoto" data-pid="'+id+'" aria-label="사진 삭제">✕</button>'
+      +'<div class="pbar"><span class="pn">사진 '+n+'</span>'
+        +(used? '<span class="pused">글 속 '+n+'번 자리에 있음</span>' : '')
+        +'<button class="pmark" type="button" data-act="markphoto" data-n="'+n+'" aria-label="사진 '+n+'을 글 커서 위치에 넣기">📍 글 커서 위치에 넣기</button>'
+      +'</div>'
+    +'</div>';
   }).join('');
 }
 function sectionHTML(c){
@@ -1425,6 +1579,7 @@ function sectionHTML(c){
       +'<i class="gd" aria-hidden="true"></i>'
       +'<div class="sec-name">'+secNameHTML(c)+'</div>'
       +'<button class="photo-btn" data-act="photo">📷 사진</button>'
+      +'<button class="photo-btn book-btn" data-act="book" aria-label="책 표지 검색" title="책 표지 검색">📚 책 표지 검색</button>'
     +'</div>'
     +'<div class="sec-body">'
       +(c.timer? timeRowHTML(c,m) : '')
@@ -1576,14 +1731,37 @@ function linkify(text){
     return '<a href="'+u+'" target="_blank" rel="noopener">'+u+'</a>';
   });
 }
+function renderTextWithPhotos(text, rawIds, used){
+  var src=String(text||'');
+  var pids=rawIds.filter(function(id){ return PhotoCache.has(id); });
+  var re=new RegExp(PHOTO_MARK_RE.source,'g');
+  var out='', last=0, m;
+  while((m=re.exec(src))!==null){
+    out+=linkify(src.slice(last,m.index));
+    var n=+m[1];
+    var pid=rawIds[n-1];
+    if(pid && PhotoCache.has(pid)){
+      used[n-1]=true;
+      var li=pids.indexOf(pid);
+      out+='<button class="txt-photo" type="button" data-act="viewphoto" data-pids="'+esc(pids.join(','))+'" data-idx="'+(li<0?0:li)+'" aria-label="'+esc(photoAlt(pid,n))+' 크게 보기">'+photoImgHTML(pid, photoAlt(pid,n))+'</button>';
+    }
+    last=m.index+m[0].length;
+    if(!m[0].length) re.lastIndex++;
+  }
+  out+=linkify(src.slice(last));
+  return out;
+}
 function readSectionHTML(c, s){
   var m=Math.max(0, Math.round(Number(s.m)||0));
-  var pids=(s.p||[]).filter(function(id){ return PhotoCache.has(id); });
+  var raw=(s.p||[]).slice();
+  var pids=raw.filter(function(id){ return PhotoCache.has(id); });
+  var used=[];
   var body='';
-  if(s.t && s.t.trim()) body+='<div class="txt">'+linkify(s.t)+'</div>';
-  if(pids.length){
-    body+='<div class="photo-grid">'+pids.map(function(id,i){
-      return '<button data-act="viewphoto" data-pids="'+esc(pids.join(','))+'" data-idx="'+i+'">'+photoImgHTML(id,'사진 '+(i+1))+'</button>';
+  if(s.t && s.t.trim()) body+='<div class="txt">'+renderTextWithPhotos(s.t, raw, used)+'</div>';
+  var rest=pids.filter(function(id){ var i=raw.indexOf(id); return i<0 || !used[i]; });
+  if(rest.length){
+    body+='<div class="photo-grid">'+rest.map(function(id,i){
+      return '<button data-act="viewphoto" data-pids="'+esc(rest.join(','))+'" data-idx="'+i+'">'+photoImgHTML(id,photoAlt(id, raw.indexOf(id)+1))+'</button>';
     }).join('')+'</div>';
   }
   var tm = c.timer
@@ -1687,7 +1865,7 @@ function viewModel(){
         var s=secs[c.id];
         if(!hasContent(s)) return false;
         if(catLabel(c).toLowerCase().indexOf(ql)>=0) return true;
-        return (s.t||'').toLowerCase().indexOf(ql)>=0;
+        return stripPhotoMarks(s.t||'').toLowerCase().indexOf(ql)>=0;
       });
       if(hits.length) hitsDays.push({ds:ds, cats:hits});
     });
@@ -1955,7 +2133,7 @@ function runSearch(){
       return '<div class="res-group"><div class="res-date"><span>'+fmtFull(d.ds)+'</span><span class="k">'+d.cats.length+'건</span></div>'
         +d.cats.map(function(c){
           var s=secs[c.id];
-          var text=s.t||'';
+          var text=stripPhotoMarks(s.t||'');
           var sn = text.toLowerCase().indexOf(ql)>=0
             ? snippetHTML(text, q)
             : '<span class="muted">영역 이름에서 찾았어요</span>';
@@ -2037,7 +2215,7 @@ function buildViewText(model){
       if(isPrivate(c)) return;              /* 비공개 메모는 복사본에 담지 않는다 */
       var m=Math.max(0, Math.round(Number(s.m)||0));
       lines.push('· '+catLabel(c)+(m? ' ('+fmtMin(m)+')':''));
-      if(s.t && s.t.trim()) lines.push(s.t.trim());
+      if(s.t && s.t.trim()) lines.push(stripPhotoMarks(s.t).trim());
       if(s.p && s.p.length) lines.push('📷 사진 '+s.p.length+'장');
     });
     lines.push('');
@@ -2491,6 +2669,7 @@ function importBackupFile(file){
           }catch(e){}
         }
         state=normalizeState(data.state);
+        hydratePhotoRefs();
         await saveNow();
         selected=todayStr();
         viewY=parseYmd(selected).getFullYear(); viewM=parseYmd(selected).getMonth();
@@ -2647,7 +2826,11 @@ function compressImage(file, maxDim, quality){
 async function removePhoto(cid, pid){
   var sec=ensureSec(cid); if(!sec) return;
   var i=sec.p.indexOf(pid);
-  if(i>=0) sec.p.splice(i,1);
+  if(i>=0){
+    sec.p.splice(i,1);
+    /* 지운 사진의 표시를 본문에서 빼고, 뒤 번호는 하나씩 당긴다 */
+    if(sec.t) sec.t=shiftPhotoMarks(sec.t, i+1);
+  }
   markEdited();
   renderSections();
   try{ await PhotoStore.del(pid); }catch(e){}
@@ -2657,26 +2840,238 @@ async function removePhoto(cid, pid){
 async function handlePhotoFiles(files){
   var cid=pendingPhotoCat; pendingPhotoCat=null;
   if(!cid || !files || !files.length) return;
+  var date=current? current.date : null;
   var cat=catById(cid); if(!cat) return;
   var sec=ensureSec(cid); if(!sec) return;
-  var added=0, failed=0;
+  var pos=markPositionFor(cid, sec);
+  var added=0, failed=0, caretPos=null;
   toast('사진 '+files.length+'장을 가볍게 압축하는 중…', 6000);
   for(var i=0;i<files.length;i++){
     try{
       var blob=await compressImage(files[i]);
       var id='p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
       await PhotoStore.put(id, blob);
-      sec.p.push(id);
+      if(!current || current.date!==date){ failed++; continue; }
+      var s=ensureSec(cid); if(!s){ failed++; continue; }
+      s.p.push(id);
+      if(pos){
+        var after=insertPhotoMark(cid, s.p.length, pos);
+        if(after!=null){ caretPos=after; pos={start:after, end:after}; }
+      }
       added++;
     }catch(err){ console.warn('photo fail', err); failed++; }
   }
   if(added){
     markEdited();
     renderSections();
-    toast(added+'장 추가했어요'+(failed? ' · '+failed+'장 실패':''));
+    if(caretPos!=null) focusEditorCaret(cid, caretPos);
+    toast(added+'장 추가했어요'+(failed? ' · '+failed+'장 실패':'')+(caretPos!=null? ' · 글 커서 자리에 넣었어요':''));
   } else {
     toast('사진을 넣지 못했어요. 다른 사진으로 해보세요');
   }
+}
+
+/* ────────────────────────────── 책 표지 검색 (Google Books · Open Library 대체) ────────────────────────────── */
+var bookResults=[], bookSearchBusy=false;
+function coverUp(u, zoom){
+  if(!u) return '';
+  u=String(u).replace(/^http:\/\//i,'https://');
+  if(zoom) u=u.replace(/([?&])zoom=\d+/,'$1zoom='+zoom);
+  return u;
+}
+function googleBook(it){
+  var vi=(it && it.volumeInfo && typeof it.volumeInfo==='object')? it.volumeInfo : {};
+  var links=(vi.imageLinks && typeof vi.imageLinks==='object')? vi.imageLinks : {};
+  var u=links.thumbnail || links.smallThumbnail || '';
+  return {
+    title: String(vi.title||''),
+    subtitle: String(vi.subtitle||''),
+    authors: Array.isArray(vi.authors)? vi.authors : [],
+    cover: coverUp(u,2),
+    base: coverUp(u,1),
+    src: 'google'
+  };
+}
+function openLibBook(doc){
+  var id=doc? doc.cover_i : 0;
+  return {
+    title: String((doc&&doc.title)||''),
+    subtitle: String((doc&&doc.subtitle)||''),
+    authors: (doc && Array.isArray(doc.author_name))? doc.author_name : [],
+    cover: id? 'https://covers.openlibrary.org/b/id/'+id+'-L.jpg' : '',
+    base: id? 'https://covers.openlibrary.org/b/id/'+id+'-M.jpg' : '',
+    src: 'openlibrary'
+  };
+}
+function fetchJSON(url, ms){
+  var ctl=(typeof AbortController!=='undefined')? new AbortController() : null;
+  var tm=setTimeout(function(){ if(ctl) ctl.abort(); }, ms||10000);
+  return fetch(url, {signal: ctl? ctl.signal : undefined, credentials:'omit'})
+    .then(function(r){
+      if(!r.ok) throw new Error(r.status===429? '요청 한도를 넘었어요' : ('연결 오류 ('+r.status+')'));
+      return r.json();
+    })
+    .finally(function(){ clearTimeout(tm); });
+}
+function searchGoogleBooks(q){
+  return fetchJSON('https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(q)+'&maxResults=12&printType=books', 10000)
+    .then(function(d){
+      return ((d && Array.isArray(d.items))? d.items : []).map(googleBook).filter(function(b){ return b.title; });
+    });
+}
+function searchOpenLibrary(q){
+  return fetchJSON('https://openlibrary.org/search.json?q='+encodeURIComponent(q)+'&limit=12&fields=title,subtitle,author_name,cover_i', 10000)
+    .then(function(d){
+      return ((d && Array.isArray(d.docs))? d.docs : []).map(openLibBook).filter(function(b){ return b.title; });
+    });
+}
+function sortBooks(list){
+  return list.slice().sort(function(a,b){ return (b.cover?1:0)-(a.cover?1:0); });
+}
+function bookItemHTML(item, i){
+  var cov=item.cover||'', base=item.base||'';
+  var title=item.title || '(제목 없음)';
+  var authors=(item.authors&&item.authors.length)? item.authors.join(', ') : '';
+  var fb='';
+  if(cov && base && base!==cov) fb=' onerror="this.onerror=null;this.src=\''+esc(base)+'\'"';
+  return '<button class="bk-item'+(cov?'':' nocover')+'" type="button" data-bki="'+i+'" aria-label="'+esc(title+' 표지 붙이기')+'">'
+    +'<span class="bk-cover">'+(cov? '<img src="'+esc(cov)+'" alt="'+esc(title)+' 표지" loading="lazy" referrerpolicy="no-referrer"'+fb+'>' : '📕')+'</span>'
+    +'<span class="bk-t">'+esc(title)+'</span>'
+    +'<span class="bk-a">'+esc(authors || '저자 정보 없음')+'</span>'
+  +'</button>';
+}
+function bookState(root, html){
+  var box=root.querySelector('#bkResult');
+  if(box) box.innerHTML=html;
+}
+async function runBookSearch(root, cid){
+  var input=root.querySelector('#bkQuery');
+  var q=input? String(input.value||'').replace(/\s+/g,' ').trim() : '';
+  if(!q){
+    bookState(root,'<div class="bk-state"><b>책 제목이나 저자를 적어 주세요</b>예: 마당을 나온 암탉, 황선미</div>');
+    if(input) input.focus();
+    return;
+  }
+  if(bookSearchBusy) return;
+  bookSearchBusy=true;
+  var go=root.querySelector('#bkGo');
+  if(go) go.disabled=true;
+  bookState(root,'<div class="bk-state"><span class="spin">◌</span> ‘'+esc(q)+'’ 찾는 중…</div>');
+  var items=[], src='', errs=[];
+  try{ items=await searchGoogleBooks(q); if(items.length) src='google'; }
+  catch(e){ errs.push('Google 도서: '+((e&&e.message)||'연결 실패')); }
+  if(!items.length){
+    try{
+      var alt=await searchOpenLibrary(q);
+      if(alt.length){ items=alt; src='openlibrary'; }
+    }catch(e){ errs.push('Open Library: '+((e&&e.message)||'연결 실패')); }
+  }
+  bookSearchBusy=false;
+  if(go) go.disabled=false;
+  if(!root.isConnected) return;
+  if(!items.length){
+    bookState(root,'<div class="bk-state"><b>책 정보를 불러오지 못했어요</b>'
+      +(errs.length? esc(errs.join(' · '))+'<br>' : '<b style="font-weight:800">찾은 책이 없어요</b>')
+      +'제목을 조금 짧게 줄이거나 저자 이름만 넣어 다시 찾아보거나, ‘📷 사진’으로 표지를 직접 넣어 주세요.'
+      +(errs.length? '<br><span style="font-size:11px">잠시 뒤 다시 해보세요.</span>' : '')+'</div>');
+    return;
+  }
+  items=sortBooks(items);
+  bookResults=items;
+  var withCover=items.filter(function(it){ return !!it.cover; }).length;
+  var srcLabel = src==='openlibrary'? 'Open Library' : 'Google 도서';
+  bookState(root,'<div class="bk-grid">'+items.map(bookItemHTML).join('')+'</div>'
+    +'<p class="bk-hint">'+srcLabel+'에서 찾은 '+items.length+'권 · 표지가 있는 책 '+withCover+'권<br>표지를 누르면 이 영역 사진으로 붙어요. 마음에 드는 표지가 없으면 ‘📷 사진’으로 직접 넣어 주세요.</p>');
+}
+function openBookSearch(cid){
+  if(!cid) return;
+  bookResults=[];
+  var cat=catById(cid);
+  var html='<div class="grab"></div>'
+    +'<div class="sheet-head"><h2>📚 책 표지 검색</h2><button class="x" data-close aria-label="닫기">✕</button></div>'
+    +'<div class="sheet-block">'
+      +'<p class="hint">‘'+esc(cat? catBase(cat) : '이 영역')+'’에 붙일 책을 찾아요. 제목이나 저자를 넣고 검색을 눌러 주세요.</p>'
+      +'<form class="bk-form" id="bkForm" autocomplete="off">'
+        +'<input class="inp" id="bkQuery" type="search" placeholder="예: 마당을 나온 암탉 / 황선미" maxlength="60" enterkeyhint="search" aria-label="책 제목이나 저자">'
+        +'<button class="btn-line teal" id="bkGo" type="submit">검색</button>'
+      +'</form>'
+      +'<p class="bk-hint" style="margin-top:8px">제목이나 저자로 찾아 표지로 붙여요. 고른 표지는 이 영역의 사진이 되고, 쓴 글은 그대로 남아요.</p>'
+    +'</div>'
+    +'<div id="bkResult"><div class="bk-state">책 제목이나 저자를 입력해 주세요.</div></div>';
+  openSheet(html, function(root){
+    root.querySelector('#bkForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      runBookSearch(root, cid);
+    });
+    root.addEventListener('click', function(e){
+      var b=e.target.closest('[data-bki]');
+      if(!b) return;
+      e.preventDefault();
+      var it=bookResults[parseInt(b.getAttribute('data-bki'),10)||0];
+      if(it) addBookCover(cid, it, b);
+    });
+    var qi=root.querySelector('#bkQuery');
+    if(qi) setTimeout(function(){ try{ qi.focus(); }catch(e){} }, 140);
+  });
+}
+function coverFetchable(url){
+  try{
+    var h=new URL(url, location.href).hostname.toLowerCase();
+    /* 구글 도서 표지 서버는 CORS 헤더를 주지 않아 바이트 읽기가 막힌다 — 시도 없이 URL로 저장 */
+    if(/(^|\.)books\.google\.(com|co\.kr)$/.test(h)) return false;
+    return true;
+  }catch(e){ return false; }
+}
+async function fetchImageBlob(url){
+  if(!coverFetchable(url)) throw new Error('이 서버는 그림 바이트를 바로 건네지 않아요');
+  var ctl=(typeof AbortController!=='undefined')? new AbortController() : null;
+  var tm=setTimeout(function(){ if(ctl) ctl.abort(); }, 9000);
+  try{
+    var res=await fetch(url, {mode:'cors', credentials:'omit', cache:'force-cache', signal: ctl? ctl.signal : undefined});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    var b=await res.blob();
+    if(!b || !b.size) throw new Error('빈 그림');
+    if(!/^image\//.test(b.type||'')) throw new Error('그림 파일이 아니에요');
+    return b;
+  } finally { clearTimeout(tm); }
+}
+async function addBookCover(cid, item, btnEl){
+  var date=current? current.date : null;
+  var sec=ensureSec(cid);
+  if(!sec || !date){ toast('영역을 찾지 못했어요'); return; }
+  var title=item.title || '책 표지';
+  var cover=item.cover || '', base=item.base || '';
+  if(!cover){ toast('이 책은 표지 그림이 없어요. 다른 책을 골라 주세요'); return; }
+  if(btnEl){ btnEl.classList.add('busy'); btnEl.disabled=true; }
+  toast('표지를 가져오는 중…', 5000);
+  var pos=markPositionFor(cid, sec);
+  var id='b'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  var stored=false;
+  try{
+    if(!coverFetchable(cover)) throw new Error('이 서버는 그림 바이트 읽기를 막아요(CORS)');
+    var blob=await fetchImageBlob(cover);
+    var small=await compressImage(blob);
+    await PhotoStore.put(id, small);
+    stored=true;
+  }catch(e){ console.warn('book cover bytes blocked', e); }
+  if(!current || current.date!==date){ toast('날짜가 바뀌어 표지를 붙이지 못했어요'); return; }
+  if(!stored){
+    var ref={url:cover, storage:'url'};
+    if(base && base!==cover) ref.fallback=base;
+    if(title) ref.title=title;
+    state.photoRefs[id]=ref;
+    PhotoCache.set(id, {url:cover, remoteUrl:true});
+  }
+  var s2=ensureSec(cid);
+  if(!s2){ toast('영역을 찾지 못했어요'); return; }
+  if(!s2.p) s2.p=[];
+  s2.p.push(id);
+  var caretPos=pos? insertPhotoMark(cid, s2.p.length, pos) : null;
+  markEdited();
+  closeSheet();
+  renderSections();
+  if(caretPos!=null) focusEditorCaret(cid, caretPos);
+  toast(stored? '‘'+title+'’ 표지를 사진으로 붙였어요' : '‘'+title+'’ 표지를 붙였어요');
 }
 
 /* ────────────────────────────── events ────────────────────────────── */
@@ -2764,6 +3159,11 @@ function bindEvents(){
       $('photoInput').click();
       return;
     }
+    if(a==='book'){
+      e.preventDefault();
+      openBookSearch(cid);
+      return;
+    }
     if(a==='preset'){
       var m=parseInt(act.getAttribute('data-min'),10)||0;
       var sec=ensureSec(cid);
@@ -2778,6 +3178,19 @@ function bindEvents(){
       removePhoto(cid, act.getAttribute('data-pid'));
       return;
     }
+    if(a==='markphoto'){
+      e.preventDefault();
+      var pn=parseInt(act.getAttribute('data-n'),10)||0;
+      var psec=ensureSec(cid);
+      if(!psec || !pn) return;
+      var ppos=markPositionFor(cid, psec);
+      var pafter=insertPhotoMark(cid, pn, ppos);
+      markEdited();
+      renderSections();
+      if(pafter!=null) focusEditorCaret(cid, pafter);
+      toast(ppos? '사진 '+pn+'을 글 커서 자리에 넣었어요' : '사진 '+pn+'을 글 맨 끝에 넣었어요');
+      return;
+    }
     if(a==='viewphoto'){
       var pids=String(act.getAttribute('data-pids')||'').split(',').filter(Boolean);
       openLightbox(pids, parseInt(act.getAttribute('data-idx'),10)||0);
@@ -2790,6 +3203,11 @@ function bindEvents(){
     var files=Array.prototype.slice.call(e.target.files||[]);
     e.target.value='';
     handlePhotoFiles(files);
+  });
+
+  /* 글 커서 위치 기억 — 사진·표지를 커서 자리에 넣기 위해 */
+  ['keyup','mouseup','select','focusin','click','input'].forEach(function(ev){
+    $('sections').addEventListener(ev, function(e){ noteCaretFrom(e.target); }, true);
   });
 
   /* 하단 버튼 */
@@ -3172,6 +3590,11 @@ async function pushEntry(date){
       var id=ids[i], ref=state.photoRefs[id];
       if(!ref){ try{ ref=await uploadPhoto(id,date); }catch(e){ ref=null; } }
       if(ref && ref.path) refs[id]={id:id, path:ref.path, storage:'supabase'};
+      else if(ref && ref.url){
+        refs[id]={id:id, url:ref.url, storage:'url'};
+        if(ref.fallback) refs[id].fallback=ref.fallback;
+        if(ref.title) refs[id].title=ref.title;
+      }
     }
     var body={
       user_id:CLOUD.uid,
@@ -3220,6 +3643,13 @@ async function mergeCloud(profRow, rows){
         if(ref && ref.path){
           state.photoRefs[id]={path:String(ref.path), storage:'supabase'};
           if(!PhotoCache.has(id)) PhotoCache.set(id,{url:'', remote:true});
+        } else if(ref && typeof ref.url==='string' && /^https?:\/\//i.test(ref.url)){
+          var o={url:ref.url, storage:'url'};
+          if(typeof ref.fallback==='string' && /^https?:\/\//i.test(ref.fallback)) o.fallback=ref.fallback;
+          if(typeof ref.title==='string' && ref.title) o.title=ref.title;
+          state.photoRefs[id]=o;
+          var cur=PhotoCache.get(id);
+          if(!cur || !cur.url) PhotoCache.set(id,{url:ref.url, remoteUrl:true, fallback:o.fallback});
         }
       });
     }
@@ -3233,6 +3663,7 @@ async function mergeCloud(profRow, rows){
   });
   Object.keys(state.entries).forEach(function(d){ if(!cloudDates[d]) push.push(d); });
   state.savedAt=Date.now();
+  hydratePhotoRefs();
   await saveNow();
   /* 편집 중인 임시저장 내용은 건드리지 않는다 */
   renderHeader(); renderCalendar(); loadView(); renderCatChips(); syncRangeUI(); renderRead(); applyTip();
@@ -3310,21 +3741,34 @@ async function cloudLogoutAll(){
   toast(ok? '모든 기기에서 로그아웃되었습니다':'로그아웃했어요');
 }
 
-/* ── 사진 URL (비공개 버킷 서명 URL, 메모리 캐시) ── */
+/* ── 사진 URL (버킷 서명 URL + 외부 표지 URL, 메모리 캐시) ── */
+function hydratePhotoRefs(){
+  var refs=state.photoRefs||{};
+  Object.keys(refs).forEach(function(id){
+    var ref=refs[id];
+    if(!ref || !ref.url) return;
+    var cur=PhotoCache.get(id);
+    if(!cur || !cur.url) PhotoCache.set(id, {url:ref.url, remoteUrl:true, fallback:ref.fallback});
+  });
+}
 function photoUrl(id){
   var r=PhotoCache.get(id);
   if(r && r.url && !(r.exp && Date.now()>r.exp-300000)) return r.url;
-  if(state.photoRefs[id] && CLOUD.session) refreshPhotoUrl(id);
+  var ref=state.photoRefs[id];
+  if(ref && ref.url) return ref.url;
+  if(ref && ref.path && CLOUD.session) refreshPhotoUrl(id);
   return r? (r.url||'') : '';
 }
 function photoImgHTML(id, alt, attrs){
   var u=photoUrl(id);
   if(!u) return '<div class="thumb loading" role="img" aria-label="사진 불러오는 중">⏳</div>';
-  return '<img src="'+esc(u)+'" alt="'+esc(alt)+'"'+(attrs? ' '+attrs : '')+'>';
+  var ref=state.photoRefs[id]||{};
+  var fb=(ref.fallback && ref.fallback!==u)? ' onerror="this.onerror=null;this.src=\''+esc(ref.fallback)+'\'"' : '';
+  return '<img src="'+esc(u)+'" alt="'+esc(alt)+'"'+(attrs? ' '+attrs : '')+fb+'>';
 }
 function refreshPhotoUrl(id){
   var ref=state.photoRefs[id];
-  if(!ref||!CLOUD.session||photoRefreshBusy[id]) return;
+  if(!ref||!ref.path||!CLOUD.session||photoRefreshBusy[id]) return;
   photoRefreshBusy[id]=true;
   var enc=String(ref.path).split('/').map(encodeURIComponent).join('/');
   sbApi('/storage/v1/object/sign/diary-photos/'+enc,{method:'POST',body:{expiresIn:3600}})
@@ -3573,8 +4017,10 @@ var Cloud={
   sync:function(){ if(!CLOUD.session) return; queueSync(function(){ return cloudSync(); }); },
   deletePhoto:function(id){
     var ref=state.photoRefs[id];
-    if(!ref||!CLOUD.session) return;
+    if(!ref) return;
     delete state.photoRefs[id];
+    if(ref.url && !ref.path) return;   /* 외부 표지 URL은 버킷에 올린 파일이 없어요 */
+    if(!CLOUD.session) return;
     var enc=String(ref.path).split('/').map(encodeURIComponent).join('/');
     queueSync(function(){ return sbApi('/storage/v1/object/diary-photos/'+enc,{method:'DELETE'}); });
   }
