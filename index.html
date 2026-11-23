@@ -74,19 +74,25 @@ h1,h2,h3,h4,p{margin:0}
   position:sticky;top:0;z-index:30;
   background:linear-gradient(150deg,#0c6f68 0%,#0e8478 52%,#11a091 100%);
   color:#fff;
-  padding:calc(12px + env(safe-area-inset-top,0px)) 14px 12px;
-  border-radius:0 0 24px 24px;
+  padding:calc(7px + env(safe-area-inset-top,0px)) 14px 8px;
+  border-radius:0 0 20px 20px;
   box-shadow:0 12px 28px -20px rgba(11,95,89,.95);
   overflow:hidden;
+  transition:padding .2s ease, border-radius .2s ease;
 }
+/* 스크롤을 내리거나 자판이 올라오면 프로필 줄을 접어 본문을 넓게 쓴다 */
+.topbar.hdr-min{padding-top:calc(4px + env(safe-area-inset-top,0px));padding-bottom:4px;border-radius:0 0 13px 13px}
+.topbar.hdr-min .brand{max-height:0;opacity:0;transform:translateY(-8px);pointer-events:none;margin:0}
+.topbar.hdr-min .tabs{margin-top:1px}
 .topbar::after{
   content:"";position:absolute;inset:-60% -30% auto auto;width:220px;height:220px;
   background:radial-gradient(circle at center, rgba(255,255,255,.16), rgba(255,255,255,0) 68%);
   pointer-events:none;
 }
-.brand{display:flex;align-items:center;gap:11px;position:relative;z-index:1}
+.brand{display:flex;align-items:center;gap:9px;position:relative;z-index:1;max-height:44px;overflow:hidden;
+  transition:max-height .22s ease, opacity .16s ease, transform .2s ease, margin .2s ease}
 .mascot{
-  width:42px;height:42px;flex:0 0 42px;border-radius:14px;
+  width:36px;height:36px;flex:0 0 36px;border-radius:12px;
   background:linear-gradient(160deg,#fff6d8,#ffe08a);
   color:#0b5f59;display:grid;place-items:center;
   font-weight:900;font-size:17px;letter-spacing:-.02em;
@@ -98,24 +104,24 @@ h1,h2,h3,h4,p{margin:0}
   color:rgba(255,255,255,.72);font-weight:700;
 }
 .brand h1{
-  font-size:18.5px;font-weight:800;letter-spacing:-.02em;line-height:1.25;
+  font-size:17.5px;font-weight:800;letter-spacing:-.02em;line-height:1.22;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .brand h1 small{font-size:12.5px;font-weight:700;color:rgba(255,255,255,.82);margin-left:2px}
 .icon-btn{
-  width:40px;height:40px;flex:0 0 40px;border-radius:12px;display:grid;place-items:center;
-  font-size:19px;background:rgba(255,255,255,.14);color:#fff;
+  width:38px;height:38px;flex:0 0 38px;border-radius:11px;display:grid;place-items:center;
+  font-size:18px;background:rgba(255,255,255,.14);color:#fff;
   transition:background .15s ease, transform .15s ease;
 }
 .icon-btn:active{transform:scale(.94);background:rgba(255,255,255,.24)}
 .tabs{
-  display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:12px 0 0;
-  background:rgba(255,255,255,.16);border-radius:14px;padding:4px;
+  display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:8px 0 0;
+  background:rgba(255,255,255,.16);border-radius:13px;padding:3px;
   position:relative;z-index:1;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
 }
 .tab{
-  height:38px;border-radius:11px;font-weight:800;font-size:14px;
+  height:35px;border-radius:9px;font-weight:800;font-size:13.5px;
   color:rgba(255,255,255,.86);letter-spacing:-.01em;
   transition:background .16s ease,color .16s ease,box-shadow .16s ease;
   display:flex;align-items:center;justify-content:center;gap:5px;
@@ -631,6 +637,80 @@ table.tbl{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-nume
 .vid-t{font-size:11.5px;font-weight:800;line-height:1.3;letter-spacing:-.02em;padding:6px 7px 0;color:var(--ink);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .vid-s{font-size:10px;font-weight:700;color:var(--teal-3);padding:2px 7px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vid-d{font-size:10px;font-weight:700;color:var(--muted);padding:2px 7px 7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* ── ▶️ 유튜브 썸네일만 16:9 가로로 크게 (책·포스터는 64px 유지) ── */
+.photos .pcard.thumb-card.yt-card .pimg{width:168px;aspect-ratio:16/9;background:#0f0f0f;border-color:#0f0f0f}
+.photos .pcard.thumb-card.yt-card .pimg img{width:100%;height:100%;object-fit:cover;background:#0f0f0f}
+.photos .pcard.thumb-card.yt-card .pimg .thumb{aspect-ratio:16/9;background:#0f0f0f;color:#fff}
+.read-sec .txt .txt-thumbs .txt-photo.yt{width:168px;aspect-ratio:16/9;background:#0f0f0f;border-color:#0f0f0f}
+.read-sec .txt .txt-thumbs .txt-photo.yt img{width:100%;height:100%;object-fit:cover;background:#0f0f0f}
+.read-sec .txt .txt-thumbs .txt-photo.yt .thumb{aspect-ratio:16/9;background:#0f0f0f;color:#fff}
+.photo-thumbs button.yt{width:168px;aspect-ratio:16/9;background:#0f0f0f;border-color:#0f0f0f}
+.photo-thumbs button.yt img{width:100%;height:100%;object-fit:cover;background:#0f0f0f}
+.photo-thumbs button.yt .thumb{aspect-ratio:16/9;background:#0f0f0f;color:#fff}
+/* ── 책장 도구 (선택·숨김·언어 거르기) ── */
+.shelf-tools{display:flex;align-items:center;gap:6px;margin-top:9px;flex-wrap:wrap}
+.shelf-tools .mini-btn{margin-left:0;border:1px solid var(--line);background:#fff;color:var(--ink-2)}
+.shelf-tools .mini-btn:first-child{margin-left:auto}
+.shelf-tools .mini-btn.on{background:var(--teal);border-color:var(--teal);color:#fff}
+.shelf-lang{display:flex;gap:5px;margin-top:9px;flex-wrap:wrap}
+.shelf-lang .lchip{height:31px;padding:0 12px;border-radius:9px;border:1px solid var(--line);background:#fff;font-size:12px;font-weight:800;color:var(--ink-2);letter-spacing:-.01em}
+.shelf-lang .lchip.on{background:var(--teal-soft);border-color:var(--teal-soft-2);color:var(--teal-3)}
+.shelf-lang .lchip:active{background:var(--teal-soft-2)}
+.sel-bar{
+  position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(520px,100%);z-index:27;
+  display:flex;gap:7px;padding:9px 13px calc(9px + var(--safe-b));
+  background:linear-gradient(180deg,rgba(251,248,243,.86),rgba(251,248,243,.99) 45%);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-top:1px solid rgba(236,229,217,.9);
+}
+.sel-bar button{height:44px;border-radius:13px;font-weight:900;font-size:13.5px;border:1px solid var(--line);background:#fff;color:var(--ink-2);flex:1;letter-spacing:-.02em}
+.sel-bar button.merge{background:var(--teal-soft);border-color:var(--teal-soft-2);color:var(--teal-3)}
+.sel-bar button.hide{background:#fdf2f2;border-color:#f0d6d6;color:#b24a4a}
+.sel-bar button.x{flex:0 0 46px;font-size:15px}
+.sel-bar button:disabled{opacity:.45}
+body.shelf-sel #view-shelf{padding-bottom:78px}
+.bk-card.sel,.vid-card.sel{outline:2.5px solid var(--teal-2);outline-offset:-2px;box-shadow:0 0 0 3px rgba(13,148,136,.14)}
+.bk-card .selmark,.vid-card .selmark{position:absolute;top:5px;left:5px;z-index:3;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.92);border:1.5px solid var(--line);display:grid;place-items:center;font-size:12px;font-weight:900;color:transparent}
+.bk-card.sel .selmark,.vid-card.sel .selmark{background:var(--teal);border-color:var(--teal);color:#fff}
+.bk-grp{position:absolute;top:5px;left:5px;z-index:2;background:rgba(13,122,112,.92);color:#fff;font-size:9.5px;font-weight:900;line-height:1;padding:4px 5px;border-radius:6px;letter-spacing:-.02em}
+.sel-mode .bk-card .bk-badge,.sel-mode .vid-card .vid-k{opacity:.55}
+/* ── 📊 누적 시간 카드 ── */
+.cum-card{padding:12px 13px}
+.cum-head{display:flex;align-items:center;gap:7px}
+.cum-head h3{font-size:14.5px;font-weight:800;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.cum-head .mini-btn{margin-left:auto;border:1px solid var(--teal-soft-2);background:var(--teal-soft);color:var(--teal-3)}
+.cum-rows{display:flex;flex-direction:column;gap:7px;margin-top:9px}
+.cum-row{background:#faf7f0;border:1px solid var(--line-2);border-radius:11px;padding:7px 10px}
+.cum-row .lbl{font-size:11.5px;font-weight:900;color:var(--ink-2);display:flex;align-items:baseline;gap:5px}
+.cum-row .lbl s{text-decoration:none;font-size:10.5px;font-weight:800;color:var(--muted)}
+.cum-row .bar3{display:flex;gap:6px;margin-top:4px}
+.cum-row .b3{flex:1;min-width:0}
+.cum-row .b3 .k{font-size:10px;font-weight:800;color:var(--muted);white-space:nowrap}
+.cum-row .b3 .v{font-size:14px;font-weight:900;color:var(--teal-3);letter-spacing:-.02em;white-space:nowrap}
+.cum-row .b3.oth .v{color:#a07a2a}
+.cum-row .b3.allv .v{color:var(--ink)}
+.cum-row .mbars{display:flex;align-items:flex-end;gap:3px;height:34px;margin-top:8px}
+.cum-row .mbars i{flex:1;min-width:0;border-radius:3px 3px 0 0;background:linear-gradient(180deg,var(--teal-2),var(--teal));opacity:.85}
+.cum-row .mlabels{display:flex;gap:3px;margin-top:3px}
+.cum-row .mlabels span{flex:1;text-align:center;font-size:8.5px;font-weight:800;color:var(--muted)}
+.mstats-tbl td.nm{max-width:74px}
+/* ── 글씨 서식 툴바 ── */
+.fmt-row{display:flex;align-items:center;gap:5px;padding:6px 12px 0}
+.fmt-row .fmt{height:26px;min-width:27px;padding:0 6px;border-radius:7px;border:1px solid var(--line);background:#fff;font-size:12px;font-weight:900;color:var(--ink-2);display:grid;place-items:center;line-height:1}
+.fmt-row .fmt.u{text-decoration:underline}
+.fmt-row .fmt:active{background:var(--teal-soft)}
+.fmt-row .fmt.tpl{margin-left:auto;font-size:11.5px;color:var(--teal);border-color:var(--teal-soft-2);background:var(--teal-soft);padding:0 9px;white-space:nowrap}
+.fmt-row .fmt.tpl.has{background:#fff;color:var(--teal-3)}
+.fmt-row .fdots{display:flex;gap:4px;margin-left:3px;align-items:center}
+.fmt-row .fdot{width:17px;height:17px;border-radius:50%;background:var(--c,#ccc);border:1.5px solid #fff;box-shadow:0 0 0 1px var(--line)}
+.fmt-row .fdot.base{background:linear-gradient(135deg,#fff 44%,#c3ccc7 45%,#c3ccc7 55%,#fff 56%)}
+.fmt-row .fdot:active{transform:scale(.88)}
+.mg-covers{display:flex;gap:8px;flex-wrap:wrap}
+.mg-cv{width:88px;height:66px;border-radius:10px;overflow:hidden;border:2px solid var(--line);background:#efeae1;padding:0;display:grid;place-items:center}
+.mg-cv.on{border-color:var(--teal-2);box-shadow:0 0 0 3px rgba(13,148,136,.16)}
+.mg-cv img{width:100%;height:100%;object-fit:cover;display:block}
+.bk-sh-cv.yt{width:96px;flex:0 0 96px;aspect-ratio:16/9;background:#0f0f0f}
+.tpl-prev{font-size:12.5px;line-height:1.6;color:var(--ink-2);background:#faf8f3;border:1px solid var(--line-2);border-radius:11px;padding:9px 11px;white-space:pre-wrap;max-height:150px;overflow:auto;margin-top:8px}
 .cat-row{
   display:flex;align-items:center;gap:7px;padding:8px 9px;border:1px solid var(--line);
   border-radius:12px;background:#fff;margin-bottom:6px;
@@ -1134,6 +1214,8 @@ body.kb-open .actionbar{bottom:var(--kb,0px)}
         </div>
       </div>
 
+      <section class="card cum-card" id="cumStats"></section>
+
       <div id="searchResults" hidden></div>
       <div id="readContent"></div>
     </section>
@@ -1146,12 +1228,27 @@ body.kb-open .actionbar{bottom:var(--kb,0px)}
           <button class="cv-tab" id="shTabVideo" type="button" data-sh="video" role="tab" aria-selected="false">🎬 영상</button>
         </div>
         <div class="shelf-sum" id="shelfSum"><b>0권</b><span>누적 0회</span></div>
+        <div class="shelf-tools">
+          <button class="mini-btn" id="shelfHiddenBtn" type="button" hidden>🙈 숨긴 0개</button>
+          <button class="mini-btn" id="shelfSelBtn" type="button" aria-pressed="false" title="여러 개를 골라 합치거나 숨기기">☑️ 선택</button>
+        </div>
         <form class="shelf-form" id="shelfForm" autocomplete="off">
           <input class="inp" id="shelfQuery" type="search" placeholder="제목·저자로 찾기" maxlength="40" enterkeyhint="search" aria-label="책장에서 찾기">
           <button class="btn-line teal" id="shelfAdd" type="button">＋ 책 추가</button>
         </form>
+        <div class="shelf-lang" id="shelfLang" role="group" aria-label="책장 거르기">
+          <button class="lchip on" type="button" data-lang="all" aria-pressed="true">전체</button>
+          <button class="lchip" type="button" data-lang="kr" aria-pressed="false">한글책</button>
+          <button class="lchip" type="button" data-lang="en" aria-pressed="false">영어책</button>
+          <button class="lchip" type="button" data-vgroup="1" id="shelfVGroup" hidden aria-pressed="false">📺 채널로 묶기</button>
+        </div>
       </div>
       <div id="shelfBody"></div>
+      <div class="sel-bar" id="shelfSelBar" hidden>
+        <button class="merge" type="button" data-selact="merge">🔗 합치기 (0개)</button>
+        <button class="hide" type="button" data-selact="hide">🙈 숨기기 (0개)</button>
+        <button class="x" type="button" data-selact="cancel" aria-label="선택 취소">✕</button>
+      </div>
     </section>
   </main>
 </div>
@@ -1226,7 +1323,9 @@ function defaultState(){
     drafts:{},
     photoRefs:{},
     bookshelf:[],
-    settings:{ calCollapsed:false, tipDismissed:false, lastBackupAt:0 }
+    settings:{ calCollapsed:false, tipDismissed:false, lastBackupAt:0,
+      shelfTab:'book', shelfLang:'all', videoGroup:'title',
+      shelfGroups:[], shelfHidden:[], shelfOverrides:{}, shelfExtra:{}, templates:{} }
   };
 }
 
@@ -1483,6 +1582,16 @@ function normalizeState(s){
   out.bookshelf=normalizeBookshelf(s.bookshelf);
   out.settings = Object.assign({}, out.settings, s.settings||{});
   if(out.settings && out.settings.bookshelf) delete out.settings.bookshelf;
+  /* 책장 표시 설정 — 원문(entries·photos)은 건드리지 않고 여기서만 관리한다 */
+  var st=out.settings;
+  st.shelfGroups=normShelfGroups(st.shelfGroups);
+  st.shelfHidden=strList(st.shelfHidden, 3000);
+  st.shelfOverrides=normShelfOverrides(st.shelfOverrides);
+  st.shelfExtra=normCountMap(st.shelfExtra);
+  st.templates=normTemplates(st.templates);
+  st.shelfLang=/^(all|kr|en)$/.test(String(st.shelfLang||''))? st.shelfLang:'all';
+  st.videoGroup=(st.videoGroup==='channel')? 'channel':'title';
+  st.shelfTab=(st.shelfTab==='video')? 'video':'book';
   out.savedAt = Number(s.savedAt)||0;
   return out;
 }
@@ -1615,6 +1724,125 @@ function shiftPhotoMarks(text, removed){
   });
 }
 
+/* ── 글씨 서식 버튼: 고른 글자(또는 커서)를 **·__·[c:#hex] 마커로 감싼다 ── */
+function applyFmt(art, cid, kind, color){
+  if(!art || !current) return;
+  var ta=art.querySelector('.sec-text');
+  if(!ta) return;
+  var sec=ensureSec(cid);
+  if(!sec) return;
+  var val=String(ta.value||'');
+  var s=(typeof ta.selectionStart==='number')? ta.selectionStart : val.length;
+  var e=(typeof ta.selectionEnd==='number')? ta.selectionEnd : val.length;
+  if(e<s){ var tmp=s; s=e; e=tmp; }
+  var sel=val.slice(s,e);
+  var open='', close='';
+  if(kind==='b'){ open='**'; close='**'; }
+  else if(kind==='u'){ open='__'; close='__'; }
+  else if(kind==='c'){ var ok=fmtColorOK(color); if(!ok) return; open='[c:'+ok+']'; close='[/c]'; }
+  else if(kind==='c0'){
+    var cleaned=sel.replace(/\[c:#[0-9A-Fa-f]{6}\]/g,'').replace(/\[\/c\]/g,'');
+    if(!sel || cleaned===sel){ toast('색을 뺄 부분을 먼저 골라 주세요'); try{ ta.focus(); }catch(err){} return; }
+    var nv0=val.slice(0,s)+cleaned+val.slice(e);
+    ta.value=nv0; sec.t=nv0; autoGrow(ta);
+    art.classList.toggle('is-filled', hasContent(sec));
+    try{ ta.focus(); ta.setSelectionRange(s, s+cleaned.length); }catch(err){}
+    markEdited();
+    return;
+  } else return;
+  /* 같은 서식이 이미 감싸고 있으면 벗긴다 */
+  if(sel && s>=open.length && val.slice(s-open.length, s)===open && val.slice(e, e+close.length)===close){
+    var nv1=val.slice(0, s-open.length)+sel+val.slice(e+close.length);
+    ta.value=nv1; sec.t=nv1; autoGrow(ta);
+    art.classList.toggle('is-filled', hasContent(sec));
+    try{ ta.focus(); ta.setSelectionRange(s-open.length, s-open.length+sel.length); }catch(err){}
+    markEdited();
+    return;
+  }
+  var nv=val.slice(0,s)+open+sel+close+val.slice(e);
+  ta.value=nv; sec.t=nv; autoGrow(ta);
+  art.classList.toggle('is-filled', hasContent(sec));
+  try{
+    ta.focus();
+    if(sel) ta.setSelectionRange(s+open.length, s+open.length+sel.length);
+    else ta.setSelectionRange(s+open.length, s+open.length);
+  }catch(err){}
+  markEdited();
+}
+
+/* ── 영역별 양식(템플릿) 저장 · 불러오기 ── */
+function applyTemplate(cid, text){
+  var sec=ensureSec(cid);
+  if(!sec) return;
+  var cur=String(sec.t||'');
+  var next=cur.trim()? (cur.replace(/\s+$/,'')+'\n\n'+text) : text;
+  sec.t=next;
+  markEdited();
+  renderSections();
+  var art=document.querySelector('#sections .sec[data-cat="'+cid+'"]');
+  if(art){
+    var ta=art.querySelector('.sec-text');
+    if(ta){ autoGrow(ta); markScrollable(); try{ ta.focus(); ta.setSelectionRange(next.length, next.length); }catch(e){} }
+    if(art.scrollIntoView) art.scrollIntoView({block:'center'});
+  }
+  toast(cur.trim()? '양식을 글 뒤에 붙였어요' : '양식을 불러왔어요');
+}
+function openTemplateSheet(cid){
+  var c=catById(cid);
+  if(!c){ toast('영역을 찾지 못했어요'); return; }
+  var tpl=(state.settings.templates||{})[cid];
+  var sec=(current && current.sections)? current.sections[cid] : null;
+  var cur=String((sec && sec.t)||'');
+  var html='<div class="grab"></div>'
+    +'<div class="sheet-head"><h2>📋 ‘'+esc(catBase(c))+'’ 양식</h2><button class="x" data-close aria-label="닫기">✕</button></div>'
+    +'<div class="sheet-block">'
+      +'<p class="hint">이 영역에서 늘 쓰는 서식을 저장해 두면 다른 날 한 번에 붙일 수 있어요. 예: [집] / [영어] / [학교] / [학원]</p>'
+      +(tpl? '<div class="bk-lab" style="font-size:11.5px;font-weight:800;color:var(--muted);margin:11px 0 0">저장된 양식</div>'
+        +'<div class="tpl-prev">'+esc(tpl.t.slice(0,700))+'</div>'
+        : '<p class="hint" style="margin-top:11px">아직 저장된 양식이 없어요. 지금 적힌 글을 이 영역의 양식으로 저장해 보세요.</p>')
+      +(tpl? '<div class="two-btns" style="margin-top:12px">'
+          +'<button class="btn-line teal" type="button" data-tplload="'+esc(cid)+'">불러와 붙이기</button>'
+          +'<button class="btn-line" type="button" data-tplsave="'+esc(cid)+'">지금 글로 덮어쓰기</button>'
+        +'</div>'
+        +'<button class="btn-line danger" type="button" data-tpldel="'+esc(cid)+'" style="margin-top:8px">양식 지우기</button>'
+        : '<button class="btn-line teal" type="button" data-tplsave="'+esc(cid)+'" style="margin-top:12px">지금 글을 양식으로 저장</button>')
+    +'</div>';
+  openSheet(html, function(root){
+    root.addEventListener('click', function(e){
+      var sv=e.target.closest('[data-tplsave]');
+      if(sv){
+        e.preventDefault();
+        if(!cur.trim()){ toast('먼저 이 영역에 양식으로 쓸 글을 적어 주세요', 2600); return; }
+        if(tpl && !window.confirm('이 영역의 양식을 지금 글로 덮어쓸까요?')) return;
+        state.settings.templates[cid]={t:cur.slice(0,4000), at:Date.now()};
+        shelfTouch(); scheduleSave(); Cloud.pushProfile();
+        closeSheet(true); renderSections();
+        toast('양식을 저장했어요 · 다른 날 📋 양식으로 불러오세요', 3200);
+        return;
+      }
+      var ld=e.target.closest('[data-tplload]');
+      if(ld){
+        e.preventDefault();
+        if(!tpl || !tpl.t){ toast('저장된 양식이 없어요'); return; }
+        var text=tpl.t;
+        closeSheet(true);
+        applyTemplate(cid, text);
+        return;
+      }
+      var dl=e.target.closest('[data-tpldel]');
+      if(dl){
+        e.preventDefault();
+        if(!window.confirm('‘'+catBase(c)+'’ 영역의 양식을 지울까요?')) return;
+        delete state.settings.templates[cid];
+        shelfTouch(); scheduleSave(); Cloud.pushProfile();
+        closeSheet(true); renderSections();
+        toast('양식을 지웠어요');
+        return;
+      }
+    });
+  }, 'template');
+}
+
 /* ────────────────────────────── toast ────────────────────────────── */
 var toastTimer=null;
 function toast(msg, ms){
@@ -1696,7 +1924,10 @@ function timeRowHTML(c, m){
 }
 function photoAlt(id, n){
   var ref=state.photoRefs[id];
-  if(ref && ref.title) return '책 표지 — '+ref.title;
+  if(ref && ref.title){
+    var pre=(ref.kind==='youtube')? '유튜브 — ' : (ref.kind==='poster'? '포스터 — ' : '책 표지 — ');
+    return pre+ref.title;
+  }
   return '사진 '+n;
 }
 function isBookPhoto(id){
@@ -1738,7 +1969,9 @@ function photosEditHTML(sec){
   return pids.map(function(id,i){
     var n=all.indexOf(id)+1;
     var used=hasPhotoMark(txt,n);
-    return '<div class="pcard'+(isThumbPhoto(id)?' thumb-card':'')+'" data-pid="'+id+'">'
+    var ref=state.photoRefs[id]||{};
+    var yt=(ref.kind==='youtube');
+    return '<div class="pcard'+(isThumbPhoto(id)?' thumb-card':'')+(yt?' yt-card':'')+'" data-pid="'+id+'">'
       +'<button class="pimg" type="button" data-act="viewphoto" data-pids="'+esc(pids.join(','))+'" data-idx="'+i+'" aria-label="'+esc(photoAlt(id,n))+' 크게 보기">'+photoImgHTML(id, photoAlt(id,n))+'</button>'
       +'<button class="del" data-act="delphoto" data-pid="'+id+'" aria-label="사진 삭제">✕</button>'
       +'<div class="pbar"><span class="pn">사진 '+n+'</span>'
@@ -1764,6 +1997,18 @@ function secActionsHTML(c){
   out+='<button class="photo-btn" data-act="photo">📷 사진</button>';
   return out;
 }
+function fmtRowHTML(c){
+  var tpl=(state.settings.templates||{})[c.id];
+  var dots=FMT_COLORS.map(function(f){
+    return '<button class="fdot" type="button" data-act="fmt" data-fmt="c" data-color="'+f.hex+'" style="--c:'+f.hex+'" aria-label="'+f.name+' 글자색" title="'+f.name+'"></button>';
+  }).join('');
+  return '<div class="fmt-row">'
+    +'<button class="fmt b" type="button" data-act="fmt" data-fmt="b" aria-label="굵게" title="굵게">B</button>'
+    +'<button class="fmt u" type="button" data-act="fmt" data-fmt="u" aria-label="밑줄" title="밑줄">U</button>'
+    +'<span class="fdots">'+dots+'<button class="fdot base" type="button" data-act="fmt" data-fmt="c0" aria-label="기본 글자색" title="기본 글자색"></button></span>'
+    +'<button class="fmt tpl'+(tpl?' has':'')+'" type="button" data-act="template" aria-label="영역 양식" title="이 영역의 양식 저장·불러오기">📋 양식</button>'
+  +'</div>';
+}
 function sectionHTML(c){
   var sec=current.sections[c.id] || {m:0,t:'',p:[]};
   var m=Math.max(0, Math.round(Number(sec.m)||0));
@@ -1777,6 +2022,7 @@ function sectionHTML(c){
     +'</div>'
     +'<div class="sec-body">'
       +(c.timer? timeRowHTML(c,m) : '')
+      +fmtRowHTML(c)
       +'<div class="sec-scroll">'
         +'<textarea class="sec-text" data-field="t" rows="2" placeholder="'+esc(ph)+'">'+esc(sec.t||'')+'</textarea>'
         +'<div class="photos">'+photosEditHTML(sec)+'</div>'
@@ -1874,6 +2120,81 @@ function statsHTML(tot){
     +'<div class="stat"><div class="k">영어 외 총시간</div><div class="v">'+fmtMin(tot.other)+'</div></div>'
     +'<div class="stat"><div class="k">전체 총시간</div><div class="v">'+fmtMin(tot.all)+'</div></div>';
 }
+/* ── 월별·연도별 누적 시간 (이번 달 / 올해) ── */
+function monthTotals(y, m){
+  var last=new Date(y, m+1, 0).getDate();
+  var from=y+'-'+pad2(m+1)+'-01', to=y+'-'+pad2(m+1)+'-'+pad2(last);
+  var en=0, other=0, days=0;
+  Object.keys(state.entries||{}).forEach(function(d){
+    if(d<from || d>to) return;
+    var t=calcTotals(sectionsOf(d));
+    if(!t.all) return;
+    en+=t.en; other+=t.other; days++;
+  });
+  return {en:en, other:other, all:en+other, days:days};
+}
+function yearTotals(y){
+  var en=0, other=0, days=0, months=[];
+  for(var m=0;m<12;m++){
+    var t=monthTotals(y,m);
+    months.push(t);
+    en+=t.en; other+=t.other; days+=t.days;
+  }
+  return {en:en, other:other, all:en+other, days:days, months:months};
+}
+function cumRowHTML(label, note, t){
+  return '<div class="cum-row"><div class="lbl">'+label+(note? '<s>'+esc(note)+'</s>':'')+'</div>'
+    +'<div class="bar3">'
+      +'<div class="b3"><div class="k">영어</div><div class="v">'+fmtMin(t.en)+'</div></div>'
+      +'<div class="b3 oth"><div class="k">영어 외</div><div class="v">'+fmtMin(t.other)+'</div></div>'
+      +'<div class="b3 allv"><div class="k">전체</div><div class="v">'+fmtMin(t.all)+'</div></div>'
+    +'</div></div>';
+}
+function renderCumStats(){
+  var el=$('cumStats');
+  if(!el) return;
+  var td=new Date();
+  var y=td.getFullYear(), m=td.getMonth();
+  var cur=monthTotals(y,m), yr=yearTotals(y);
+  el.innerHTML='<div class="cum-head"><h3>📊 누적 시간</h3>'
+      +'<button class="mini-btn" type="button" data-cumact="month">월별 보기 ›</button></div>'
+    +'<div class="cum-rows">'
+      +cumRowHTML('이번 달', (m+1)+'월 · 기록 '+(cur.days? cur.days+'일':'없음'), cur)
+      +cumRowHTML('올해', y+'년 · 기록 '+(yr.days? yr.days+'일':'없음'), yr)
+    +'</div>';
+}
+function openMonthlyStats(){
+  var td=new Date();
+  var y=td.getFullYear();
+  var yt=yearTotals(y), ly=yearTotals(y-1);
+  var maxAll=1;
+  yt.months.forEach(function(t){ if(t.all>maxAll) maxAll=t.all; });
+  var rows=yt.months.map(function(t,i){
+    var w=t.all? Math.max(4, Math.round(t.all/maxAll*100)) : 0;
+    var cur=(i===td.getMonth());
+    return '<tr'+(cur? ' class="total"':'')+'><td class="nm">'+(i+1)+'월</td>'
+      +'<td class="'+(t.en?'has':'dim')+'">'+(t.en? fmtMin(t.en):'–')+'</td>'
+      +'<td class="'+(t.other?'has':'dim')+'">'+(t.other? fmtMin(t.other):'–')+'</td>'
+      +'<td class="'+(t.all?'':'dim')+'" style="font-weight:800">'+(t.all? fmtMin(t.all):'–')+'</td>'
+      +'<td><div class="bar"><i style="width:'+w+'%"></i></div></td></tr>';
+  }).join('');
+  var html='<div class="grab"></div>'
+    +'<div class="sheet-head"><h2>📊 월별·연도별 누적 시간</h2><button class="x" data-close aria-label="닫기">✕</button></div>'
+    +'<div class="sheet-block"><h3>'+y+'년 월별</h3>'
+      +'<div class="tbl-wrap"><table class="tbl mstats-tbl">'
+        +'<thead><tr><th class="nm">월</th><th>영어</th><th>영어 외</th><th>전체</th><th>막대</th></tr></thead>'
+        +'<tbody>'+rows+'</tbody></table></div>'
+      +'<p class="hint" style="margin-top:8px">그 달에 기록한 시간을 모두 더한 값이에요. 기록이 없는 달은 – 로 나와요.</p>'
+    +'</div>'
+    +'<div class="sheet-block"><h3>연도 합계</h3>'
+      +'<div class="stat-line"><span>'+(y-1)+'년 전체</span><b>'+fmtMin(ly.all)+'</b></div>'
+      +'<div class="stat-line"><span>'+y+'년 영어</span><b>'+fmtMin(yt.en)+'</b></div>'
+      +'<div class="stat-line"><span>'+y+'년 영어 외</span><b>'+fmtMin(yt.other)+'</b></div>'
+      +'<div class="stat-line"><span>'+y+'년 전체</span><b>'+fmtMin(yt.all)+'</b></div>'
+      +'<div class="stat-line"><span>기록한 날</span><b>'+yt.days+'일</b></div>'
+    +'</div>';
+  openSheet(html, null, 'mstats');
+}
 function updateTodayAnalysis(){
   if(!current) return;
   $('todaySub').textContent = fmtShort(current.date)+' 기준 · 입력하는 즉시 반영돼요';
@@ -1929,8 +2250,31 @@ function weeklyTableHTML(ds, override){
     +'</tbody></table></div>';
 }
 /* ────────────────────────────── render: read ────────────────────────────── */
+/* ── 글씨 서식: **굵게** · __밑줄__ · [c:#HEX]글자색[/c] (esc() 뒤에만 안전하게 바꿔 넣는다) ── */
+var FMT_COLORS=[{hex:'#c0392b',name:'빨강'},{hex:'#1f6feb',name:'파랑'},{hex:'#0f766e',name:'초록'},{hex:'#8e44ad',name:'보라'},{hex:'#c98a1c',name:'주황'}];
+function fmtColorOK(hex){
+  var h=String(hex||'').toLowerCase();
+  for(var i=0;i<FMT_COLORS.length;i++){ if(FMT_COLORS[i].hex===h) return FMT_COLORS[i].hex; }
+  return '';
+}
+function richFmt(e){
+  var s=String(e||'');
+  s=s.replace(/\[c:(#[0-9A-Fa-f]{6})\]([\s\S]*?)\[\/c\]/g, function(m,hex,inner){
+    var ok=fmtColorOK(hex);
+    return ok? '<span class="fc" style="color:'+ok+'">'+inner+'</span>' : m;
+  });
+  s=s.replace(/\*\*([^\n]{1,600}?)\*\*/g, function(m,inner){ return inner.trim()? '<strong>'+inner+'</strong>' : m; });
+  s=s.replace(/__([^\n]{1,600}?)__/g, function(m,inner){ return inner.trim()? '<u>'+inner+'</u>' : m; });
+  return s;
+}
+/* 순수 글자만 필요할 때(검색 요약·복사·인쇄 텍스트) 서식 기호를 걷어 낸다 */
+function stripFmt(t){
+  return String(t==null?'':t)
+    .replace(/\[c:#[0-9A-Fa-f]{6}\]/g,'').replace(/\[\/c\]/g,'')
+    .replace(/\*\*/g,'').replace(/__/g,'');
+}
 function linkify(text){
-  var e=esc(text);
+  var e=richFmt(esc(text));
   return e.replace(/(https?:\/\/[^\s<]+)/g, function(u){
     return '<a href="'+u+'" target="_blank" rel="noopener">'+u+'</a>';
   });
@@ -1976,7 +2320,8 @@ function renderTextWithPhotos(text, rawIds, used){
   if(last<src.length) tokens.push({x:'t', v:src.slice(last)});
   function btn(pid,n){
     var li=pids.indexOf(pid);
-    return '<button class="txt-photo" type="button" data-act="viewphoto" data-pids="'+esc(pids.join(','))+'" data-idx="'+(li<0?0:li)+'" aria-label="'+esc(photoAlt(pid,n))+' 크게 보기">'+photoImgHTML(pid, photoAlt(pid,n))+'</button>';
+    var r=state.photoRefs[pid]||{};
+    return '<button class="txt-photo'+(r.kind==='youtube'?' yt':'')+'" type="button" data-act="viewphoto" data-pids="'+esc(pids.join(','))+'" data-idx="'+(li<0?0:li)+'" aria-label="'+esc(photoAlt(pid,n))+' 크게 보기">'+photoImgHTML(pid, photoAlt(pid,n))+'</button>';
   }
   /* 연속된 썸네일은 한 줄(flex wrap)로 묶는다 */
   var out='', group=null;
@@ -2010,9 +2355,17 @@ function readSectionHTML(c, s){
   var rest=pids.filter(function(id){ var i=raw.indexOf(id); return i<0 || !used[i]; });
   var restTh=rest.filter(function(id){ return isThumbPhoto(id); });
   var restBig=rest.filter(function(id){ return !isThumbPhoto(id); });
-  if(restTh.length){
-    body+='<div class="photo-thumbs">'+restTh.map(function(id,i){
-      return '<button data-act="viewphoto" data-pids="'+esc(restTh.join(','))+'" data-idx="'+i+'">'+photoImgHTML(id,photoAlt(id, raw.indexOf(id)+1))+'</button>';
+  var isYtPhoto=function(id){ var r=state.photoRefs[id]; return !!(r && r.kind==='youtube'); };
+  var restYt=restTh.filter(isYtPhoto);
+  var restTh2=restTh.filter(function(id){ return !isYtPhoto(id); });
+  if(restYt.length){
+    body+='<div class="photo-thumbs">'+restYt.map(function(id,i){
+      return '<button class="yt" data-act="viewphoto" data-pids="'+esc(restYt.join(','))+'" data-idx="'+i+'">'+photoImgHTML(id,photoAlt(id, raw.indexOf(id)+1))+'</button>';
+    }).join('')+'</div>';
+  }
+  if(restTh2.length){
+    body+='<div class="photo-thumbs">'+restTh2.map(function(id,i){
+      return '<button data-act="viewphoto" data-pids="'+esc(restTh2.join(','))+'" data-idx="'+i+'">'+photoImgHTML(id,photoAlt(id, raw.indexOf(id)+1))+'</button>';
     }).join('')+'</div>';
   }
   if(restBig.length){
@@ -2357,6 +2710,7 @@ function highlightHTML(text, q){
   return out+esc(text.slice(last));
 }
 function snippetHTML(text, q){
+  text=stripFmt(text);
   var i=text.toLowerCase().indexOf(q.toLowerCase());
   if(i<0) return esc(text.slice(0,90));
   var start=Math.max(0, i-26), end=Math.min(text.length, i+q.length+60);
@@ -2413,6 +2767,7 @@ function runSearch(){
 function renderRead(){
   if(activeTab!=='read') return;
   if(!catFilterValid()) viewCat='';
+  renderCumStats();
   var q=searchQuery.trim();
   if(q){ runSearch(); return; }
   $('searchResults').hidden=true;
@@ -2480,7 +2835,7 @@ function buildViewText(model){
       if(isPrivate(c)) return;              /* 비공개 메모는 복사본에 담지 않는다 */
       var m=Math.max(0, Math.round(Number(s.m)||0));
       lines.push('· '+catLabel(c)+(m? ' ('+fmtMin(m)+')':''));
-      if(s.t && s.t.trim()) lines.push(stripPhotoMarks(s.t).trim());
+      if(s.t && s.t.trim()) lines.push(stripFmt(stripPhotoMarks(s.t)).trim());
       if(s.p && s.p.length) lines.push('📷 사진 '+s.p.length+'장');
     });
     lines.push('');
@@ -3268,6 +3623,28 @@ function mergeBackupIntoState(src, plan){
     var cur=state.settings[k];
     if(cur===undefined || cur===null || cur==='') state.settings[k]=src.settings[k];
   });
+  /* 6-1) 책장 표시 설정(병합·숨김·이름·양식)도 파일에서 살린다 — 원문은 그대로 */
+  var ss=src.settings||{};
+  if(Array.isArray(ss.shelfGroups) && ss.shelfGroups.length){
+    if(!Array.isArray(state.settings.shelfGroups)) state.settings.shelfGroups=[];
+    var haveG={};
+    state.settings.shelfGroups.forEach(function(g){ haveG[g.id]=1; });
+    normShelfGroups(ss.shelfGroups).forEach(function(g){ if(!haveG[g.id]){ state.settings.shelfGroups.push(g); haveG[g.id]=1; } });
+    state.settings.shelfGroups=normShelfGroups(state.settings.shelfGroups);
+  }
+  if(Array.isArray(ss.shelfHidden) && ss.shelfHidden.length){
+    state.settings.shelfHidden=strList((state.settings.shelfHidden||[]).concat(ss.shelfHidden), 3000);
+  }
+  var ovB=normShelfOverrides(ss.shelfOverrides);
+  Object.keys(ovB).forEach(function(k){ if(!state.settings.shelfOverrides[k]) state.settings.shelfOverrides[k]=ovB[k]; });
+  var exB=normCountMap(ss.shelfExtra);
+  Object.keys(exB).forEach(function(k){ state.settings.shelfExtra[k]=Math.max(Number(state.settings.shelfExtra[k])||0, exB[k]); });
+  var tpB=normTemplates(ss.templates);
+  Object.keys(tpB).forEach(function(k){
+    var c=state.settings.templates[k];
+    if(!c || (tpB[k].at||0)>(c.at||0)) state.settings.templates[k]=tpB[k];
+  });
+  state.settings.shelfAt=Math.max(Number(state.settings.shelfAt)||0, Number(ss.shelfAt)||0, Date.now());
   return rep;
 }
 async function pushImportedDates(dates){
@@ -3395,6 +3772,7 @@ function renderAll(){
   syncRangeUI();
   renderRead();
   renderShelf();
+  renderCumStats();
   applyTip();
 }
 function applyTip(){
@@ -4333,150 +4711,605 @@ function shelfDelete(id){
   }
   return false;
 }
-function shelfCoverHTML(b, cls, alt){
-  var ph='📕';
-  var img=b.coverUrl? '<img src="'+esc(b.coverUrl)+'" alt="'+esc(alt||(b.title+' 표지'))+'" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">' : '';
-  return '<span class="'+cls+'"><span class="bk-ph" aria-hidden="true">'+ph+'</span>'+img+'</span>';
+/* ── 책장 표시 설정 값 정리 (원문 entries·photos 는 건드리지 않는다) ── */
+function strList(v, max){
+  if(!Array.isArray(v)) return [];
+  var out=[], seen={};
+  v.forEach(function(x){
+    var s=String(x==null? '':x).trim();
+    if(!s || s.length>200 || seen[s]) return;
+    seen[s]=1; out.push(s);
+  });
+  return out.slice(0, max||500);
 }
-function bookCardHTML(b){
-  var n=bookCount(b);
-  var last=(b.dates && b.dates.length)? b.dates[b.dates.length-1] : '';
-  return '<div class="bk-card" data-bcard="'+esc(b.id)+'">'
-    +'<button class="bk-card-main" type="button" data-bookopen="'+esc(b.id)+'" aria-label="'+esc(b.title+' 자세히 보기')+'">'
-      +shelfCoverHTML(b,'bk-cv',b.title+' 표지')
+function normShelfGroups(v){
+  if(!Array.isArray(v)) return [];
+  var out=[], seen={};
+  v.forEach(function(g){
+    if(!g || typeof g!=='object') return;
+    var keys=strList(g.keys, 400);
+    var name=String(g.name||'').trim().slice(0,80);
+    if(!keys.length || !name) return;
+    var id=String(g.id||'').trim();
+    if(!/^[A-Za-z0-9_\-]{1,40}$/.test(id)) id='sg'+Math.random().toString(36).slice(2,10);
+    if(seen[id]) return;
+    seen[id]=1;
+    out.push({ id:id, kind:(g.kind==='video')? 'video':'book', name:name,
+      cover:String(g.cover||'').slice(0,200), keys:keys, at:Number(g.at)||0 });
+  });
+  return out.slice(0,300);
+}
+function normShelfOverrides(v){
+  var out={};
+  if(!v || typeof v!=='object') return out;
+  Object.keys(v).forEach(function(k){
+    var r=v[k];
+    if(!r || typeof r!=='object') return;
+    var o={};
+    if(typeof r.title==='string' && r.title.trim()) o.title=r.title.trim().slice(0,80);
+    if(typeof r.channel==='string') o.channel=String(r.channel).trim().slice(0,60);
+    if(o.title!==undefined || o.channel!==undefined) out[String(k).slice(0,200)]=o;
+  });
+  return out;
+}
+function normCountMap(v){
+  var out={};
+  if(!v || typeof v!=='object') return out;
+  Object.keys(v).forEach(function(k){
+    var n=Math.floor(Number(v[k])||0);
+    if(n>0 && n<10000) out[String(k).slice(0,200)]=n;
+  });
+  return out;
+}
+function normTemplates(v){
+  var out={};
+  if(!v || typeof v!=='object') return out;
+  Object.keys(v).forEach(function(k){
+    var r=v[k];
+    if(!r && r!==0) return;
+    var t=(typeof r==='string')? r : (r && typeof r.t==='string'? r.t : '');
+    if(!t || !t.trim()) return;
+    out[String(k).slice(0,60)]={t:t.slice(0,4000), at:Number(r && r.at)||0};
+  });
+  return out;
+}
+/* 책장 표시 설정이 마지막으로 바뀐 때 — 클라우드와 합칠 기준 */
+function shelfTouch(){ if(state.settings) state.settings.shelfAt=Date.now(); }
+function keyedSig(o){
+  o=o||{};
+  return Object.keys(o).sort().map(function(k){ return [k, o[k]]; });
+}
+function shelfSettingsSig(){
+  var s=state.settings||{};
+  return JSON.stringify([normShelfGroups(s.shelfGroups), strList(s.shelfHidden,3000), keyedSig(normShelfOverrides(s.shelfOverrides)), keyedSig(normCountMap(s.shelfExtra)), keyedSig(normTemplates(s.templates)), s.shelfLang||'all', s.videoGroup||'title']);
+}
+function cloudShelfSig(cs){
+  cs=cs||{};
+  return JSON.stringify([normShelfGroups(cs.shelfGroups), strList(cs.shelfHidden,3000), keyedSig(normShelfOverrides(cs.shelfOverrides)), keyedSig(normCountMap(cs.shelfExtra)), keyedSig(normTemplates(cs.templates)), cs.shelfLang||'all', cs.videoGroup||'title']);
+}
+function applyCloudShelfSettings(cs){
+  cs=cs||{};
+  var s=state.settings;
+  s.shelfGroups=normShelfGroups(cs.shelfGroups);
+  s.shelfHidden=strList(cs.shelfHidden,3000);
+  s.shelfOverrides=normShelfOverrides(cs.shelfOverrides);
+  s.shelfExtra=normCountMap(cs.shelfExtra);
+  s.templates=normTemplates(cs.templates);
+  if(/^(all|kr|en)$/.test(String(cs.shelfLang||''))) s.shelfLang=cs.shelfLang;
+  if(cs.videoGroup==='channel' || cs.videoGroup==='title') s.videoGroup=cs.videoGroup;
+  s.shelfAt=Number(cs.shelfAt)||s.shelfAt||0;
+}
+
+/* ── 본문([J1]·[JD5] …)에서 책·영상 제목 읽기 ── */
+var SHELF_TITLE_WORDS={시리즈:1,tv:1,영화:1,책:1,dvd:1,애니:1,애니메이션:1,리더스북:1,챕터북:1,특집:1,스페셜:1,단편:1,뮤지컬:1,ost:1,시즌:1,박물관:1};
+var DEFAULT_ITEM_TITLES={'영화 포스터':1,'유튜브 영상':1,'책 표지':1};
+function isDefaultItemTitle(t){ var s=String(t||'').trim(); return !s || DEFAULT_ITEM_TITLES[s]===1; }
+/* [JD5] · (2회) · '2시간30분' · ' / 설명' 같은 껍데기를 걷어 낸 제목 */
+function cleanShelfTitle(raw){
+  var t=String(raw||'').replace(/\s+/g,' ').trim();
+  if(!t) return '';
+  t=t.replace(/^[\-–—:·•*>#\[\]\s]+/,'');
+  t=t.replace(/\s*\(\s*\d+\s*회\s*\)/g,' ');
+  t=t.replace(/\s*\d+\s*시간\s*\d*\s*분?/g,' ');
+  t=t.replace(/\s*\d+\s*분(?=[\s,)]|$)/g,' ');
+  t=t.replace(/\s*\/\s+.*$/,'');
+  t=t.replace(/\s*메모\s*:.*$/,'');
+  /* 영어 제목 뒤에 붙은 한글 설명은 자른다 (시리즈·TV 같은 꼬리는 남긴다) */
+  if(/^[A-Za-z0-9('"]/.test(t)){
+    var toks=t.split(' '), keep=[];
+    for(var i=0;i<toks.length;i++){
+      var w=toks[i];
+      var wl=w.replace(/[^가-힣A-Za-z]/g,'').toLowerCase();
+      if(/[가-힣]/.test(w) && !SHELF_TITLE_WORDS[wl]) break;
+      keep.push(w);
+    }
+    if(keep.length) t=keep.join(' ');
+  }
+  t=t.replace(/\s+/g,' ').replace(/[\s\-–—:·•]+$/,'').trim();
+  t=t.replace(/\s*\([^()]*$/,'');          /* 닫히지 않은 괄호 꼬리 정리 */
+  if(t.length>70){
+    t=t.slice(0,70);
+    var sp=t.lastIndexOf(' ');
+    if(sp>40) t=t.slice(0,sp);
+    t=t.replace(/[\s\-–—:·•,(]+$/,'').trim();
+  }
+  return t;
+}
+var JTAG_SCAN=/\[J[0-9A-Za-z\-]{0,4}\]/g;
+function tagTitles(text){
+  var src=String(text||''), out=[], m;
+  var re=new RegExp(JTAG_SCAN.source,'g');
+  while((m=re.exec(src))!==null){
+    if(!m[0].length){ re.lastIndex++; continue; }
+    var from=re.lastIndex, end=src.length;
+    var nl=src.indexOf('\n', from);
+    if(nl>=0) end=nl;
+    var nx=src.slice(from).search(JTAG_SCAN);
+    if(nx>=0) end=Math.min(end, from+nx);
+    out.push({ at:m.index, title:cleanShelfTitle(src.slice(from, end)) });
+  }
+  return out;
+}
+/* 사진(책 표지·포스터·유튜브)에 붙일 이름 — 저장된 이름 → [[사진N]] 위 줄 → 순서 순으로 찾는다 */
+function titleForPhoto(sec, pid, kind){
+  var ref=(state.photoRefs||{})[pid]||{};
+  var own=String(ref.title||'').trim();
+  if(own && !isDefaultItemTitle(own)) return own;
+  var titles=tagTitles(sec && sec.t);
+  if(!titles.length) return '';
+  var p=(sec && sec.p) || [];
+  var txt=String((sec && sec.t) || '');
+  var n=p.indexOf(pid)+1;
+  if(n>0){
+    var mm=txt.match(new RegExp('\\[\\[\\s*사진\\s*'+n+'\\s*\\]\\]'));
+    if(mm){
+      var pick='';
+      titles.forEach(function(t){ if(t.at<mm.index && t.title) pick=t.title; });
+      if(pick) return pick;
+    }
+  }
+  var same=p.filter(function(id){
+    var r=(state.photoRefs||{})[id]||{};
+    return (kind==='video')? (r.kind==='poster'||r.kind==='youtube') : (r.kind==='cover');
+  });
+  var idx=same.indexOf(pid);
+  if(idx<0) idx=0;
+  if(titles.length===same.length) return titles[idx].title || titles[0].title || '';
+  if(titles.length===1) return titles[0].title || '';
+  return (titles[Math.min(idx, titles.length-1)]||titles[0]).title || '';
+}
+
+/* ── 책장에 담을 항목 만들기 (책 = 책장 + 옛 백업 표지, 영상 = 포스터·유튜브) ── */
+function bookItems(){
+  var out=[], autoMap={}, seenTitle={};
+  (state.bookshelf||[]).forEach(function(b){
+    var it={ key:'b:'+b.id, kind:'book', real:true, bookId:b.id,
+      title:b.title, author:b.author||'', channel:'', photo:'', coverUrl:b.coverUrl||'',
+      dates:(b.dates||[]).slice(), extraCount:Number(b.extraCount)||0,
+      last:(b.dates&&b.dates.length)? b.dates[b.dates.length-1] : '',
+      count:bookCount(b), updatedAt:Number(b.updatedAt)||0 };
+    seenTitle[normKey(it.title)]=1;
+    out.push(it);
+  });
+  var extra=(state.settings && state.settings.shelfExtra)||{};
+  Object.keys(state.entries||{}).sort().forEach(function(ds){
+    var secs=sectionsOf(ds);
+    Object.keys(secs).forEach(function(cid){
+      var sec=secs[cid];
+      if(!sec || !sec.p || !sec.p.length) return;
+      sec.p.forEach(function(pid){
+        var ref=(state.photoRefs||{})[pid];
+        if(!ref || ref.kind!=='cover') return;
+        if(!PhotoCache.has(pid)) return;
+        var title=titleForPhoto(sec, pid, 'cover');
+        if(!title) return;
+        var nk=normKey(title);
+        if(!nk || seenTitle[nk]) return;
+        var it=autoMap[nk];
+        if(!it){
+          it=autoMap[nk]={ key:'c:'+nk, kind:'book', auto:true, title:title, author:'', channel:'',
+            photo:pid, coverUrl:'', dates:[], extraCount:0, last:ds, count:0, updatedAt:0 };
+          autoMap[nk]=it; out.push(it);
+        }
+        if(it.dates.indexOf(ds)<0) it.dates.push(ds);
+        if(ds>it.last) it.last=ds;
+        if(!it.photo || !PhotoCache.has(it.photo)) it.photo=pid;
+      });
+    });
+  });
+  out.forEach(function(it){
+    if(!it.auto) return;
+    it.dates.sort();
+    it.count=it.dates.length + (Number(extra[it.key])||0);
+  });
+  return out;
+}
+function videoItems(){
+  var out=[], seen={};
+  Object.keys(state.entries||{}).sort().forEach(function(ds){
+    var secs=sectionsOf(ds);
+    Object.keys(secs).forEach(function(cid){
+      var sec=secs[cid];
+      if(!sec || !sec.p || !sec.p.length) return;
+      sec.p.forEach(function(pid){
+        var ref=(state.photoRefs||{})[pid];
+        if(!ref || (ref.kind!=='poster' && ref.kind!=='youtube')) return;
+        if(!PhotoCache.has(pid)) return;
+        var vkind=(ref.kind==='youtube')? 'youtube':'poster';
+        var title=titleForPhoto(sec, pid, 'video');
+        var key='v:'+vkind+'|'+(normKey(title)||('id'+pid));
+        var it=seen[key];
+        if(!it){
+          it=seen[key]={ key:key, kind:'video', vkind:vkind, title:title,
+            channel:String(ref.channel||''), photo:pid, dates:[], last:ds, count:0, cat:'' };
+          var cat=catById(cid); if(cat) it.cat=catBase(cat);
+          seen[key]=it; out.push(it);
+        }
+        if(!it.channel && ref.channel) it.channel=String(ref.channel);
+        if(it.dates.indexOf(ds)<0) it.dates.push(ds);
+        if(ds>it.last) it.last=ds;
+        it.count++;
+        if(!PhotoCache.has(it.photo) && PhotoCache.has(pid)) it.photo=pid;
+      });
+    });
+  });
+  out.forEach(function(it){ it.dates.sort(); });
+  return out;
+}
+/* 채널명으로 묶어 보기 — 저장은 그대로, 화면에서만 뭉친다 */
+function channelize(items){
+  var out=[], byCh={};
+  items.forEach(function(it){
+    var ch=String(it.channel||'').trim();
+    if(it.group || !ch){ out.push(it); return; }
+    var k='ch:'+normKey(ch), g=byCh[k];
+    if(!g){
+      g=byCh[k]={ key:k, kind:it.kind, vkind:it.vkind, channel:ch, title:ch, channelGroup:true,
+        photo:it.photo||'', dates:[], last:it.last||'', count:0, videos:0, yt:0, members:[] };
+      byCh[k]=g; out.push(g);
+    }
+    g.members.push(it.key);
+    g.videos++;
+    if(it.vkind==='youtube') g.yt=(Number(g.yt)||0)+1;
+    (it.dates||[]).forEach(function(d){ if(g.dates.indexOf(d)<0) g.dates.push(d); });
+    g.count+=(Number(it.count)||1);
+    if(!g.photo) g.photo=it.photo||'';
+    if((it.last||'')>g.last) g.last=it.last;
+  });
+  out.forEach(function(g){ if(g.channelGroup) g.dates.sort(); });
+  return out;
+}
+/* 항목 + 저장된 이름·병합·숨김 설정을 한 화면 목록으로 */
+function shelfView(kind, opts){
+  opts=opts||{};
+  var base=(kind==='video')? videoItems() : bookItems();
+  var ovs=state.settings.shelfOverrides||{};
+  var map={};
+  base.forEach(function(it){
+    var ov=ovs[it.key];
+    if(ov){
+      if(ov.title) it.title=ov.title;
+      if(typeof ov.channel==='string' && ov.channel) it.channel=ov.channel;
+    }
+    map[it.key]=it;
+  });
+  var used={}, out=[];
+  (state.settings.shelfGroups||[]).forEach(function(g){
+    if(!g || g.kind!==kind) return;
+    var members=[];
+    g.keys.forEach(function(k){
+      var m=map[k];
+      if(m && !used[k]){ used[k]=1; members.push(m); }
+    });
+    if(!members.length) return;
+    var dd={}, count=0, photo='', last='';
+    members.forEach(function(m){
+      (m.dates||[]).forEach(function(d){ dd[d]=1; });
+      count += (Number(m.count)||1);
+      if(!photo && m.photo) photo=m.photo;
+      if(m.last && m.last>last) last=m.last;
+    });
+    var dates=Object.keys(dd).sort();
+    if(!last && dates.length) last=dates[dates.length-1];
+    var gk='g:'+g.id, go=ovs[gk]||{};
+    var cover=String(g.cover||'');
+    out.push({ key:gk, kind:kind, group:true, groupId:g.id,
+      title:go.title || g.name || '합친 항목',
+      channel:(typeof go.channel==='string' && go.channel)? go.channel : (members[0].channel||''),
+      vkind:members[0].vkind || '',
+      photo: /^https?:\/\//i.test(cover)? '' : (cover || photo),
+      coverUrl: /^https?:\/\//i.test(cover)? cover : '',
+      dates:dates, last:last, count:count,
+      members:members.map(function(m){ return m.key; }),
+      memberTitles:members.map(function(m){ return m.title; }),
+      author:'' });
+  });
+  base.forEach(function(it){ if(!used[it.key]) out.push(it); });
+  if(kind==='video' && state.settings.videoGroup==='channel' && !opts.raw) out=channelize(out);
+  if(!opts.includeHidden){
+    var hid=state.settings.shelfHidden||[];
+    out=out.filter(function(it){ return hid.indexOf(it.key)<0; });
+  }
+  out.sort(function(a,b){
+    if((a.last||'')!==(b.last||'')) return (a.last||'')<(b.last||'')? 1 : -1;
+    var au=Number(a.updatedAt)||0, bu=Number(b.updatedAt)||0;
+    if(au!==bu) return bu-au;
+    return String(a.title||'')<String(b.title||'')? -1 : 1;
+  });
+  return out;
+}
+function findShelfItem(key){
+  var k=String(key||'');
+  var order=(k.indexOf('v:')===0 || k.indexOf('ch:')===0)? ['video','book'] : ['book','video'];
+  for(var n=0;n<order.length;n++){
+    var kind=order[n];
+    var list=shelfView(kind, {includeHidden:true, raw:true});
+    for(var i=0;i<list.length;i++){ if(list[i].key===key) return list[i]; }
+    list=shelfView(kind, {includeHidden:true});
+    for(var j=0;j<list.length;j++){ if(list[j].key===key) return list[j]; }
+  }
+  return null;
+}
+/* ── 카드 그리기 ── */
+function itemCoverHTML(it, cls){
+  var ph=it.channelGroup? '📺' : (it.kind==='video'? '🎬' : '📕');
+  var alt=String(it.title||'')+' 표지';
+  var img='';
+  if(it.photo && PhotoCache.has(it.photo)) img=photoImgHTML(it.photo, alt, 'loading="lazy" referrerpolicy="no-referrer"');
+  else if(it.coverUrl) img='<img src="'+esc(it.coverUrl)+'" alt="'+esc(alt)+'" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">';
+  return '<span class="'+cls+(it.channelGroup?' yt':'')+'"><span class="bk-ph" aria-hidden="true">'+ph+'</span>'+img+'</span>';
+}
+function shelfSelMarkHTML(){
+  return shelfSelectMode? '<span class="selmark" aria-hidden="true">✓</span>' : '';
+}
+function bookCardHTML(it){
+  var n=Number(it.count)||0;
+  var last=it.last||'';
+  var sub=last? esc(fmtMD(last))+' 읽음' : (it.auto? '표지에서 자동으로 담김' : '아직 읽은 날 없음');
+  return '<div class="bk-card'+(shelfSel[it.key]?' sel':'')+'" data-bcard="'+esc(it.key)+'">'
+    +'<button class="bk-card-main" type="button" data-itemopen="'+esc(it.key)+'" aria-label="'+esc(it.title+' 자세히 보기')+'">'
+      +itemCoverHTML(it,'bk-cv')
+      +shelfSelMarkHTML()
+      +(it.group? '<span class="bk-grp" aria-hidden="true">🔗</span>':'')
       +'<span class="bk-badge'+(n?'':' zero')+'">'+n+'회</span>'
-      +'<span class="bk-tt">'+esc(b.title)+'</span>'
-      +'<span class="bk-dd">'+(last? esc(last)+' 읽음' : '아직 읽은 날 없음')+'</span>'
+      +'<span class="bk-tt">'+esc(it.title)+'</span>'
+      +'<span class="bk-dd">'+sub+'</span>'
     +'</button>'
-    +'<div class="bk-act"><button class="bk-plus" type="button" data-bookplus="'+esc(b.id)+'" aria-label="'+esc(b.title+' 오늘 한 번 더 읽음')+'">＋1 오늘</button></div>'
   +'</div>';
+}
+function videoCardHTML(it){
+  var title=it.title || (it.vkind==='youtube'? '유튜브 영상' : '영화 포스터');
+  var sub;
+  if(it.channelGroup) sub=(it.videos||it.members.length)+'편';
+  else sub=it.channel || (it.vkind==='youtube'? '유튜브' : '영화·시리즈');
+  var badge=it.channelGroup? '📺' : (it.vkind==='youtube'? '▶️' : '🎬');
+  return '<div class="vid-card'+(shelfSel[it.key]?' sel':'')+'" data-vidcard="'+esc(it.key)+'">'
+    +'<button class="bk-card-main" type="button" data-itemopen="'+esc(it.key)+'" aria-label="'+esc(title+' 자세히 보기')+'">'
+      +'<span class="vid-cv'+(it.vkind==='youtube'?' yt':'')+'">'
+        +(it.photo && PhotoCache.has(it.photo)? photoImgHTML(it.photo, title, 'loading="lazy" referrerpolicy="no-referrer"') : '')
+        +'<span class="vid-k" aria-hidden="true">'+badge+'</span>'
+      +'</span>'
+      +'<span class="vid-t">'+esc(title)+'</span>'
+      +'<span class="vid-s">'+esc(sub)+'</span>'
+      +'<span class="vid-d">'+esc(fmtShort(it.last))+(it.count>1? ' · '+it.count+'회' : '')+'</span>'
+    +'</button>'
+    +shelfSelMarkHTML()
+  +'</div>';
+}
+function shelfQueryText(){ return String(shelfQuery||'').trim().toLowerCase(); }
+/* 한글책/영어책 — '시리즈' 같은 껍데기 낱말만 있는 제목은 영어책으로 본다 */
+function shelfLangOf(title){
+  var t=String(title||'');
+  var rest=t.split(/\s+/).filter(function(w){
+    var wl=w.replace(/[^가-힣A-Za-z]/g,'').toLowerCase();
+    return !SHELF_TITLE_WORDS[wl];
+  }).join(' ');
+  if(/[가-힣]/.test(rest)) return 'kr';
+  if(/[A-Za-z]/.test(rest)) return 'en';
+  return 'all';
 }
 function renderShelf(){
   syncShelfTabs();
   if(shelfTab==='video'){ renderShelfVideo(); return; }
   var body=$('shelfBody');
   if(!body) return;
-  var list=(state.bookshelf||[]).slice().sort(function(a,b){ return (b.updatedAt||0)-(a.updatedAt||0); });
+  var list=shelfView('book');
   var total=0;
-  list.forEach(function(b){ total+=bookCount(b); });
+  list.forEach(function(it){ total+=(Number(it.count)||0); });
   var sum=$('shelfSum');
   if(sum) sum.innerHTML='<b>📚 '+list.length+'권</b><span>누적 '+total+'회 읽음</span>';
-  var q=String(shelfQuery||'').trim().toLowerCase();
-  var shown=!q? list : list.filter(function(b){
-    return (b.title+' '+(b.author||'')).toLowerCase().indexOf(q)>=0;
+  var q=shelfQueryText();
+  var lang=state.settings.shelfLang||'all';
+  var shown=list.filter(function(it){
+    var hay=(it.title+' '+(it.author||'')).toLowerCase();
+    if(q && hay.indexOf(q)<0) return false;
+    if(lang==='all') return true;
+    return shelfLangOf(it.title)===lang;
   });
   if(!list.length){
     body.innerHTML='<div class="card bk-empty"><b>아직 담긴 책이 없어요</b>'
       +'‘＋ 책 추가’로 책을 담거나, 쓰기에서 <b>📚 책</b> 표지를 붙이면 자동으로 책장에 쌓여요.</div>';
+    syncShelfBar();
     return;
   }
   if(!shown.length){
-    body.innerHTML='<div class="card bk-empty"><b>‘'+esc(shelfQuery)+'’로 찾은 책이 없어요</b>다른 낱말로 찾아보세요.</div>';
+    body.innerHTML='<div class="card bk-empty"><b>'+(q? '‘'+esc(shelfQuery)+'’로 찾은 책이 없어요' : '이 목록에는 책이 없어요')+'</b>'
+      +(q? '다른 낱말로 찾아보세요.' : '위의 <b>전체</b>를 눌러 보세요.')+'</div>';
+    syncShelfBar();
     return;
   }
   body.innerHTML='<div class="shelf-grid">'+shown.map(bookCardHTML).join('')+'</div>';
-}
-/* ── 🎬 영상 탭: 다이어리에 붙인 영화·시리즈 포스터와 유튜브 썸네일 모아 보기 ── */
-function videoItems(){
-  var out=[], seen={};
-  var dates=Object.keys(state.entries||{}).sort().reverse();
-  dates.forEach(function(ds){
-    var secs=sectionsOf(ds);
-    Object.keys(secs).forEach(function(cid){
-      var sec=secs[cid];
-      if(!sec || !sec.p) return;
-      var cat=catById(cid);
-      sec.p.forEach(function(id){
-        var ref=state.photoRefs[id];
-        if(!ref || (ref.kind!=='poster' && ref.kind!=='youtube')) return;
-        if(!PhotoCache.has(id)) return;
-        var kind=(ref.kind==='youtube')? 'youtube':'poster';
-        var title=String(ref.title||'');
-        var key=title? (kind+'|'+normKey(title)) : ('id|'+id);
-        var it=seen[key];
-        if(it){
-          it.count++;
-          if(it.dates.indexOf(ds)<0) it.dates.push(ds);
-          if(ds>it.last) it.last=ds;
-          return;
-        }
-        it=seen[key]={ id:id, kind:kind, title:title,
-          channel:String(ref.channel||''), dates:[ds], last:ds, count:1,
-          cat: cat? catBase(cat):'' };
-        out.push(it);
-      });
-    });
-  });
-  out.sort(function(a,b){ return a.last<b.last? 1 : (a.last>b.last? -1 : 0); });
-  return out;
-}
-function videoCardHTML(it){
-  var title=it.title || (it.kind==='youtube'? '유튜브 영상' : '영화 포스터');
-  var sub=it.channel || (it.kind==='youtube'? '유튜브' : '영화·시리즈');
-  return '<button class="vid-card" type="button" data-vid="'+esc(it.id)+'" aria-label="'+esc(title+' 크게 보기')+'">'
-    +'<span class="vid-cv'+(it.kind==='youtube'?' yt':'')+'">'+photoImgHTML(it.id, title)
-      +'<span class="vid-k" aria-hidden="true">'+(it.kind==='youtube'?'▶️':'🎬')+'</span></span>'
-    +'<span class="vid-t">'+esc(title)+'</span>'
-    +'<span class="vid-s">'+esc(sub)+'</span>'
-    +'<span class="vid-d">'+esc(fmtShort(it.last))+(it.count>1? ' · '+it.count+'회' : '')+'</span>'
-  +'</button>';
+  syncShelfBar();
 }
 function renderShelfVideo(){
   var body=$('shelfBody');
   if(!body) return;
-  var list=videoItems();
-  var yt=list.filter(function(x){ return x.kind==='youtube'; }).length;
+  var list=shelfView('video');
+  var total=0, yt=0, movie=0;
+  list.forEach(function(it){
+    var n=it.channelGroup? (Number(it.videos)||1) : 1;
+    var yc=it.channelGroup? (Number(it.yt)||0) : (it.vkind==='youtube'? 1:0);
+    total+=n; yt+=yc; movie+=(n-yc);
+  });
   var sum=$('shelfSum');
-  if(sum) sum.innerHTML='<b>🎬 '+list.length+'편</b><span>유튜브 '+yt+' · 영화·시리즈 '+(list.length-yt)+'</span>';
+  if(sum) sum.innerHTML='<b>🎬 '+total+'편</b><span>유튜브 '+yt+' · 영화·시리즈 '+movie+'</span>';
+  var q=shelfQueryText();
+  var shown=!q? list : list.filter(function(it){
+    return (String(it.title||'')+' '+String(it.channel||'')).toLowerCase().indexOf(q)>=0;
+  });
   if(!list.length){
     body.innerHTML='<div class="card bk-empty"><b>아직 모인 영상이 없어요</b>'
       +'쓰기에서 <b>🎬 포스터</b>나 <b>▶️ 유튜브</b>로 그림을 붙이면 여기에 한눈에 모여요.</div>';
+    syncShelfBar();
     return;
   }
-  body.innerHTML='<div class="vid-grid">'+list.map(videoCardHTML).join('')+'</div>';
+  if(!shown.length){
+    body.innerHTML='<div class="card bk-empty"><b>‘'+esc(shelfQuery)+'’로 찾은 영상이 없어요</b>다른 낱말로 찾아보세요.</div>';
+    syncShelfBar();
+    return;
+  }
+  body.innerHTML='<div class="vid-grid">'+shown.map(videoCardHTML).join('')+'</div>';
+  syncShelfBar();
 }
 function syncShelfTabs(){
-  var b=$('shTabBook'), v=$('shTabVideo'), f=$('shelfForm');
+  var b=$('shTabBook'), v=$('shTabVideo');
   var isVid=(shelfTab==='video');
   if(b){ b.classList.toggle('on', !isVid); b.setAttribute('aria-selected', isVid? 'false':'true'); }
   if(v){ v.classList.toggle('on', isVid); v.setAttribute('aria-selected', isVid? 'true':'false'); }
-  if(f) f.style.display= isVid? 'none' : '';
+  var qi=$('shelfQuery'), add=$('shelfAdd'), lang=$('shelfLang'), vg=$('shelfVGroup');
+  if(qi) qi.placeholder = isVid? '제목·채널로 찾기' : '제목·저자로 찾기';
+  if(add) add.hidden = isVid;
+  if(lang){
+    Array.prototype.forEach.call(lang.querySelectorAll('[data-lang]'), function(ch){
+      var on=(state.settings.shelfLang||'all')===ch.getAttribute('data-lang');
+      ch.hidden=isVid;
+      ch.classList.toggle('on', on && !isVid);
+      ch.setAttribute('aria-pressed', (on && !isVid)? 'true':'false');
+    });
+  }
+  if(vg){
+    var chOn=(state.settings.videoGroup==='channel');
+    vg.hidden=!isVid;
+    vg.classList.toggle('on', isVid && chOn);
+    vg.setAttribute('aria-pressed', (isVid && chOn)? 'true':'false');
+    vg.textContent=chOn? '📺 채널 묶기 끄기' : '📺 채널로 묶기';
+  }
+}
+function syncShelfBar(){
+  var sel=$('shelfSelBtn'), hidBtn=$('shelfHiddenBtn'), bar=$('shelfSelBar');
+  var n=shelfSelCount();
+  if(sel){
+    sel.classList.toggle('on', shelfSelectMode);
+    sel.textContent=shelfSelectMode? '✕ 선택 끝' : '☑️ 선택';
+    sel.setAttribute('aria-pressed', shelfSelectMode? 'true':'false');
+    var blocked=(shelfTab==='video' && state.settings.videoGroup==='channel');
+    sel.disabled=blocked;
+    sel.title=blocked? '채널로 묶은 보기에서는 합치기를 쓸 수 없어요' : '여러 개를 골라 합치거나 숨기기';
+  }
+  var hc=(state.settings.shelfHidden||[]).length;
+  if(hidBtn){ hidBtn.hidden=!hc; hidBtn.textContent='🙈 숨긴 '+hc+'개'; }
+  if(bar){
+    bar.hidden=!shelfSelectMode;
+    var m=bar.querySelector('[data-selact="merge"]'), h=bar.querySelector('[data-selact="hide"]');
+    if(m){ m.textContent='🔗 합치기 ('+n+'개)'; m.disabled=n<2; }
+    if(h){ h.textContent='🙈 숨기기 ('+n+'개)'; h.disabled=n<1; }
+  }
 }
 function setShelfTab(t){
   t=(t==='video')? 'video':'book';
   var changed=(shelfTab!==t);
   shelfTab=t;
   if(state.settings) state.settings.shelfTab=t;
-  if(changed){ renderShelf(); scheduleSave(); }
-  else syncShelfTabs();
+  if(changed){
+    shelfSel={}; shelfSelectMode=false;
+    document.body.classList.remove('shelf-sel','sel-mode');
+    renderShelf(); scheduleSave();
+  } else syncShelfTabs();
 }
-function openBookDetail(id){
-  var b=shelfById(id);
-  if(!b) return;
-  var tags=(b.dates&&b.dates.length)
-    ? '<div class="bk-tags">'+b.dates.slice().reverse().map(function(d){
-        return '<span class="bk-tag">'+esc(d)+'<button class="x2" type="button" data-deldate="'+esc(d)+'" aria-label="'+esc(d+' 빼기')+'">✕</button></span>';
-      }).join('')+'</div>'
-    : '<p class="hint">아직 읽은 날이 없어요. 아래 ‘＋1 오늘 읽음’을 눌러 주세요.</p>';
+/* ── 다중 선택 ── */
+var shelfSelectMode=false, shelfSel={};
+function shelfSelCount(){ var n=0; Object.keys(shelfSel).forEach(function(k){ if(shelfSel[k]) n++; }); return n; }
+function selKeys(){ var out=[]; Object.keys(shelfSel).forEach(function(k){ if(shelfSel[k]) out.push(k); }); return out; }
+function toggleShelfSelect(){
+  if(shelfTab==='video' && state.settings.videoGroup==='channel'){
+    toast('채널로 묶은 보기를 끄면 여러 개를 고를 수 있어요', 2600);
+    return;
+  }
+  shelfSelectMode=!shelfSelectMode;
+  shelfSel={};
+  document.body.classList.toggle('shelf-sel', shelfSelectMode);
+  document.body.classList.toggle('sel-mode', shelfSelectMode);
+  renderShelf();
+  if(shelfSelectMode) toast('카드를 눌러 여러 개를 고른 뒤 아래 버튼을 눌러 주세요', 2600);
+}
+function toggleSelKey(k){
+  if(!k) return;
+  if(shelfSel[k]) delete shelfSel[k]; else shelfSel[k]=1;
+  renderShelf();
+}
+/* ── 상세 · 이름 수정 · 병합 · 숨기기 ── */
+function itemDatesHTML(it){
+  if(it.channelGroup){
+    var list=[];
+    (it.members||[]).forEach(function(k){ var m=findShelfItem(k); if(m) list.push(m); });
+    return '<div class="bk-tags">'+list.map(function(m){
+      return '<span class="bk-tag">'+esc(m.title)+(m.last? '<b style="font-size:11px;color:var(--muted)">'+esc(fmtMD(m.last))+'</b>':'')+'</span>';
+    }).join('')+'</div>';
+  }
+  if(it.group){
+    var uniq={}, list=[];
+    (it.members||[]).forEach(function(k){ var m=findShelfItem(k); if(m && uniq[k]!==1){ uniq[k]=1; list.push(m); } });
+    return '<div class="bk-tags">'+list.map(function(m){
+      return '<span class="bk-tag">'+esc(m.title)+(m.last? '<b style="font-size:11px;color:var(--muted)">'+esc(fmtMD(m.last))+'</b>':'')+'</span>';
+    }).join('')+'</div>'
+      +(it.dates.length? '<div class="bk-tags" style="margin-top:8px">'+it.dates.slice().reverse().map(function(d){
+          return '<span class="bk-tag">'+esc(d)+'</span>';
+        }).join('')+'</div>' : '');
+  }
+  if(!(it.dates||[]).length) return '<p class="hint">아직 기록된 날이 없어요. 아래 ‘＋1 오늘’을 눌러 주세요.</p>';
+  return '<div class="bk-tags">'+it.dates.slice().reverse().map(function(d){
+    return '<span class="bk-tag">'+esc(d)
+      +(it.real? '<button class="x2" type="button" data-deldate="'+esc(d)+'" aria-label="'+esc(d+' 빼기')+'">✕</button>':'')
+      +'</span>';
+  }).join('')+'</div>';
+}
+function openItemSheet(key){
+  var it=findShelfItem(key);
+  if(!it){ toast('항목을 찾지 못했어요'); return; }
+  var isVid=(it.kind==='video');
+  var head=it.channelGroup? '📺 채널 묶음' : (it.group? (isVid? '🎬 합친 영상':'📚 합친 책') : (isVid? '🎬 영상 자세히':'📚 책 자세히'));
+  var sub=isVid
+    ? (it.channelGroup? (it.videos||(it.members||[]).length)+'편 · '+esc(it.title) : (it.channel? esc(it.channel) : (it.vkind==='youtube'? '유튜브':'영화·시리즈')))
+    : (it.author? esc(it.author) : (it.group? '합친 카드' : (it.auto? '본문에서 자동으로 찾은 제목' : '저자 정보 없음')));
+  var cover=itemCoverHTML(it, 'bk-sh-cv'+(isVid && it.vkind==='youtube'? ' yt':''));
+  var extra=(it.auto && (state.settings.shelfExtra||{})[it.key])? Number((state.settings.shelfExtra||{})[it.key])||0 : 0;
   var html='<div class="grab"></div>'
-    +'<div class="sheet-head"><h2>📚 책 자세히</h2><button class="x" data-close aria-label="닫기">✕</button></div>'
+    +'<div class="sheet-head"><h2>'+head+'</h2><button class="x" data-close aria-label="닫기">✕</button></div>'
     +'<div class="sheet-block">'
-      +'<div class="bk-sh">'
-        +'<span class="bk-sh-cv"><span class="bk-ph" aria-hidden="true">📕</span>'
-          +(b.coverUrl? '<img src="'+esc(b.coverUrl)+'" alt="'+esc(b.title+' 표지')+'" referrerpolicy="no-referrer" onerror="this.remove()">':'')
-        +'</span>'
-        +'<div class="bk-sh-t"><b>'+esc(b.title)+'</b>'
-          +'<span>'+(b.author? esc(b.author) : '저자 정보 없음')+'</span>'
-          +'<span style="color:var(--teal-3);font-weight:900;font-size:14px">총 '+bookCount(b)+'회 읽음</span>'
+      +'<div class="bk-sh">'+cover
+        +'<div class="bk-sh-t"><b>'+esc(it.title)+'</b><span>'+sub+'</span>'
+          +'<span style="color:var(--teal-3);font-weight:900;font-size:14px">'+(isVid? '총 '+(Number(it.count)||0)+'회 봄' : '총 '+(Number(it.count)||0)+'회 읽음')+'</span>'
         +'</div>'
       +'</div>'
     +'</div>'
-    +'<div class="sheet-block"><h3>📅 읽은 날짜</h3>'+tags
-      +(b.extraCount? '<p class="hint" style="margin-top:8px">날짜 없이 더 센 횟수 '+b.extraCount+'회</p>':'')
+    +'<div class="sheet-block"><h3>📅 '+(it.group? '합쳐진 날짜' : '기록된 날짜')+'</h3>'+itemDatesHTML(it)
+      +(extra? '<p class="hint" style="margin-top:8px">날짜 없이 더 센 횟수 '+extra+'회</p>':'')
+      +(it.group? '<p class="hint" style="margin-top:8px">🔗 합친 카드예요. 다이어리 원문은 그대로 있고, 책장에서만 한 장으로 보여요.</p>':'')
+      +(it.auto? '<p class="hint" style="margin-top:8px">옛 백업 표지에서 자동으로 담았어요. 제목이 다르면 ✏️ 이름 바꾸기로 고쳐 주세요.</p>':'')
+      +(it.channelGroup? '<p class="hint" style="margin-top:8px">같은 채널 영상을 한 장으로 모아 보여요. 채널 묶기를 끄면 하나씩 보여요.</p>':'')
     +'</div>'
-    +'<div class="two-btns" style="margin-bottom:8px">'
-      +'<button class="btn-line teal" type="button" data-shelfplus="'+esc(b.id)+'">＋1 오늘 읽음</button>'
-      +'<button class="btn-line danger" type="button" data-shelfdel="'+esc(b.id)+'">책 삭제</button>'
+    +(it.channelGroup
+      ? '<button class="btn-line" type="button" data-itemedit="'+esc(it.key)+'" style="margin-bottom:8px">✏️ 채널 이름 바꾸기</button>'
+      : '<div class="two-btns" style="margin-bottom:8px">'
+        +'<button class="btn-line teal" type="button" data-itemplus="'+esc(it.key)+'">＋1 오늘</button>'
+        +'<button class="btn-line" type="button" data-itemedit="'+esc(it.key)+'">✏️ 이름 바꾸기</button>'
+      +'</div>')
+    +(it.group? '<button class="btn-line" type="button" data-itemunmerge="'+esc(it.key)+'" style="margin-bottom:8px">🔗 병합 해제</button>':'')
+    +(isVid? '<button class="btn-line" type="button" data-itembig="'+esc(it.key)+'" style="margin-bottom:8px">🖼️ 사진으로 크게 보기</button>':'')
+    +'<div class="two-btns">'
+      +'<button class="btn-line" type="button" data-itemhide="'+esc(it.key)+'">🙈 책장에서 숨기기</button>'
+      +(it.real? '<button class="btn-line danger" type="button" data-itemdel="'+esc(it.key)+'">책 삭제</button>'
+                : '<button class="btn-line" type="button" data-close>닫기</button>')
     +'</div>';
   openSheet(html, function(root){
     root.addEventListener('click', function(e){
@@ -4484,33 +5317,244 @@ function openBookDetail(id){
       if(del){
         e.preventDefault();
         var d=del.getAttribute('data-deldate');
-        shelfRemoveDate(id, d);
-        scheduleSave(); Cloud.pushProfile();
-        openBookDetail(id); renderShelf();
+        shelfRemoveDate(it.bookId, d);
+        shelfTouch(); scheduleSave(); Cloud.pushProfile();
+        openItemSheet(it.key); renderShelf();
         toast(d+' 기록을 뺐어요');
         return;
       }
-      var plus=e.target.closest('[data-shelfplus]');
+      var plus=e.target.closest('[data-itemplus]');
       if(plus){
         e.preventDefault();
-        shelfMarkRead(id);
-        scheduleSave(); Cloud.pushProfile();
-        openBookDetail(id); renderShelf();
-        toast('오늘 읽은 것으로 +1 했어요');
+        if(it.real){
+          var b=shelfMarkRead(it.bookId);
+          if(b) toast('‘'+b.title+'’ 오늘 +1 · 총 '+bookCount(b)+'회');
+        } else {
+          if(!state.settings.shelfExtra) state.settings.shelfExtra={};
+          state.settings.shelfExtra[it.key]=(Number(state.settings.shelfExtra[it.key])||0)+1;
+          toast('‘'+it.title+'’ 오늘 +1');
+        }
+        shelfTouch(); scheduleSave(); Cloud.pushProfile();
+        openItemSheet(it.key); renderShelf();
         return;
       }
-      var dl=e.target.closest('[data-shelfdel]');
+      var ed=e.target.closest('[data-itemedit]');
+      if(ed){ e.preventDefault(); openItemEditor(ed.getAttribute('data-itemedit')); return; }
+      var un=e.target.closest('[data-itemunmerge]');
+      if(un){
+        e.preventDefault();
+        if(!window.confirm('이 카드의 병합을 풀까요?\n\n각 항목이 원래대로 따로 보여요. 다이어리 기록은 그대로입니다.')) return;
+        state.settings.shelfGroups=(state.settings.shelfGroups||[]).filter(function(g){ return 'g:'+g.id!==it.key; });
+        shelfTouch(); scheduleSave(); Cloud.pushProfile(); closeSheet(true); renderShelf();
+        toast('병합을 풀었어요');
+        return;
+      }
+      var big=e.target.closest('[data-itembig]');
+      if(big){
+        e.preventDefault();
+        var pids=[];
+        if(it.members){
+          it.members.forEach(function(k){ var m=findShelfItem(k); if(m && m.photo && pids.indexOf(m.photo)<0) pids.push(m.photo); });
+        } else if(it.photo){ pids.push(it.photo); }
+        if(!pids.length){ toast('크게 볼 사진이 없어요'); return; }
+        closeSheetUI();
+        openLightbox(pids, 0);
+        return;
+      }
+      var hd=e.target.closest('[data-itemhide]');
+      if(hd){
+        e.preventDefault();
+        hideShelfKeys([it.key]);
+        closeSheetUI(); renderShelf();
+        toast('책장에서 숨겼어요 · 🙈 숨긴 항목에서 되살릴 수 있어요', 3000);
+        return;
+      }
+      var dl=e.target.closest('[data-itemdel]');
       if(dl){
         e.preventDefault();
-        if(!window.confirm('‘'+b.title+'’을(를) 책장에서 지울까요?')) return;
-        shelfDelete(id);
+        if(!it.real) return;
+        if(!window.confirm('‘'+it.title+'’을(를) 책장에서 지울까요?\n\n다이어리 기록과 사진은 그대로 남아요.')) return;
+        shelfDelete(it.bookId);
         closeSheetUI(); renderShelf();
-        scheduleSave(); Cloud.pushProfile();
+        shelfTouch(); scheduleSave(); Cloud.pushProfile();
         toast('책장에서 지웠어요');
         return;
       }
     });
-  }, 'book');
+  }, 'item');
+}
+function openItemEditor(key){
+  var it=findShelfItem(key);
+  if(!it) return;
+  var ov=(state.settings.shelfOverrides||{})[key]||{};
+  var isVid=(it.kind==='video');
+  var html='<div class="grab"></div>'
+    +'<div class="sheet-head"><h2>✏️ '+(it.group? '카드 이름':'이름')+' 바꾸기</h2><button class="x" data-close aria-label="닫기">✕</button></div>'
+    +'<div class="sheet-block">'
+      +'<p class="hint">책장에 보이는 이름만 바꿔요. 다이어리 기록과 사진은 그대로입니다.</p>'
+      +'<div class="field" style="margin-top:10px"><label>'+(isVid? '제목':'제목')+'</label>'
+        +'<input class="inp" id="mgTitle" maxlength="80" value="'+esc(ov.title || it.title)+'"></div>'
+      +(isVid? '<div class="field" style="margin-top:9px"><label>채널명</label>'
+        +'<input class="inp" id="mgChannel" maxlength="60" value="'+esc(typeof ov.channel==='string'? ov.channel : (it.channel||''))+'"></div>':'')
+      +'<div class="two-btns" style="margin-top:12px">'
+        +'<button class="btn-line teal" type="button" data-saveedit="'+esc(key)+'">저장</button>'
+        +'<button class="btn-line" type="button" data-resetedit="'+esc(key)+'">되돌리기</button>'
+      +'</div>'
+    +'</div>';
+  openSheet(html, function(root){
+    root.addEventListener('click', function(e){
+      var sv=e.target.closest('[data-saveedit]');
+      if(sv){
+        e.preventDefault();
+        var title=String((root.querySelector('#mgTitle')||{}).value||'').trim().slice(0,80);
+        var chEl=root.querySelector('#mgChannel');
+        var o={};
+        if(title) o.title=title;
+        if(chEl) o.channel=String(chEl.value||'').trim().slice(0,60);
+        if(!state.settings.shelfOverrides) state.settings.shelfOverrides={};
+        if(o.title || o.channel) state.settings.shelfOverrides[key]=o;
+        else delete state.settings.shelfOverrides[key];
+        shelfTouch(); scheduleSave(); Cloud.pushProfile();
+        closeSheet(true); renderShelf();
+        openItemSheet(key);
+        toast('이름을 저장했어요');
+        return;
+      }
+      var rs=e.target.closest('[data-resetedit]');
+      if(rs){
+        e.preventDefault();
+        if(state.settings.shelfOverrides) delete state.settings.shelfOverrides[rs.getAttribute('data-resetedit')];
+        shelfTouch(); scheduleSave(); Cloud.pushProfile();
+        closeSheet(true); renderShelf();
+        openItemSheet(key);
+        toast('원래 이름으로 되돌렸어요');
+        return;
+      }
+    });
+  }, 'edit');
+}
+function hideShelfKeys(keys){
+  if(!Array.isArray(keys) || !keys.length) return;
+  if(!Array.isArray(state.settings.shelfHidden)) state.settings.shelfHidden=[];
+  keys.forEach(function(k){ if(state.settings.shelfHidden.indexOf(k)<0) state.settings.shelfHidden.push(k); });
+  shelfTouch(); scheduleSave(); Cloud.pushProfile();
+  if(shelfSelectMode){ shelfSel={}; shelfSelectMode=false; document.body.classList.remove('shelf-sel','sel-mode'); }
+}
+function openHiddenSheet(){
+  var hid=(state.settings.shelfHidden||[]).slice();
+  if(!hid.length){ toast('숨긴 항목이 없어요'); return; }
+  var map={};
+  shelfView('book',{includeHidden:true}).concat(shelfView('video',{includeHidden:true}))
+    .concat(shelfView('book',{includeHidden:true,raw:true})).concat(shelfView('video',{includeHidden:true,raw:true}))
+    .forEach(function(it){ if(it && it.key && !map[it.key]) map[it.key]=it; });
+  var rows=hid.map(function(k){
+    var it=map[k];
+    return { key:k, title: it? it.title : k.replace(/^[a-z]+:/,''), kind: it? it.kind : '' };
+  });
+  var html='<div class="grab"></div>'
+    +'<div class="sheet-head"><h2>🙈 숨긴 항목</h2><button class="x" data-close aria-label="닫기">✕</button></div>'
+    +'<div class="sheet-block">'
+      +'<p class="hint">책장에서만 숨긴 항목이에요. 다이어리 기록과 사진은 그대로 있고, 되살리면 다시 보여요.</p>'
+      +'<div style="margin-top:9px">'+rows.map(function(r){
+        return '<div class="cat-row"><div class="cm"><b style="font-size:13.5px;font-weight:800">'+esc(r.title)+'</b>'
+          +'<span style="font-size:11px;color:var(--muted)">'+(r.kind==='video'? '🎬 영상':'📚 책')+'</span></div>'
+          +'<button class="mini-btn" type="button" data-unhide="'+esc(r.key)+'">되살리기</button></div>';
+      }).join('')+'</div>'
+      +'<button class="btn-line teal" type="button" data-unhideall style="margin-top:10px">모두 되살리기 ('+rows.length+'개)</button>'
+    +'</div>';
+  openSheet(html, function(root){
+    root.addEventListener('click', function(e){
+      var un=e.target.closest('[data-unhide]');
+      if(un){
+        e.preventDefault();
+        var k=un.getAttribute('data-unhide');
+        state.settings.shelfHidden=(state.settings.shelfHidden||[]).filter(function(x){ return x!==k; });
+        shelfTouch(); scheduleSave(); Cloud.pushProfile();
+        closeSheet(true); renderShelf();
+        toast('되살렸어요');
+        return;
+      }
+      if(e.target.closest('[data-unhideall]')){
+        e.preventDefault();
+        state.settings.shelfHidden=[];
+        shelfTouch(); scheduleSave(); Cloud.pushProfile();
+        closeSheet(true); renderShelf();
+        toast('숨긴 항목을 모두 되살렸어요');
+        return;
+      }
+    });
+  }, 'hidden');
+}
+/* ── 다중 선택 → 하나로 합치기 ── */
+function openMergeSheet(){
+  var keys=selKeys();
+  if(keys.length<2){ toast('두 개 이상 골라 주세요'); return; }
+  var kind=(shelfTab==='video')? 'video':'book';
+  var list=shelfView(kind, {includeHidden:true}).filter(function(it){ return shelfSel[it.key]; });
+  if(list.length<2){ toast('다시 골라 주세요'); return; }
+  var defName=list[0].title;
+  var covers=list.filter(function(it){ return (it.photo && PhotoCache.has(it.photo)) || it.coverUrl; });
+  var html='<div class="grab"></div>'
+    +'<div class="sheet-head"><h2>🔗 하나로 합치기</h2><button class="x" data-close aria-label="닫기">✕</button></div>'
+    +'<div class="sheet-block">'
+      +'<p class="hint">고른 '+list.length+'개를 한 카드로 묶어요. 날짜와 횟수는 합쳐지고, 다이어리 원문은 그대로 남아요.</p>'
+      +'<div class="field" style="margin-top:10px"><label>대표 이름</label>'
+        +'<input class="inp" id="mgName" maxlength="80" value="'+esc(defName)+'" placeholder="예: 캐리비안의 해적 시리즈"></div>'
+      +(covers.length? '<div style="margin-top:11px"><div class="bk-lab" style="font-size:11.5px;font-weight:800;color:var(--muted);margin-bottom:6px">대표 그림 고르기</div>'
+        +'<div class="mg-covers">'+covers.map(function(it,i){
+          var u=(it.photo && PhotoCache.has(it.photo))? photoUrl(it.photo) : it.coverUrl;
+          return '<button class="mg-cv'+(i===0?' on':'')+'" type="button" data-mgcov="'+esc(it.key)+'">'
+            +'<img src="'+esc(u||'')+'" alt="'+esc(it.title)+'" referrerpolicy="no-referrer"></button>';
+        }).join('')+'</div></div>' : '')
+      +'<div class="bk-lab" style="font-size:11.5px;font-weight:800;color:var(--muted);margin:12px 0 6px">합칠 항목</div>'
+      +'<div>'+list.map(function(it){
+          return '<div class="cat-row"><div class="cm"><b style="font-size:13px;font-weight:800">'+esc(it.title)+'</b>'
+            +'<span style="font-size:11px;color:var(--muted)">'+esc((it.dates||[]).length? fmtMD(it.last)+' · '+(Number(it.count)||0)+'회' : '날짜 없음')+'</span></div></div>';
+        }).join('')+'</div>'
+      +'<button class="btn-line teal" type="button" id="mgGo" style="margin-top:11px">🔗 합치기 ('+list.length+'개)</button>'
+    +'</div>';
+  openSheet(html, function(root){
+    var chosen=(covers[0] && covers[0].key) || '';
+    root.addEventListener('click', function(e){
+      var cv=e.target.closest('[data-mgcov]');
+      if(cv){
+        e.preventDefault();
+        Array.prototype.forEach.call(root.querySelectorAll('.mg-cv'), function(x){ x.classList.remove('on'); });
+        cv.classList.add('on');
+        chosen=cv.getAttribute('data-mgcov');
+        return;
+      }
+      if(e.target.closest('#mgGo')){
+        e.preventDefault();
+        var name=String((root.querySelector('#mgName')||{}).value||'').trim().slice(0,80) || defName;
+        var newKeys=[], drop={};
+        list.forEach(function(it){
+          if(it.group){
+            drop[it.groupId]=1;
+            (it.members||[]).forEach(function(k){ if(newKeys.indexOf(k)<0) newKeys.push(k); });
+          } else if(newKeys.indexOf(it.key)<0) newKeys.push(it.key);
+        });
+        var coverItem=null;
+        list.forEach(function(it){ if(it.key===chosen) coverItem=it; });
+        var cover='';
+        if(coverItem){
+          cover=(coverItem.photo && PhotoCache.has(coverItem.photo))? coverItem.photo : (coverItem.coverUrl||'');
+        }
+        var groups=(state.settings.shelfGroups||[]).filter(function(g){ return !drop[g.id]; });
+        groups.forEach(function(g){ g.keys=(g.keys||[]).filter(function(k){ return newKeys.indexOf(k)<0; }); });
+        groups=groups.filter(function(g){ return g.keys && g.keys.length; });
+        groups.push({ id:'sg'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),
+          kind:kind, name:name, cover:cover, keys:newKeys, at:Date.now() });
+        state.settings.shelfGroups=groups;
+        shelfSel={}; shelfSelectMode=false;
+        document.body.classList.remove('shelf-sel','sel-mode');
+        shelfTouch(); scheduleSave(); Cloud.pushProfile();
+        closeSheet(true); renderShelf();
+        toast('‘'+name+'’ 하나로 합쳤어요', 2800);
+        return;
+      }
+    });
+  }, 'merge');
 }
 function bindShelf(){
   var form=$('shelfForm');
@@ -4526,35 +5570,64 @@ function bindShelf(){
   if(qi) qi.addEventListener('input', function(){ shelfQuery=qi.value||''; renderShelf(); });
   var add=$('shelfAdd');
   if(add) add.addEventListener('click', function(){ openCoverSearch(null, {shelf:true}); });
+  var lang=$('shelfLang');
+  if(lang) lang.addEventListener('click', function(e){
+    var l=e.target.closest('[data-lang]');
+    if(l){
+      e.preventDefault();
+      state.settings.shelfLang=l.getAttribute('data-lang');
+      shelfTouch(); renderShelf(); scheduleSave();
+      return;
+    }
+    var vg=e.target.closest('[data-vgroup]');
+    if(vg){
+      e.preventDefault();
+      state.settings.videoGroup=(state.settings.videoGroup==='channel')? 'title':'channel';
+      shelfSel={}; shelfSelectMode=false;
+      document.body.classList.remove('shelf-sel','sel-mode');
+      shelfTouch(); renderShelf(); scheduleSave();
+      toast(state.settings.videoGroup==='channel'? '같은 채널 영상을 한 장으로 모았어요':'채널 묶기를 껐어요', 2200);
+      return;
+    }
+  });
+  var selBtn=$('shelfSelBtn');
+  if(selBtn) selBtn.addEventListener('click', function(){
+    if(shelfSelectMode){ shelfSelectMode=false; shelfSel={}; document.body.classList.remove('shelf-sel','sel-mode'); renderShelf(); return; }
+    toggleShelfSelect();
+  });
+  var hidBtn=$('shelfHiddenBtn');
+  if(hidBtn) hidBtn.addEventListener('click', openHiddenSheet);
+  var bar=$('shelfSelBar');
+  if(bar) bar.addEventListener('click', function(e){
+    var b=e.target.closest('[data-selact]');
+    if(!b) return;
+    e.preventDefault();
+    var a=b.getAttribute('data-selact');
+    if(a==='cancel'){ shelfSelectMode=false; shelfSel={}; document.body.classList.remove('shelf-sel','sel-mode'); renderShelf(); return; }
+    if(a==='merge'){ openMergeSheet(); return; }
+    if(a==='hide'){
+      var keys=selKeys();
+      if(!keys.length){ toast('숨길 카드를 먼저 골라 주세요'); return; }
+      if(!window.confirm(keys.length+'개를 책장에서 숨길까요?\n\n다이어리 기록과 사진은 그대로이고, 🙈 숨긴 항목에서 되살릴 수 있어요.')) return;
+      hideShelfKeys(keys);
+      renderShelf();
+      toast(keys.length+'개를 책장에서 숨겼어요', 2600);
+      return;
+    }
+  });
   var body=$('shelfBody');
   if(body){
     body.addEventListener('click', function(e){
-      var vid=e.target.closest('[data-vid]');
-      if(vid){
-        e.preventDefault();
-        var vlist=videoItems();
-        var ids=vlist.map(function(x){ return x.id; });
-        var vi=ids.indexOf(vid.getAttribute('data-vid'));
-        openLightbox(ids, vi<0? 0: vi);
-        return;
-      }
-      var plus=e.target.closest('[data-bookplus]');
-      if(plus){
-        e.preventDefault();
-        var id=plus.getAttribute('data-bookplus');
-        var b=shelfMarkRead(id);
-        if(b){
-          renderShelf(); scheduleSave(); Cloud.pushProfile();
-          toast('‘'+b.title+'’ 오늘 읽음 +1 · 총 '+bookCount(b)+'회');
-        }
-        return;
-      }
-      var open=e.target.closest('[data-bookopen]');
+      var card=e.target.closest('[data-bcard],[data-vidcard]');
+      var key=card? (card.getAttribute('data-bcard')||card.getAttribute('data-vidcard')) : '';
+      if(card && shelfSelectMode){ e.preventDefault(); toggleSelKey(key); return; }
+      var open=e.target.closest('[data-itemopen]');
       if(open){
         e.preventDefault();
-        openBookDetail(open.getAttribute('data-bookopen'));
+        openItemSheet(open.getAttribute('data-itemopen'));
         return;
       }
+      if(card){ e.preventDefault(); openItemSheet(key); }
     });
   }
 }
@@ -4563,6 +5636,7 @@ function bindShelf(){
 function bindEvents(){
   bindHistory();
   bindKeyboardFix();
+  bindHeaderCollapse();
   /* 달력 */
   $('calGrid').addEventListener('click', function(e){
     var b=e.target.closest('[data-date]');
@@ -4662,6 +5736,16 @@ function bindEvents(){
     if(a==='youtube'){
       e.preventDefault();
       openYouTube(cid);
+      return;
+    }
+    if(a==='fmt'){
+      e.preventDefault();
+      applyFmt(art, cid, act.getAttribute('data-fmt'), act.getAttribute('data-color')||'');
+      return;
+    }
+    if(a==='template'){
+      e.preventDefault();
+      openTemplateSheet(cid);
       return;
     }
     if(a==='addtime'){
@@ -4796,6 +5880,15 @@ function bindEvents(){
     toast('그 날 기록으로 이동했어요');
   });
 
+  /* 누적 통계 카드 */
+  var cumEl=$('cumStats');
+  if(cumEl) cumEl.addEventListener('click', function(e){
+    var b=e.target.closest('[data-cumact]');
+    if(!b) return;
+    e.preventDefault();
+    openMonthlyStats();
+  });
+
   /* 보기 탭 안 버튼 */
   $('readContent').addEventListener('click', function(e){
     var act=e.target.closest('[data-act]');
@@ -4882,6 +5975,7 @@ function kbMeasure(){
     document.documentElement.style.setProperty('--kb', h+'px');
     document.body.classList.toggle('kb-open', h>0);
   }catch(e){}
+  syncHeaderCollapse();
 }
 function kbScrollIntoView(el){
   if(!el || !el.scrollIntoView) return;
@@ -4933,6 +6027,33 @@ function syncStickyTop(){
   if(head && bar && head.offsetHeight){
     bar.style.top=(head.offsetHeight-2)+'px';
   }
+}
+/* 상단 초록 헤더 접기 — 아래로 스크롤(60px)하거나 자판이 올라오면 프로필 줄을 숨긴다 */
+var hdrCollapsed=false;
+function syncHeaderCollapse(){
+  var head=document.querySelector('.topbar');
+  if(!head) return;
+  var y=window.pageYOffset || document.documentElement.scrollTop || 0;
+  var kb=document.body.classList.contains('kb-open');
+  var on=hdrCollapsed? (y>30) : (y>60);
+  if(kb) on=true;
+  if(on===hdrCollapsed){ return; }
+  hdrCollapsed=on;
+  head.classList.toggle('hdr-min', on);
+  syncStickyTop();
+  setTimeout(syncStickyTop, 280);
+}
+function bindHeaderCollapse(){
+  var raf=false;
+  function queue(){
+    if(raf) return;
+    raf=true;
+    (window.requestAnimationFrame||function(f){ setTimeout(f,16); })(function(){ raf=false; syncHeaderCollapse(); });
+  }
+  window.addEventListener('scroll', queue, {passive:true});
+  window.addEventListener('resize', queue);
+  window.addEventListener('orientationchange', function(){ setTimeout(syncHeaderCollapse, 260); });
+  syncHeaderCollapse();
 }
 
 /* ══════════════════════════ ☁️ 클라우드 (Supabase) ══════════════════════════
@@ -5126,9 +6247,14 @@ async function pushProfileNow(){
   var cats=state.categories.map(function(c){
     return {id:c.id, name:c.name, timer:!!c.timer, group:c.group, hidden:!!c.hidden, order:c.order};
   });
+  var st=state.settings||{};
   var body={user_id:CLOUD.uid, settings:{child:{name:state.child.name||'', grade:state.child.grade||''}, categories:cats, bookshelf:(state.bookshelf||[]).map(function(b){
     return {id:b.id, key:b.key, title:b.title, author:b.author, coverUrl:b.coverUrl, dates:b.dates, extraCount:b.extraCount, updatedAt:b.updatedAt};
-  })}, updated_at:new Date().toISOString()};
+  }),
+    shelfGroups:st.shelfGroups||[], shelfHidden:st.shelfHidden||[], shelfOverrides:st.shelfOverrides||{},
+    shelfExtra:st.shelfExtra||{}, templates:st.templates||{},
+    shelfLang:st.shelfLang||'all', videoGroup:st.videoGroup||'title', shelfAt:Number(st.shelfAt)||0
+  }, updated_at:new Date().toISOString()};
   var r=await sbApi('/rest/v1/diary_profiles?on_conflict=user_id',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},body:body});
   if(!r.ok) throw new Error(sbErrText(r));
   CLOUD.lastOk=Date.now(); CLOUD.err=''; setPill('synced'); updateCloudUI();
@@ -5212,6 +6338,13 @@ async function mergeCloud(profRow, rows){
       state.bookshelf=mergedBooks;
       if(JSON.stringify(mergedBooks.map(bookSig))!==JSON.stringify(cloudBooks.map(bookSig))) needProfilePush=true;
     } else if((state.bookshelf||[]).length){
+      needProfilePush=true;
+    }
+    /* 책장 표시 설정(병합·숨김·이름·양식) — 더 최근에 바꿔 둔 쪽을 따른다 */
+    var cloudAt=Number(cs.shelfAt)||0, localAt=Number(state.settings.shelfAt)||0;
+    if(cloudAt>localAt){
+      applyCloudShelfSettings(cs);
+    } else if(cloudAt<localAt || shelfSettingsSig()!==cloudShelfSig(cs)){
       needProfilePush=true;
     }
   } else {
@@ -5440,7 +6573,7 @@ function lockAppForGate(){
     var ct=$('childTitle'); if(ct) ct.innerHTML='나의 학습노트';
     var m=$('mascot'); if(m) m.textContent='✏️';
     document.title='학습 · 성장 다이어리';
-    ['sections','readContent','shelfBody','shelfSum','todayTable','todayStats','weekTable','calGrid','jumpBar','viewCatChips','rangeInfo'].forEach(function(id){
+    ['sections','readContent','shelfBody','shelfSum','cumStats','todayTable','todayStats','weekTable','calGrid','jumpBar','viewCatChips','rangeInfo'].forEach(function(id){
       var el=$(id); if(el) el.innerHTML='';
     });
     var dc=$('draftBadge'); if(dc) dc.hidden=true;
@@ -5653,6 +6786,7 @@ async function boot(){
   renderCatChips();
   syncRangeUI();
   applyTip();
+  renderCumStats();
   if(!storageUsable()){
     var tb=$('tipBanner');
     tb.hidden=false;
