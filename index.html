@@ -732,19 +732,20 @@ table.tbl{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-nume
 .rv-day{display:flex;flex-direction:column;gap:8px;margin:0}
 .rv-day-head{
   display:flex;align-items:center;gap:8px;width:100%;text-align:left;
-  padding:8px 11px;border-radius:12px;border:1px solid var(--line);
-  background:linear-gradient(180deg,#f8f5ee,#f2ede3);
+  padding:8px 11px;border-radius:12px;border:1px solid #9ad2ca;
+  background:linear-gradient(180deg,#e4f4f0,#d4eee9);
+  box-shadow:0 4px 10px -9px rgba(11,95,89,.9);
 }
 .rv-day-head:active{filter:brightness(.985)}
 .rv-day-date{
-  flex:1;min-width:0;font-size:13px;font-weight:800;letter-spacing:-.01em;color:var(--ink);
+  flex:1;min-width:0;font-size:13px;font-weight:900;letter-spacing:-.01em;color:#0d5c54;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .rv-day-sub{
-  flex:0 0 auto;font-size:11px;font-weight:800;color:var(--teal-3);
-  background:var(--teal-soft);border-radius:8px;padding:3px 7px;white-space:nowrap;
+  flex:0 0 auto;font-size:11px;font-weight:800;color:#0b5f59;
+  background:#fff;border:1px solid #b7ddd6;border-radius:8px;padding:2px 7px;white-space:nowrap;
 }
-.rv-day-chev{flex:0 0 auto;color:var(--muted);font-size:13px;font-weight:800;line-height:1}
+.rv-day-chev{flex:0 0 auto;color:#4b8e86;font-size:13px;font-weight:800;line-height:1}
 .print-only{display:none}
 #printArea{display:none}
 /* 인쇄(PDF) 전용 서식 — 화면에서는 #printArea가 숨는다 */
@@ -781,14 +782,14 @@ table.tbl{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-nume
   #printArea .pa-day{margin:0 0 4mm;break-inside:auto}
   #printArea .rv-day{display:block !important}
   #printArea .rv-day-head{
-    display:flex;align-items:center;gap:3mm;background:#f3f1e9 !important;
-    border:1px solid #cfcabd !important;border-radius:1.5mm;padding:1.6mm 2.6mm;margin:0 0 2mm;
+    display:flex;align-items:center;gap:3mm;background:#e9f6f3 !important;
+    border:1px solid #9ad2ca !important;border-radius:1.5mm;padding:1.6mm 2.6mm;margin:0 0 2mm;
     break-after:avoid;page-break-after:avoid;
   }
-  #printArea .rv-day-date{flex:1;min-width:0;font-size:11pt;font-weight:900;color:#141414;white-space:normal}
+  #printArea .rv-day-date{flex:1;min-width:0;font-size:11pt;font-weight:900;color:#0d4f47;white-space:normal}
   #printArea .rv-day-sub{
     flex:0 0 auto;font-size:8.5pt;font-weight:800;color:#0b5f59;
-    background:#e6efe9;border-radius:1mm;padding:.5mm 2mm;white-space:nowrap;
+    background:#fff;border:1px solid #b7ddd6;border-radius:1mm;padding:.5mm 2mm;white-space:nowrap;
   }
 
   /* 영역 카드 — 화면의 .read-sec을 그대로 인쇄한다 */
