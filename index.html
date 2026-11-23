@@ -320,6 +320,13 @@ main{padding:12px 13px 8px;display:flex;flex-direction:column;gap:12px}
 .photos .pbar .pused{font-size:10.5px;font-weight:800;color:var(--teal-3);background:var(--teal-soft);border-radius:6px;padding:2px 6px}
 .photos .pbar .pmark{margin-left:auto;font-size:11px;font-weight:800;color:var(--teal);background:#fff;border:1px solid var(--teal-soft-2);border-radius:8px;padding:5px 8px}
 .photos .pbar .pmark:active{background:var(--teal-soft)}
+/* 책 표지·포스터·유튜브 썸네일은 작게 — 직접 올린 사진만 크게 */
+.photos .pcard.thumb-card{display:flex;flex-direction:row;align-items:center;gap:8px;padding:6px 7px;border-radius:12px}
+.photos .pcard.thumb-card .pimg{flex:0 0 auto;width:62px;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+.photos .pcard.thumb-card .pimg img{display:block;width:100%;height:auto;object-fit:contain;background:#fff}
+.photos .pcard.thumb-card .pimg .thumb{min-height:0;aspect-ratio:3/4;border:0;border-radius:0;display:grid;place-items:center;font-size:16px}
+.photos .pcard.thumb-card .pbar{flex:1;min-width:0;border-top:0;background:transparent;padding:0;gap:5px}
+.photos .pcard.thumb-card .del{position:static;order:3;width:22px;height:22px;font-size:11px;background:#edeae2;color:#6c7772;box-shadow:none;backdrop-filter:none}
 .thumb{
   position:relative;aspect-ratio:3/4;border-radius:12px;overflow:hidden;
   background:#fff;border:1px solid var(--line);
@@ -433,6 +440,15 @@ table.tbl{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-nume
   background:#fff;border-radius:12px;overflow:hidden;box-shadow:var(--shadow-sm);text-align:left;
 }
 .read-sec .txt .txt-photo img{display:block;width:100%;height:auto;max-height:none;object-fit:contain;background:#fff}
+/* 글 속에 붙은 썸네일(책 표지·포스터·유튜브)은 작게 가로로 나란히 */
+.read-sec .txt .txt-thumbs{display:flex;flex-wrap:wrap;align-items:flex-start;gap:6px;margin:8px 0 10px}
+.read-sec .txt .txt-thumbs .txt-photo{display:block;flex:0 0 auto;width:64px;margin:0;border:1px solid var(--line);border-radius:8px;box-shadow:none;background:#fff;overflow:hidden}
+.read-sec .txt .txt-thumbs .txt-photo img{width:100%;height:auto;max-height:none;object-fit:contain;background:#fff}
+.photo-thumbs{display:flex;flex-wrap:wrap;align-items:flex-start;gap:6px;margin-top:10px}
+.photo-thumbs button{position:relative;display:block;flex:0 0 auto;width:64px;padding:0;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden;box-shadow:none}
+.photo-thumbs button:active{opacity:.94}
+.photo-thumbs button img{display:block;width:100%;height:auto;max-height:none;object-fit:contain;background:#fff}
+.photo-thumbs .thumb{aspect-ratio:3/4;min-height:0;border:0;border-radius:0;display:grid;place-items:center;font-size:15px;color:var(--muted);background:#f7f4ed}
 .photo-grid{display:flex;flex-direction:column;gap:8px;margin-top:10px}
 .photo-grid button{
   position:relative;display:block;width:100%;padding:0;background:#fff;
@@ -796,6 +812,13 @@ table.tbl{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-nume
     display:block !important;width:auto !important;height:auto !important;max-width:100% !important;
     max-height:205mm !important;object-fit:contain !important;margin:0 auto;
   }
+  /* 썸네일은 인쇄에서도 작게 나란히 */
+  .read-sec .txt .txt-thumbs{display:flex !important;flex-wrap:wrap !important;gap:2mm !important;margin:2mm 0 !important}
+  .read-sec .txt .txt-thumbs .txt-photo{width:16mm !important;margin:0 !important;border-radius:1mm !important}
+  .read-sec .txt .txt-thumbs .txt-photo img{width:100% !important;max-height:none !important;margin:0 !important}
+  .photo-thumbs{display:flex !important;flex-wrap:wrap !important;gap:2mm !important;margin-top:2mm !important}
+  .photo-thumbs button{width:16mm !important;border-radius:1mm !important}
+  .photo-thumbs button img{width:100% !important;max-height:none !important;margin:0 !important}
 
   /* 분석 표 */
   .analysis{
@@ -1387,7 +1410,7 @@ function normalizeState(s){
       var r=s.photoRefs[id];
       if(!r || typeof r!=='object') return;
       if(typeof r.path==='string' && r.path){
-        prs[id]={path:r.path, storage:'supabase'};
+        prs[id]=Object.assign({path:r.path, storage:'supabase'}, refThumbFields(r));
         return;
       }
       /* 외부(HTTPS) 표지처럼 버킷에 올리지 않은 사진 */
@@ -1395,6 +1418,7 @@ function normalizeState(s){
         var o={url:r.url, storage:'url'};
         if(typeof r.fallback==='string' && /^https?:\/\//i.test(r.fallback)) o.fallback=r.fallback;
         if(typeof r.title==='string' && r.title) o.title=r.title;
+        Object.assign(o, refThumbFields(r));
         prs[id]=o;
       }
     });
@@ -1622,6 +1646,20 @@ function isBookPhoto(id){
   var ref=state.photoRefs[id];
   return !!(ref && ref.storage==='url');
 }
+/* 책 표지·영화 포스터·유튜브 썸네일은 작은 썸네일로, 직접 올린 사진은 크게 */
+var THUMB_KINDS={cover:1, book:1, poster:1, youtube:1};
+function isThumbPhoto(id){
+  var ref=state.photoRefs[id];
+  if(!ref) return false;
+  return ref.thumb===true || !!(ref.kind && THUMB_KINDS[ref.kind]);
+}
+function refThumbFields(r){
+  var o={};
+  if(!r || typeof r!=='object') return o;
+  if(r.thumb===true) o.thumb=true;
+  if(r.kind && THUMB_KINDS[r.kind]) o.kind=r.kind;
+  return o;
+}
 /* 본문 속 사진 위치 표시: [[사진3]] — sec.p 의 3번째 사진 */
 var PHOTO_MARK_RE=/\[\[\s*사진\s*(\d{1,2})\s*\]\]/g;
 function photoMark(n){ return '[[사진'+n+']]'; }
@@ -1640,7 +1678,7 @@ function photosEditHTML(sec){
   return pids.map(function(id,i){
     var n=all.indexOf(id)+1;
     var used=hasPhotoMark(txt,n);
-    return '<div class="pcard" data-pid="'+id+'">'
+    return '<div class="pcard'+(isThumbPhoto(id)?' thumb-card':'')+'" data-pid="'+id+'">'
       +'<button class="pimg" type="button" data-act="viewphoto" data-pids="'+esc(pids.join(','))+'" data-idx="'+i+'" aria-label="'+esc(photoAlt(id,n))+' 크게 보기">'+photoImgHTML(id, photoAlt(id,n))+'</button>'
       +'<button class="del" data-act="delphoto" data-pid="'+id+'" aria-label="사진 삭제">✕</button>'
       +'<div class="pbar"><span class="pn">사진 '+n+'</span>'
@@ -1831,20 +1869,40 @@ function renderTextWithPhotos(text, rawIds, used){
   var src=String(text||'');
   var pids=rawIds.filter(function(id){ return PhotoCache.has(id); });
   var re=new RegExp(PHOTO_MARK_RE.source,'g');
-  var out='', last=0, m;
+  var tokens=[], last=0, m;
   while((m=re.exec(src))!==null){
-    out+=linkify(src.slice(last,m.index));
+    if(m.index>last) tokens.push({x:'t', v:src.slice(last,m.index)});
     var n=+m[1];
     var pid=rawIds[n-1];
-    if(pid && PhotoCache.has(pid)){
-      used[n-1]=true;
-      var li=pids.indexOf(pid);
-      out+='<button class="txt-photo" type="button" data-act="viewphoto" data-pids="'+esc(pids.join(','))+'" data-idx="'+(li<0?0:li)+'" aria-label="'+esc(photoAlt(pid,n))+' 크게 보기">'+photoImgHTML(pid, photoAlt(pid,n))+'</button>';
-    }
+    if(pid && PhotoCache.has(pid)){ used[n-1]=true; tokens.push({x:'p', id:pid, n:n}); }
     last=m.index+m[0].length;
     if(!m[0].length) re.lastIndex++;
   }
-  out+=linkify(src.slice(last));
+  if(last<src.length) tokens.push({x:'t', v:src.slice(last)});
+  function btn(pid,n){
+    var li=pids.indexOf(pid);
+    return '<button class="txt-photo" type="button" data-act="viewphoto" data-pids="'+esc(pids.join(','))+'" data-idx="'+(li<0?0:li)+'" aria-label="'+esc(photoAlt(pid,n))+' 크게 보기">'+photoImgHTML(pid, photoAlt(pid,n))+'</button>';
+  }
+  /* 연속된 썸네일은 한 줄(flex wrap)로 묶는다 */
+  var out='', group=null;
+  function flush(){
+    if(group && group.length) out+='<div class="txt-thumbs">'+group.join('')+'</div>';
+    group=null;
+  }
+  tokens.forEach(function(tk){
+    if(tk.x==='t'){
+      if(!tk.v.trim()){ if(!group) out+=' '; return; }
+      flush(); out+=linkify(tk.v);
+      return;
+    }
+    if(isThumbPhoto(tk.id)){
+      if(!group) group=[];
+      group.push(btn(tk.id, tk.n));
+    } else {
+      flush(); out+=btn(tk.id, tk.n);
+    }
+  });
+  flush();
   return out;
 }
 function readSectionHTML(c, s){
@@ -1855,9 +1913,16 @@ function readSectionHTML(c, s){
   var body='';
   if(s.t && s.t.trim()) body+='<div class="txt">'+renderTextWithPhotos(s.t, raw, used)+'</div>';
   var rest=pids.filter(function(id){ var i=raw.indexOf(id); return i<0 || !used[i]; });
-  if(rest.length){
-    body+='<div class="photo-grid">'+rest.map(function(id,i){
-      return '<button data-act="viewphoto" data-pids="'+esc(rest.join(','))+'" data-idx="'+i+'">'+photoImgHTML(id,photoAlt(id, raw.indexOf(id)+1))+'</button>';
+  var restTh=rest.filter(function(id){ return isThumbPhoto(id); });
+  var restBig=rest.filter(function(id){ return !isThumbPhoto(id); });
+  if(restTh.length){
+    body+='<div class="photo-thumbs">'+restTh.map(function(id,i){
+      return '<button data-act="viewphoto" data-pids="'+esc(restTh.join(','))+'" data-idx="'+i+'">'+photoImgHTML(id,photoAlt(id, raw.indexOf(id)+1))+'</button>';
+    }).join('')+'</div>';
+  }
+  if(restBig.length){
+    body+='<div class="photo-grid">'+restBig.map(function(id,i){
+      return '<button data-act="viewphoto" data-pids="'+esc(restBig.join(','))+'" data-idx="'+i+'">'+photoImgHTML(id,photoAlt(id, raw.indexOf(id)+1))+'</button>';
     }).join('')+'</div>';
   }
   var tm = c.timer
@@ -3132,6 +3197,45 @@ function searchOpenLibrary(q){
       return ((d && Array.isArray(d.docs))? d.docs : []).map(openLibBook).filter(function(b){ return b.title; });
     });
 }
+/* ── 알라딘 검색: Supabase Edge Function `book-search` (국내 어린이책·영어 원서 표지) ── */
+function isAladinCover(url){
+  try{ return /(^|\.)image\.aladin\.co\.kr$/i.test(new URL(url, location.href).hostname); }
+  catch(e){ return false; }
+}
+function coverProxyUrl(url){
+  return SB_URL+'/functions/v1/book-search?proxy='+encodeURIComponent(url);
+}
+function aladinBook(it){
+  var title=String((it&&it.title)||'').replace(/\s+/g,' ').trim();
+  var cover=String((it&&it.cover)||'');
+  var author=String((it&&it.author)||'').replace(/\s+/g,' ').trim();
+  return {
+    type:'book',
+    title: title,
+    subtitle:'',
+    authors: author? [author] : [],
+    author: author,
+    cover: cover,
+    /* 그리드 미리보기는 작은 200px 표지를, 실패하면 500px로 */
+    thumb: cover? cover.replace(/\/cover\d+\//,'/cover200/') : '',
+    base: cover,
+    src:'aladin'
+  };
+}
+function searchAladinBooks(q){
+  var ctl=(typeof AbortController!=='undefined')? new AbortController() : null;
+  var tm=setTimeout(function(){ if(ctl) ctl.abort(); }, 12000);
+  return fetch(SB_URL+'/functions/v1/book-search?q='+encodeURIComponent(q),
+      {headers:{apikey:SB_KEY}, credentials:'omit', signal: ctl? ctl.signal : undefined})
+    .then(function(r){
+      if(!r.ok) throw new Error('연결 오류 ('+r.status+')');
+      return r.json();
+    })
+    .then(function(d){
+      return ((d && Array.isArray(d.items))? d.items : []).map(aladinBook).filter(function(b){ return b.title; });
+    })
+    .finally(function(){ clearTimeout(tm); });
+}
 
 /* ── 영화·시리즈: 위키백과(한국어·영어) 문서 첫 그림 = 포스터 · TVMaze(시리즈) ── */
 function stripUtm(u){
@@ -3291,12 +3395,14 @@ function coverSubText(item){
 }
 function coverItemHTML(item, i){
   var cov=item.cover||'', base=item.base||'';
+  var show=item.thumb || cov;
   var title=item.title || '(제목 없음)';
   var sub=coverSubText(item);
   var fb='';
-  if(cov && base && base!==cov) fb=' onerror="this.onerror=null;this.src=\''+esc(base)+'\'"';
+  var fbTo=(show!==cov && cov)? cov : ((base && base!==show)? base : '');
+  if(show && fbTo) fb=' onerror="this.onerror=null;this.src=\''+esc(fbTo)+'\'"';
   return '<button class="bk-item'+(cov?'':' nocover')+'" type="button" data-ci="'+i+'" aria-label="'+esc(title+' 붙이기')+'">'
-    +'<span class="bk-cover'+(item.type==='movie'?' poster':'')+'">'+(cov? '<img src="'+esc(cov)+'" alt="'+esc(title+' 그림')+'" loading="lazy" referrerpolicy="no-referrer"'+fb+'>' : (item.type==='movie'?'🎬':'📕'))+'</span>'
+    +'<span class="bk-cover'+(item.type==='movie'?' poster':'')+'">'+(show? '<img src="'+esc(show)+'" alt="'+esc(title+' 그림')+'" loading="lazy" referrerpolicy="no-referrer"'+fb+'>' : (item.type==='movie'?'🎬':'📕'))+'</span>'
     +'<span class="bk-t">'+esc(title)+'</span>'
     +'<span class="'+(item.type==='movie'?'bk-sub':'bk-a')+'">'+esc(sub)+'</span>'
   +'</button>';
@@ -3528,7 +3634,13 @@ async function runCoverSearch(root){
   coverState(root,'<div class="bk-state"><span class="spin">◌</span> ‘'+esc(q)+'’ 찾는 중…</div>');
   var items=[], src='', errs=[];
   if(coverMode==='book'){
-    if(Date.now()>=bookGoogleUntil){
+    /* 1순위: 알라딘(book-search 엣지 함수) — 국내 어린이책·영어 원서 표지 */
+    try{
+      items=await searchAladinBooks(q);
+      if(items.length) src='aladin';
+    }catch(e){ errs.push('알라딘: '+((e&&e.message)||'연결 실패')); }
+    /* 알라딘에서 못 찾았을 때만 구글 도서·Open Library로 대체 */
+    if(!items.length && Date.now()>=bookGoogleUntil){
       try{ items=await searchGoogleBooks(q); if(items.length) src='google'; }
       catch(e){
         errs.push('Google 도서: '+((e&&e.message)||'연결 실패'));
@@ -3566,7 +3678,8 @@ async function runCoverSearch(root){
   items=sortBooks(items);
   coverResults=items;
   var withCover=items.filter(function(it){ return !!it.cover; }).length;
-  var srcLabel = coverMode==='movie'? '위키백과 · TVMaze' : (src==='openlibrary'? 'Open Library' : 'Google 도서');
+  var srcLabel = coverMode==='movie'? '위키백과 · TVMaze'
+    : (src==='aladin'? '알라딘' : (src==='openlibrary'? 'Open Library' : 'Google 도서'));
   var kind=coverMode==='movie'? '포스터' : '표지';
   coverState(root,'<div class="bk-grid">'+items.map(coverItemHTML).join('')+'</div>'
     +'<p class="bk-hint">'+srcLabel+'에서 찾은 '+items.length+'개 · '+kind+'가 있는 작품 '+withCover+'개<br>'
@@ -3581,18 +3694,27 @@ function coverFetchable(url){
     return true;
   }catch(e){ return false; }
 }
-async function fetchImageBlob(url){
+async function fetchImageBlob(url, headers){
   if(!coverFetchable(url)) throw new Error('이 서버는 그림 바이트를 바로 건네지 않아요');
   var ctl=(typeof AbortController!=='undefined')? new AbortController() : null;
   var tm=setTimeout(function(){ if(ctl) ctl.abort(); }, 9000);
   try{
-    var res=await fetch(url, {mode:'cors', credentials:'omit', cache:'force-cache', signal: ctl? ctl.signal : undefined});
+    var res=await fetch(url, {mode:'cors', credentials:'omit', cache:'force-cache', headers: headers||{}, signal: ctl? ctl.signal : undefined});
     if(!res.ok) throw new Error('HTTP '+res.status);
     var b=await res.blob();
     if(!b || !b.size) throw new Error('빈 그림');
     if(!/^image\//.test(b.type||'')) throw new Error('그림 파일이 아니에요');
     return b;
   } finally { clearTimeout(tm); }
+}
+/* 알라딘 표지는 프록시(book-search?proxy=)로 먼저 받고, 프록시가 실패할 때만 직접 받는다 */
+async function fetchCoverBytes(url){
+  if(isAladinCover(url)){
+    try{ return await fetchImageBlob(coverProxyUrl(url), {apikey:SB_KEY}); }
+    catch(e){ console.warn('알라딘 프록시 실패 — 직접 시도', e); }
+  }
+  if(!coverFetchable(url)) throw new Error('이 서버는 그림 바이트를 바로 건네지 않아요');
+  return await fetchImageBlob(url);
 }
 /* 책·영화 그림을 지금 영역의 사진으로 붙인다 (책장 전용이면 책장에만 담는다) */
 async function addThumbToArea(cid, item, btnEl, opts){
@@ -3619,17 +3741,19 @@ async function addThumbToArea(cid, item, btnEl, opts){
   toast('그림을 가져오는 중…', 5000);
   var pos=markPositionFor(cid, sec);
   var id='b'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  /* 표지·포스터·유튜브는 작은 썸네일로 보이도록 표시를 남긴다 (직접 올린 사진은 크게) */
+  var thumbKind=item.yt? 'youtube' : (item.type==='movie'? 'poster' : 'cover');
+  state.photoRefs[id]=Object.assign(state.photoRefs[id]||{}, {thumb:true, kind:thumbKind});
   var stored=false;
   try{
-    if(!coverFetchable(cover)) throw new Error('이 서버는 그림 바이트 읽기를 막아요(CORS)');
-    var blob=await fetchImageBlob(cover);
+    var blob=await fetchCoverBytes(cover);
     var small=await compressImage(blob);
     await PhotoStore.put(id, small);
     stored=true;
   }catch(e){ console.warn('cover bytes blocked', e); }
   if(!current || current.date!==date){ toast('날짜가 바뀌어 그림을 붙이지 못했어요'); return; }
   if(!stored){
-    var ref={url:cover, storage:'url'};
+    var ref=Object.assign({url:cover, storage:'url'}, state.photoRefs[id]||{});
     if(base && base!==cover) ref.fallback=base;
     if(title) ref.title=title;
     ref.kind=item.yt? 'youtube' : (item.type==='movie'?'poster':'cover');
@@ -4427,7 +4551,7 @@ async function uploadPhoto(id, date){
     body:rec.blob
   });
   if(!r.ok) throw new Error('사진을 클라우드에 올리지 못했어요');
-  var ref={path:path, storage:'supabase'};
+  var ref=Object.assign({path:path, storage:'supabase'}, refThumbFields(state.photoRefs[id]));
   state.photoRefs[id]=ref;
   scheduleSave();
   return ref;
@@ -4448,10 +4572,10 @@ async function pushEntry(date){
     var refs={};
     for(var i=0;i<ids.length;i++){
       var id=ids[i], ref=state.photoRefs[id];
-      if(!ref){ try{ ref=await uploadPhoto(id,date); }catch(e){ ref=null; } }
-      if(ref && ref.path) refs[id]={id:id, path:ref.path, storage:'supabase'};
+      if(!ref || (!ref.path && !ref.url)){ try{ ref=await uploadPhoto(id,date); }catch(e){ ref=null; } }
+      if(ref && ref.path) refs[id]=Object.assign({id:id, path:ref.path, storage:'supabase'}, refThumbFields(ref));
       else if(ref && ref.url){
-        refs[id]={id:id, url:ref.url, storage:'url'};
+        refs[id]=Object.assign({id:id, url:ref.url, storage:'url'}, refThumbFields(ref));
         if(ref.fallback) refs[id].fallback=ref.fallback;
         if(ref.title) refs[id].title=ref.title;
       }
@@ -4509,12 +4633,13 @@ async function mergeCloud(profRow, rows){
       Object.keys(data.photoRefs).forEach(function(id){
         var ref=data.photoRefs[id];
         if(ref && ref.path){
-          state.photoRefs[id]={path:String(ref.path), storage:'supabase'};
+          state.photoRefs[id]=Object.assign({path:String(ref.path), storage:'supabase'}, refThumbFields(ref));
           if(!PhotoCache.has(id)) PhotoCache.set(id,{url:'', remote:true});
         } else if(ref && typeof ref.url==='string' && /^https?:\/\//i.test(ref.url)){
           var o={url:ref.url, storage:'url'};
           if(typeof ref.fallback==='string' && /^https?:\/\//i.test(ref.fallback)) o.fallback=ref.fallback;
           if(typeof ref.title==='string' && ref.title) o.title=ref.title;
+          Object.assign(o, refThumbFields(ref));
           state.photoRefs[id]=o;
           var cur=PhotoCache.get(id);
           if(!cur || !cur.url) PhotoCache.set(id,{url:ref.url, remoteUrl:true, fallback:o.fallback});
