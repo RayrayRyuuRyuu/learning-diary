@@ -5952,11 +5952,11 @@ function wishComplete(id){
   if(it.type==='book'){
     var b=shelfAddItem({title:it.title, author:it.channel, cover:it.coverUrl}, todayStr());
     wishRemove([id]);
-    closeSheetUI(); renderShelf();
+    closeSheet(true); histReplaceNav(); renderShelf();
     toast('📚 ‘'+it.title+'’ 책장에 담았어요 · 오늘 읽은 날로 기록'+((b&&bookCount(b)>1)? ' ('+bookCount(b)+'회)':''), 3400);
   } else {
     wishRemove([id]);
-    closeSheetUI(); renderShelf();
+    closeSheet(true); histReplaceNav(); renderShelf();
     toast('✅ ‘'+it.title+'’ 다 본 것으로 하고 위시리스트에서 뺐어요', 3200);
   }
 }
@@ -6156,7 +6156,7 @@ function openWishSheet(id){
         e.preventDefault();
         if(!window.confirm('‘'+it.title+'’을(를) 위시리스트에서 지울까요?')) return;
         wishRemove([it.id]);
-        closeSheetUI(); renderShelf();
+        closeSheet(true); histReplaceNav(); renderShelf();
         toast('위시리스트에서 지웠어요');
         return;
       }
