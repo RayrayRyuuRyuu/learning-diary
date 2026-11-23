@@ -2,7 +2,7 @@
 
 초등 학습 기록을 날짜별로 남기는 **개인용** 학습 다이어리 웹앱입니다. 영역(흘려듣기·집중듣기·영어책읽기·한글책읽기·학습·정신건강·성장일기 등)별로 공부 시간과 사진을 기록하고, 기간별로 모아 보거나 주간 결과분석·PDF 저장을 할 수 있습니다.
 
-**사용 주소:** https://rayrayryuuuryuu.github.io/learning-diary/
+**사용 주소:** https://rayrayryuuryuu.github.io/learning-diary/
 
 ## 특징
 
