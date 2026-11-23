@@ -2872,7 +2872,7 @@ async function handlePhotoFiles(files){
 }
 
 /* ────────────────────────────── 책 표지 검색 (Google Books · Open Library 대체) ────────────────────────────── */
-var bookResults=[], bookSearchBusy=false;
+var bookResults=[], bookSearchBusy=false, bookGoogleUntil=0;
 function coverUp(u, zoom){
   if(!u) return '';
   u=String(u).replace(/^http:\/\//i,'https://');
@@ -2958,8 +2958,14 @@ async function runBookSearch(root, cid){
   if(go) go.disabled=true;
   bookState(root,'<div class="bk-state"><span class="spin">◌</span> ‘'+esc(q)+'’ 찾는 중…</div>');
   var items=[], src='', errs=[];
-  try{ items=await searchGoogleBooks(q); if(items.length) src='google'; }
-  catch(e){ errs.push('Google 도서: '+((e&&e.message)||'연결 실패')); }
+  if(Date.now()>=bookGoogleUntil){
+    try{ items=await searchGoogleBooks(q); if(items.length) src='google'; }
+    catch(e){
+      errs.push('Google 도서: '+((e&&e.message)||'연결 실패'));
+      /* 하루 한도를 넘긴 경우엔 잠시 구글을 건너뛰고 바로 대체 검색으로 */
+      if(/한도/.test(String(e&&e.message))) bookGoogleUntil=Date.now()+5*60*1000;
+    }
+  }
   if(!items.length){
     try{
       var alt=await searchOpenLibrary(q);
