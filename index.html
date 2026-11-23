@@ -297,11 +297,11 @@ main{padding:12px 13px 8px;display:flex;flex-direction:column;gap:12px}
 }
 .sec-text::placeholder{color:#b9c3bf}
 .sec-text:focus{outline:none}
-.photos{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:0 12px 0}
+.photos{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:0 12px 0}
 .photos:not(:empty){padding-bottom:11px;padding-top:2px}
 .thumb{
-  position:relative;aspect-ratio:1/1;border-radius:11px;overflow:hidden;
-  background:var(--line-2);border:1px solid var(--line);
+  position:relative;aspect-ratio:3/4;border-radius:12px;overflow:hidden;
+  background:#fff;border:1px solid var(--line);
 }
 .thumb img{width:100%;height:100%;object-fit:cover}
 .thumb .del{
@@ -407,9 +407,18 @@ table.tbl{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-nume
 .read-sec .body{padding:11px 13px 13px}
 .read-sec .txt{font-size:15px;line-height:1.7;white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere}
 .read-sec .txt a{color:#2563eb}
-.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}
-.photo-grid button{position:relative;aspect-ratio:1/1;border-radius:11px;overflow:hidden;background:var(--line-2)}
-.photo-grid img{width:100%;height:100%;object-fit:cover}
+.photo-grid{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.photo-grid button{
+  position:relative;display:block;width:100%;padding:0;background:#fff;
+  border:1px solid var(--line);border-radius:12px;overflow:hidden;
+  box-shadow:0 1px 2px rgba(20,40,36,.05);
+}
+.photo-grid button:active{opacity:.94}
+.photo-grid img{display:block;width:100%;height:auto;max-height:none;object-fit:contain;background:#fff}
+.photo-grid .thumb{
+  aspect-ratio:auto;min-height:110px;border:0;border-radius:0;
+  display:grid;place-items:center;font-size:22px;color:var(--muted);background:#f7f4ed;
+}
 .private-tag{font-size:10px;font-weight:800;color:#a26;background:#fdeef4;border-radius:6px;padding:2px 5px;margin-left:5px}
 .empty{
   text-align:center;padding:30px 18px;color:var(--muted);font-size:13.5px;line-height:1.65;
@@ -672,15 +681,18 @@ table.tbl{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-nume
   .read-sec .txt{font-size:10pt;line-height:1.62;color:#1b1b1b !important}
   .read-sec .txt a{color:#1b1b1b !important;text-decoration:underline}
   .private-tag{background:transparent !important;border:1px solid #c9c4b6;color:#666 !important;font-size:7.5pt}
-  .photo-grid{grid-template-columns:repeat(3,1fr) !important;gap:2mm !important;margin-top:2mm !important}
+  /* 사진은 인쇄에서도 한 장씩 아래로 쌓아 크게 — 글씨가 읽히도록 */
+  .photo-grid{display:flex !important;flex-direction:column !important;gap:2.5mm !important;margin-top:2mm !important}
   .photo-grid button{
-    aspect-ratio:auto !important;background:#fff !important;border:1px solid #ded9cc;
+    display:block !important;width:100% !important;aspect-ratio:auto !important;
+    background:#fff !important;border:1px solid #ded9cc;
     border-radius:1.5mm;overflow:hidden;break-inside:avoid;page-break-inside:avoid;
   }
   .photo-grid img{
-    width:auto !important;height:auto !important;max-width:100% !important;
-    max-height:260px !important;object-fit:contain !important;margin:0 auto;
+    display:block !important;width:auto !important;height:auto !important;max-width:100% !important;
+    max-height:205mm !important;object-fit:contain !important;margin:0 auto;
   }
+  .read-sec.has-photos{break-inside:auto !important;page-break-inside:auto !important}
 
   /* 분석 표 */
   .analysis{
@@ -1577,7 +1589,7 @@ function readSectionHTML(c, s){
   var tm = c.timer
     ? '<span class="tm'+(m?'':' none')+'">'+(m? fmtMin(m) : '시간 없음')+'</span>'
     : '<span class="tm none">메모</span>';
-  return '<section class="read-sec"><div class="rh">'
+  return '<section class="read-sec'+(pids.length?' has-photos':'')+'"><div class="rh">'
     +'<div class="nm">'+secNameHTML(c)+(isPrivate(c)?'<span class="private-tag">비공개</span>':'')+'</div>'
     +tm
     +'</div><div class="body">'+body+'</div></section>';
