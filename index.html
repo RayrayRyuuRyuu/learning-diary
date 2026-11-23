@@ -301,6 +301,7 @@ main{padding:12px 13px 8px;display:flex;flex-direction:column;gap:12px}
 .chip:active{transform:scale(.95)}
 .chip.on{background:var(--teal);border-color:var(--teal);color:#fff}
 .chip.clear{color:var(--muted)}
+.chip.add.tap{background:var(--teal-soft);border-color:var(--teal-soft-2);color:var(--teal-3);transform:scale(.95)}
 .sec-text{
   width:100%;display:block;border:0;background:transparent;resize:none;
   padding:11px 13px;font-size:15px;line-height:1.68;min-height:76px;
@@ -1420,6 +1421,11 @@ function normalizeState(s){
         if(typeof r.title==='string' && r.title) o.title=r.title;
         Object.assign(o, refThumbFields(r));
         prs[id]=o;
+        return;
+      }
+      /* 백업 파일에서 복원한 사진처럼 이 기기(IndexedDB)에만 있는 썸네일 참조 */
+      if(r.thumb===true){
+        prs[id]=Object.assign({thumb:true, kind:'cover'}, refThumbFields(r));
       }
     });
   }
@@ -1622,9 +1628,10 @@ function secNameHTML(c){
 }
 function timeRowHTML(c, m){
   var h=Math.floor(m/60), mm=m%60;
+  /* 누를 때마다 지금 적힌 시간에 더해지는 버튼 (+5m +15m +30m +1h) */
   var presets=[5,15,30,60];
   var chips=presets.map(function(v){
-    return '<button class="chip'+(m===v?' on':'')+'" data-act="preset" data-min="'+v+'">'+(v===60?'1h':v+'m')+'</button>';
+    return '<button class="chip add" data-act="addtime" data-add="'+v+'" aria-label="'+(v===60?'1시간':v+'분')+' 더하기">+'+(v===60?'1h':v+'m')+'</button>';
   }).join('');
   chips+='<button class="chip clear'+(m===0?' on':'')+'" data-act="preset" data-min="0">안함</button>';
   return '<div class="time-row">'
@@ -2854,11 +2861,13 @@ function mergeBackupIntoState(src, plan){
     state.entries[d]={sections:secs, savedAt:Date.now()};
     if(existed) rep.updated++; else rep.added++;
   });
-  /* 3) 사진 참조 — 외부(HTTPS) 그림만. 버킷 경로(path)는 다른 계정 것이라 가져오지 않는다 */
+  /* 3) 사진 참조 — 외부(HTTPS) 그림과, 파일에 내장된 사진의 썸네일 표시.
+     버킷 경로(path)는 다른 계정 것이라 가져오지 않는다 */
   Object.keys(src.photoRefs||{}).forEach(function(id){
     var r=src.photoRefs[id];
     if(state.photoRefs[id]) return;
     if(r && r.url && /^https?:\/\//i.test(r.url)) state.photoRefs[id]=r;
+    else if(r && r.thumb) state.photoRefs[id]={ thumb: true, kind: r.kind || 'cover' };
   });
   /* 4) 책장 — 제목/저자 기준 합집합 (기존 책장은 그대로 유지) */
   var before=(state.bookshelf||[]).length;
@@ -4144,6 +4153,19 @@ function bindEvents(){
     if(a==='youtube'){
       e.preventDefault();
       openYouTube(cid);
+      return;
+    }
+    if(a==='addtime'){
+      e.preventDefault();
+      var add=parseInt(act.getAttribute('data-add'),10)||0;
+      var sAdd=ensureSec(cid);
+      if(!sAdd || !add) return;
+      var cap=99*60+59;
+      sAdd.m=Math.min((Number(sAdd.m)||0)+add, cap);
+      updateTimeUI(art, sAdd.m);
+      act.classList.add('tap');
+      setTimeout(function(){ act.classList.remove('tap'); }, 180);
+      markEdited();
       return;
     }
     if(a==='preset'){
