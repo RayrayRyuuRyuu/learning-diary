@@ -1267,7 +1267,7 @@ body.kb-open .actionbar{bottom:var(--kb,0px)}
 .rc-empty b{display:block;color:var(--ink-2);font-size:14.5px;margin-bottom:5px}
 .rc-head{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:8px}
 .rc-chip{font-size:10px;font-weight:800;color:var(--teal-3);background:var(--teal-soft);border:1px solid var(--teal-soft-2);border-radius:6px;padding:2px 6px}
-.rc-link{display:block;font-size:11.5px;font-weight:700;color:var(--teal-3);text-decoration:underline;text-underline-offset:2px;word-break:break-all;line-height:1.45;margin-bottom:8px}
+.rc-link{display:block;font-size:11.5px;font-weight:700;color:var(--teal-3);text-decoration:underline;text-underline-offset:2px;word-break:break-all;line-height:1.45;margin:7px 0 8px}
 .rc-ing{font-size:12.5px;line-height:1.65;color:var(--ink-2);white-space:pre-wrap;word-break:break-word}
 .rc-note{font-size:12.5px;line-height:1.65;color:var(--ink-2);white-space:pre-wrap;word-break:break-word;margin-top:7px;padding-top:7px;border-top:1px dashed var(--line-2)}
 
@@ -1304,6 +1304,155 @@ body.kb-open .backdrop-fs .sheet{padding-bottom:calc(8px + var(--kb,0px))}
 .me-ph .mp .rm{position:absolute;top:0;right:0;width:15px;height:15px;background:rgba(255,255,255,.94);color:#b24a4a;font-size:9px;font-weight:900;display:grid;place-items:center;border-bottom-left-radius:6px}
 .memo-fig{display:block;width:100%;padding:0;margin:8px 0;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:#f2f4f2}
 .memo-fig img{display:block;width:100%;height:auto;max-height:340px;object-fit:contain;background:#f7f5ee}
+
+/* ══ 2026-11-24 저녁: 책장 2줄 절약 · 슬림화 · 쓰기 2열 · 아이 성장 페이지 · 레시피 횟수/사진 ══ */
+/* #17 책장 상단 재배치 — 권수 요약은 서브탭 오른쪽, 정렬은 언어 칩 오른쪽 */
+.tabs{grid-template-columns:repeat(4,1fr)}
+.shelf-subrow{display:flex;align-items:center;gap:6px;margin:0 0 7px}
+.shelf-subrow #shSubTabs{margin:0;flex:1 1 auto;min-width:0}
+.shelf-sum-row{flex:0 1 auto;min-width:0;display:flex;align-items:baseline;gap:4px;white-space:nowrap;overflow:hidden}
+.shelf-sum-row b{font-size:13px;font-weight:900;letter-spacing:-.03em}
+.shelf-sum-row span{font-size:10px;font-weight:800;color:var(--muted);overflow:hidden;text-overflow:ellipsis}
+.shelf-form{flex-wrap:nowrap}
+.shelf-form .shelf-tools,.shelf-form .wish-tools{flex:0 0 auto;margin:0;gap:4px;flex-wrap:nowrap}
+.shelf-form .mini-btn{height:36px;padding:0 8px;border-radius:10px;font-size:10.5px;border:1px solid var(--line);background:#fff;color:var(--ink-2);white-space:nowrap}
+.shelf-form .mini-btn.on{background:var(--teal);border-color:var(--teal);color:#fff}
+.shelf-linerow{display:flex;align-items:center;gap:6px;margin-top:6px;flex-wrap:nowrap}
+.shelf-linerow .shelf-lang{margin:0;flex:1 1 auto;min-width:0;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding-bottom:1px}
+.shelf-linerow .shelf-lang::-webkit-scrollbar{display:none}
+.shelf-linerow .shelf-lang .lchip{flex:0 0 auto}
+.shelf-linerow .shelf-sort{margin:0;flex:0 0 auto;gap:0}
+.shelf-linerow .shelf-sort label{display:none}
+.shelf-linerow .shelf-sort select{height:26px;width:auto;max-width:104px;font-size:10.5px;border-radius:8px;padding:0 6px}
+
+/* #18 쓰기·보기 항목 머리글·시간·서식 줄 슬림화 */
+.sec-head{padding:5px 7px 5px 10px;gap:5px}
+.sec-name{font-size:13px}
+.sec-name .pre{font-size:11px}
+.photo-btn{font-size:10.5px;padding:4px 5px;border-radius:8px;gap:3px}
+.book-btn{font-size:10px;padding:4px 5px}
+.sec.slim:not(.open) .sec-head{padding:4px 7px 4px 10px}
+.sec.slim:not(.open) .sec-name{font-size:12.5px}
+.time-row{padding:4px 8px;gap:4px}
+.time-in{gap:2px}
+.tin{width:32px;height:25px;font-size:12.5px;border-radius:7px}
+.time-in span{font-size:10px}
+.chip{font-size:10px;padding:3px 5px;border-radius:6px}
+.fmt-row{padding:3px 9px 0;gap:3px}
+.fmt-row .fmt{height:21px;min-width:22px;font-size:10.5px;border-radius:6px;padding:0 4px}
+.fmt-row .fdots{gap:3px;margin-left:1px}
+.fmt-row .fdot{width:14px;height:14px}
+.fmt-row .fmt.tpl{font-size:10px;padding:0 7px}
+.sec-text{min-height:104px;padding:9px 12px;font-size:14.5px;line-height:1.62}
+.sec.slim:not(.open) .sec-text{height:31px !important;padding:5px 12px 7px;font-size:13px}
+
+/* #19 쓰기 화면도 보기처럼 — 왼쪽 미니 달력 + 오른쪽 날짜·바로가기 2열 */
+.wt-top{padding:7px 9px 8px}
+.wt-top .vt-grid{gap:6px}
+.wt-right{display:flex;flex-direction:column;gap:4px;min-width:0}
+.wt-date{display:flex;align-items:center;gap:3px}
+.wt-date .dnav{width:26px;height:26px;flex:0 0 26px;border-radius:8px;background:#fff;border:1px solid var(--line);font-size:14px;color:var(--ink-2);display:grid;place-items:center;line-height:1}
+.wt-date .datebar-mid{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:3px;overflow:hidden}
+.wt-date .datebar-mid b{font-size:14px;font-weight:900;letter-spacing:-.02em;white-space:nowrap}
+.wt-date .wd{font-size:10px;color:var(--muted);font-weight:700;white-space:nowrap}
+.wt-date .badge{font-size:8.5px;padding:1px 4px;border-radius:5px}
+.wt-today{height:24px;border-radius:7px;background:var(--teal-soft);border:1px solid var(--teal-soft-2);color:var(--teal-3);font-size:10px;font-weight:900;letter-spacing:-.01em}
+.wt-today:active{background:#dff0eb}
+.wt-info{font-size:9.5px;font-weight:800;color:var(--muted);line-height:1.5;margin-top:1px}
+.wt-info b{color:var(--teal-3);font-weight:900}
+.wt-jump{display:flex;flex-wrap:nowrap;gap:3px;margin-top:5px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding-bottom:1px}
+.wt-jump::-webkit-scrollbar{display:none}
+.wt-jump .jump{flex:0 0 auto;font-size:9.5px;padding:4px 6px;border-radius:7px;gap:3px;font-weight:800}
+.wt-jump .jump .d{width:4px;height:4px;flex:0 0 4px}
+.wt-top .vt-cal{padding:2px 3px 3px}
+.wt-top .mc-c{height:20px;font-size:9px}
+.wt-top .mc-head b{font-size:10px}
+.wt-top .mc-nav{width:18px;height:18px;font-size:12px}
+
+/* #20 🧒 아이 페이지(성장·메모장) */
+.brand-wrap{display:flex;align-items:center;gap:8px;max-height:44px;overflow:hidden;position:relative;z-index:1;transition:max-height .22s ease, opacity .16s ease, transform .2s ease, margin .2s ease}
+.topbar.hdr-min .brand-wrap{max-height:0;opacity:0;transform:translateY(-8px);pointer-events:none;margin:0}
+.brand{flex:1 1 auto;min-width:0;text-align:left;background:none;border:0;color:inherit;padding:0;font:inherit;display:flex;align-items:center;gap:9px;overflow:hidden}
+.brand .mascot{transition:transform .12s ease}
+#calCard{display:none !important}
+.brand:active .mascot{transform:scale(.94)}
+.brand .hint-tap{font-size:9px;font-weight:800;color:rgba(255,255,255,.7);margin-left:2px}
+.kidpage{position:fixed;inset:0;z-index:55;background:var(--bg);display:flex;flex-direction:column;overflow:hidden}
+.kid-head{flex:0 0 auto;background:linear-gradient(150deg,#0c6f68 0%,#0e8478 52%,#11a091 100%);color:#fff;padding:calc(7px + env(safe-area-inset-top,0px)) 12px 7px;box-shadow:0 8px 20px -18px rgba(11,95,89,.9)}
+.kid-row{display:flex;align-items:center;gap:8px}
+.kid-back{width:32px;height:32px;flex:0 0 32px;border-radius:10px;background:rgba(255,255,255,.16);color:#fff;font-size:17px;display:grid;place-items:center;line-height:1}
+.kid-back:active{background:rgba(255,255,255,.3)}
+.kid-tt{flex:1;min-width:0}
+.kid-tt b{display:block;font-size:16px;font-weight:900;letter-spacing:-.02em;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kid-tt span{display:block;font-size:10.5px;font-weight:700;color:rgba(255,255,255,.8);margin-top:1px}
+.kid-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:7px;background:rgba(255,255,255,.16);border-radius:11px;padding:3px}
+.kid-tab{height:31px;border-radius:8px;font-size:12px;font-weight:800;color:rgba(255,255,255,.86);display:flex;align-items:center;justify-content:center;gap:4px}
+.kid-tab.on{background:#fff;color:var(--teal-3);box-shadow:0 3px 10px -4px rgba(0,0,0,.28)}
+.kid-body{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 11px calc(16px + var(--safe-b));display:flex;flex-direction:column;gap:9px}
+.kid-pane{display:flex;flex-direction:column;gap:9px}
+.kid-pane[hidden]{display:none}
+#kidMemoHost{display:flex;flex-direction:column;gap:10px}
+
+/* 성장 요약·그래프·목록 */
+.g-top{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.g-top b{font-size:14px;font-weight:900;letter-spacing:-.02em}
+.g-top .g-age{font-size:10.5px;font-weight:800;color:var(--muted)}
+.g-cards{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.g-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 9px;box-shadow:var(--shadow-sm)}
+.g-card .k{font-size:10px;font-weight:800;color:var(--muted);display:flex;align-items:center;gap:3px}
+.g-card .v{font-size:19px;font-weight:900;letter-spacing:-.03em;margin-top:2px;display:flex;align-items:baseline;gap:3px}
+.g-card .v small{font-size:11px;font-weight:800;color:var(--muted)}
+.g-card .p{font-size:10px;font-weight:900;color:var(--teal-3);background:var(--teal-soft);border:1px solid var(--teal-soft-2);border-radius:6px;padding:2px 5px;display:inline-block;margin-top:3px}
+.g-card .p.warn{color:#a8690f;background:var(--amber-soft);border-color:#efdcb2}
+.g-card .d{font-size:10px;font-weight:800;color:var(--muted);margin-top:3px}
+.g-card .d.up{color:#0b7a5f}
+.g-chart{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:8px 8px 6px;box-shadow:var(--shadow-sm)}
+.g-chart-head{display:flex;align-items:center;gap:5px;margin-bottom:4px}
+.g-chart-head .lchip{height:24px;padding:0 8px;border-radius:7px;border:1px solid var(--line);background:#fff;font-size:10.5px;font-weight:800;color:var(--ink-2)}
+.g-chart-head .lchip.on{background:var(--teal-soft);border-color:var(--teal-soft-2);color:var(--teal-3)}
+.g-chart-head .lg{margin-left:auto;font-size:9px;font-weight:800;color:var(--muted);display:flex;gap:6px;align-items:center}
+.g-chart svg{display:block;width:100%;height:auto}
+.g-bone{font-size:11px;font-weight:800;color:var(--ink-2);background:#fbf9f4;border:1px dashed var(--line);border-radius:9px;padding:6px 8px;line-height:1.5}
+.g-list{display:flex;flex-direction:column;gap:5px}
+.g-item{display:flex;align-items:flex-start;gap:7px;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:7px 8px;box-shadow:var(--shadow-sm)}
+.g-item-main{flex:1;min-width:0;text-align:left}
+.g-item .dt{font-size:11.5px;font-weight:900;letter-spacing:-.02em;display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.g-item .dt span{font-size:9.5px;font-weight:800;color:var(--muted)}
+.g-item .vals{font-size:11px;font-weight:800;color:var(--ink-2);margin-top:2px;display:flex;gap:4px 7px;flex-wrap:wrap}
+.g-item .vals span{white-space:nowrap}
+.g-item .vals i{font-style:normal;font-size:9.5px;color:var(--teal-3);font-weight:900}
+.g-item .memo{font-size:10px;color:var(--muted);font-weight:700;margin-top:2px;line-height:1.45;word-break:break-word;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.g-item .acts{display:flex;flex-direction:column;gap:3px;flex:0 0 auto}
+.g-item .acts button{width:26px;height:24px;border-radius:7px;border:1px solid var(--line);background:#fff;font-size:11px;display:grid;place-items:center}
+.g-empty{padding:18px 12px;text-align:center;color:var(--muted);font-size:12px;line-height:1.6}
+.g-empty b{display:block;color:var(--ink-2);font-size:13.5px;margin-bottom:4px}
+.g-add{height:37px;border-radius:11px;background:var(--teal);color:#fff;font-size:12.5px;font-weight:900;letter-spacing:-.01em}
+.g-add:active{background:var(--teal-3)}
+.g-note{font-size:9.5px;color:var(--muted);font-weight:700;line-height:1.5}
+.g-photo{border:1px dashed var(--line);border-radius:10px;padding:7px;background:#fbf9f4;display:flex;align-items:center;gap:8px}
+.g-photo img{width:64px;height:auto;border-radius:7px;border:1px solid var(--line);background:#fff}
+
+/* #21·#22 레시피 횟수·사진 */
+.rc-cv .k2{position:absolute;left:4px;bottom:4px;background:rgba(22,34,32,.82);color:#fff;font-size:9px;font-weight:900;line-height:1;padding:3px 5px;border-radius:5px;letter-spacing:-.01em}
+.rc-plus{flex:0 0 auto;height:21px;padding:0 5px;border-radius:7px;background:var(--teal-soft);border:1px solid var(--teal-soft-2);color:var(--teal-3);font-size:9.5px;font-weight:900;line-height:1;white-space:nowrap}
+.rc-plus:active{background:#dff0eb}
+.rc-cook-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:7px 0}
+.rc-cook{font-size:11px;font-weight:900;color:var(--teal-3);background:var(--teal-soft);border:1px solid var(--teal-soft-2);border-radius:8px;padding:4px 8px}
+.rc-cook-btn{height:30px;padding:0 10px;border-radius:9px;background:var(--teal);color:#fff;font-size:11.5px;font-weight:900}
+.rc-dates{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.rc-date{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:800;color:var(--ink-2);background:#f4f0e7;border:1px solid var(--line);border-radius:7px;padding:3px 6px}
+.rc-date button{color:#b26a6a;font-size:9.5px;font-weight:900;line-height:1}
+.rc-ph{margin-top:2px}
+.rc-ph-prev{display:flex;align-items:center;gap:8px}
+.rc-ph-prev img{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;border:1px solid var(--line);background:#0f0f0f}
+.rc-ph-prev .none{font-size:10.5px;color:var(--muted);font-weight:700}
+.rc-ph-btns{display:flex;gap:6px;margin-top:6px}
+.rc-ph-btns .btn-line{flex:1;height:34px;font-size:11.5px;border-radius:9px}
+@media (max-width:360px){
+  .g-cards{grid-template-columns:1fr 1fr}
+  .g-card .v{font-size:17px}
+  .wt-jump .jump{font-size:9px;padding:3px 4px}
+}
 </style>
 </head>
 <body>
@@ -1344,12 +1493,15 @@ body.kb-open .backdrop-fs .sheet{padding-bottom:calc(8px + var(--kb,0px))}
 <div class="app" id="appRoot" hidden>
 
   <header class="topbar">
-    <div class="brand">
-      <div class="mascot" id="mascot" aria-hidden="true">✏️</div>
-      <div class="brand-text">
-        <div class="kicker">학습 · 성장 다이어리</div>
-        <h1 id="childTitle">나의 학습노트</h1>
-      </div>
+    <div class="brand-wrap">
+      <button class="brand" id="profileBtn" type="button" aria-label="아이 성장·메모장 열기">
+        <div class="mascot" id="mascot" aria-hidden="true">✏️</div>
+        <div class="brand-text">
+          <div class="kicker">학습 · 성장 다이어리</div>
+          <h1 id="childTitle">나의 학습노트</h1>
+        </div>
+        <span class="hint-tap" aria-hidden="true">›</span>
+      </button>
       <button class="cloud-pill" id="cloudPill" type="button" aria-label="클라우드 동기화 상태">☁️ 로그인</button>
       <button class="icon-btn" id="btnSettings" aria-label="설정 및 백업">⚙️</button>
     </div>
@@ -1357,10 +1509,51 @@ body.kb-open .backdrop-fs .sheet{padding-bottom:calc(8px + var(--kb,0px))}
       <button class="tab active" id="tabWrite" data-tab="write" role="tab" aria-selected="true"><span class="tl tl-long">✏️ 학습노트 쓰기</span><span class="tl tl-short">✏️ 쓰기</span></button>
       <button class="tab" id="tabRead" data-tab="read" role="tab" aria-selected="false"><span class="tl tl-long">📖 학습노트 보기</span><span class="tl tl-short">📖 보기</span></button>
       <button class="tab" id="tabShelf" data-tab="shelf" role="tab" aria-selected="false"><span class="tl tl-long">📚 책장</span><span class="tl tl-short">📚 책장</span></button>
-      <button class="tab" id="tabMemo" data-tab="memo" role="tab" aria-selected="false"><span class="tl tl-long">📝 메모장</span><span class="tl tl-short">📝 메모장</span></button>
       <button class="tab" id="tabFood" data-tab="food" role="tab" aria-selected="false"><span class="tl tl-long">🍳 음식</span><span class="tl tl-short">🍳 음식</span></button>
     </div>
   </header>
+
+  <!-- 🧒 아이 페이지: 래니😚 를 누르면 열린다 — 📏 성장 + 📝 메모장 -->
+  <div class="kidpage" id="kidPage" hidden>
+    <div class="kid-head">
+      <div class="kid-row">
+        <button class="kid-back" id="kidBack" type="button" aria-label="닫기">←</button>
+        <div class="kid-tt">
+          <b id="kidName">래니😚</b>
+          <span id="kidSub">성장 기록과 메모장</span>
+        </div>
+      </div>
+      <div class="kid-tabs" role="tablist" aria-label="아이 페이지">
+        <button class="kid-tab on" id="kidTabGrowth" type="button" data-kid="growth" role="tab" aria-selected="true">📏 성장</button>
+        <button class="kid-tab" id="kidTabMemo" type="button" data-kid="memo" role="tab" aria-selected="false">📝 메모장</button>
+      </div>
+    </div>
+    <div class="kid-body">
+      <div class="kid-pane" id="kidPaneGrowth">
+        <div class="card" id="growthTop" style="padding:9px 10px"></div>
+        <div class="g-cards" id="growthCards"></div>
+        <div class="g-chart" id="growthChart"></div>
+        <div class="g-bone" id="growthBone" hidden></div>
+        <button class="g-add" id="growthAdd" type="button">＋ 성장 기록 추가</button>
+        <div class="g-list" id="growthList"></div>
+        <p class="g-note" id="growthNote">2017 질병관리청 소아청소년 성장도표(남아, 만 3~18세) 기준으로 또래 백분위를 계산해요. 참고용이니 진단은 소아청소년과에서 받아 주세요.</p>
+      </div>
+      <div class="kid-pane" id="kidPaneMemo" hidden>
+        <section id="view-memo" hidden>
+          <div class="card shelf-top" id="memoTop">
+            <div class="memo-top">
+              <div class="shelf-sum" id="memoSum"><b>📝 0개</b><span>날짜와 상관없이 꺼내 보는 메모</span></div>
+              <button class="btn-line teal" id="memoAdd" type="button">＋ 새 메모</button>
+            </div>
+            <div class="wish-folds" id="memoFolds" hidden></div>
+            <p class="hint" id="memoHint" style="margin-top:7px">메모를 누르면 크게 볼 수 있어요.</p>
+          </div>
+          <div id="memoBody"></div>
+          <div id="memoDetail" hidden></div>
+        </section>
+      </div>
+    </div>
+  </div>
 
   <main>
     <section class="card cal-card" id="calCard" aria-label="월간 달력">
@@ -1392,17 +1585,25 @@ body.kb-open .backdrop-fs .sheet{padding-bottom:calc(8px + var(--kb,0px))}
 
     <!-- ══ 쓰기 ══ -->
     <section id="view-write">
-      <div class="datebar card">
-        <button class="dnav" id="prevDay" aria-label="전날">‹</button>
-        <div class="datebar-mid">
-          <b id="writeDate">11/22</b>
-          <span class="wd" id="writeWeekday">(일)</span>
-          <span class="badge" id="draftBadge" hidden>임시저장본</span>
+      <div class="card wt-top">
+        <div class="vt-grid">
+          <div class="vt-cal" id="wtCal" aria-label="미니 달력"></div>
+          <div class="wt-right">
+            <div class="wt-date">
+              <button class="dnav" id="prevDay" aria-label="전날">‹</button>
+              <div class="datebar-mid">
+                <b id="writeDate">11/22</b>
+                <span class="wd" id="writeWeekday">(일)</span>
+                <span class="badge" id="draftBadge" hidden>임시저장본</span>
+              </div>
+              <button class="dnav" id="nextDay" aria-label="다음날">›</button>
+            </div>
+            <button class="wt-today" id="btnTodayW" type="button">오늘로</button>
+            <div class="wt-info" id="wtInfo" aria-live="polite"></div>
+          </div>
         </div>
-        <button class="dnav" id="nextDay" aria-label="다음날">›</button>
+        <div class="wt-jump" id="jumpBar" aria-label="영역 바로가기"></div>
       </div>
-
-      <div class="jumpbar" id="jumpBar" aria-label="영역 바로가기"></div>
 
       <div id="sections"></div>
 
@@ -1478,24 +1679,25 @@ body.kb-open .backdrop-fs .sheet{padding-bottom:calc(8px + var(--kb,0px))}
           <button class="cv-tab on" id="shTabBook" type="button" data-sh="book" role="tab" aria-selected="true">📚 책</button>
           <button class="cv-tab" id="shTabVideo" type="button" data-sh="video" role="tab" aria-selected="false">🎬 영상</button>
         </div>
-        <div class="sub-tabs" role="tablist" aria-label="목록 고르기" id="shSubTabs"></div>
-        <div class="shelf-head-row">
-          <div class="shelf-sum" id="shelfSum"><b>0권</b><span>누적 0회</span></div>
-          <div class="shelf-tools" id="shelfTools">
-            <button class="mini-btn" id="shelfHiddenBtn" type="button" hidden>🙈 숨긴 0개</button>
-            <button class="mini-btn" id="shelfSelBtn" type="button" aria-pressed="false" title="여러 개를 골라 합치거나 숨기기">☑️ 선택</button>
-          </div>
+        <div class="shelf-subrow">
+          <div class="sub-tabs" role="tablist" aria-label="목록 고르기" id="shSubTabs"></div>
+          <div class="shelf-sum shelf-sum-row" id="shelfSum"><b>0권</b><span>누적 0회</span></div>
+        </div>
+        <form class="shelf-form" id="shelfForm" autocomplete="off">
+          <input class="inp" id="shelfQuery" type="search" placeholder="제목·저자로 찾기" maxlength="40" enterkeyhint="search" aria-label="책장에서 찾기">
+          <button class="btn-line teal" id="shelfAdd" type="button">＋ 책 추가</button>
           <div class="wish-tools" id="wishTools" hidden>
             <button class="mini-btn" type="button" data-wishadd>＋ 찜하기</button>
             <button class="mini-btn" type="button" data-wishsel aria-pressed="false">☑️ 선택</button>
             <button class="mini-btn" type="button" data-wishjson aria-label="목록 JSON 불러오기">⬆️ JSON</button>
           </div>
-        </div>
-        <form class="shelf-form" id="shelfForm" autocomplete="off">
-          <input class="inp" id="shelfQuery" type="search" placeholder="제목·저자로 찾기" maxlength="40" enterkeyhint="search" aria-label="책장에서 찾기">
-          <button class="btn-line teal" id="shelfAdd" type="button">＋ 책 추가</button>
+          <div class="shelf-tools" id="shelfTools">
+            <button class="mini-btn" id="shelfHiddenBtn" type="button" hidden>🙈 숨긴 0개</button>
+            <button class="mini-btn" id="shelfSelBtn" type="button" aria-pressed="false" title="여러 개를 골라 합치거나 숨기기">☑️ 선택</button>
+          </div>
         </form>
         <div class="wish-folds" id="wishFolds" hidden></div>
+        <div class="shelf-linerow">
         <div class="shelf-lang" id="shelfLang" role="group" aria-label="책장 거르기">
           <button class="lchip on" type="button" data-lang="all" aria-pressed="true">전체</button>
           <button class="lchip" type="button" data-lang="kr" aria-pressed="false">한글책</button>
@@ -1508,7 +1710,6 @@ body.kb-open .backdrop-fs .sheet{padding-bottom:calc(8px + var(--kb,0px))}
           <button class="lchip" type="button" data-vfilter="channel" aria-pressed="false">📺 채널별</button>
         </div>
         <div class="shelf-sort" id="shelfSortRow">
-          <label for="shelfSort">정렬</label>
           <select id="shelfSort" aria-label="책장 정렬">
             <option value="new">최신순</option>
             <option value="old">오래된순</option>
@@ -1516,6 +1717,7 @@ body.kb-open .backdrop-fs .sheet{padding-bottom:calc(8px + var(--kb,0px))}
             <option value="rate">별점순</option>
             <option value="count">많이 본 순</option>
           </select>
+        </div>
         </div>
       </div>
       <div id="shelfBody"></div>
@@ -1527,20 +1729,6 @@ body.kb-open .backdrop-fs .sheet{padding-bottom:calc(8px + var(--kb,0px))}
       </div>
     </section>
 
-    <!-- ══ 메모장 ══ -->
-    <section id="view-memo" hidden>
-      <div class="card shelf-top" id="memoTop">
-        <div class="memo-top">
-          <div class="shelf-sum" id="memoSum"><b>📝 0개</b><span>날짜와 상관없이 꺼내 보는 메모</span></div>
-          <button class="btn-line teal" id="memoAdd" type="button">＋ 새 메모</button>
-        </div>
-        <div class="wish-folds" id="memoFolds" hidden></div>
-        <p class="hint" id="memoHint" style="margin-top:7px">메모를 누르면 크게 볼 수 있어요.</p>
-      </div>
-      <div id="memoBody"></div>
-      <div id="memoDetail" hidden></div>
-    </section>
-
     <!-- ══ 음식 · 레시피 ══ -->
     <section id="view-food" hidden>
       <div class="card shelf-top" id="foodTop">
@@ -1548,7 +1736,17 @@ body.kb-open .backdrop-fs .sheet{padding-bottom:calc(8px + var(--kb,0px))}
           <div class="shelf-sum" id="recipeSum"><b>🍳 0개</b><span>레시피를 모아 두면 초보도 바로 따라 해요</span></div>
           <button class="btn-line teal" id="recipeAdd" type="button">＋ 레시피</button>
         </div>
-        <div class="wish-folds" id="recipeFolds" hidden></div>
+        <div class="shelf-linerow" id="recipeSortRow" style="margin-top:6px;align-items:flex-start">
+          <div class="wish-folds" id="recipeFolds" hidden style="margin:0"></div>
+          <div class="shelf-sort">
+            <select id="recipeSort" aria-label="레시피 정렬">
+              <option value="new">최신순</option>
+              <option value="count">많이 해본 순</option>
+              <option value="recent">최근 만든 순</option>
+              <option value="never">아직 안 해본 것</option>
+            </select>
+          </div>
+        </div>
       </div>
       <div id="recipeBody"></div>
     </section>
@@ -1629,7 +1827,8 @@ function defaultState(){
       shelfTab:'book', shelfSub:{book:'read', video:'read'}, shelfLang:'all', videoGroup:'title', videoFilter:'all', shelfSort:'new',
       shelfGroups:[], shelfHidden:[], shelfOverrides:{}, shelfExtra:{}, templates:{},
       shelfRatings:{}, wishlist:[], wishAt:0, memos:[], memoAt:0, memoPhotos:{},
-      recipes:[], recipeAt:0, recipeFolders:[] }
+      recipes:[], recipeAt:0, recipeFolders:[], recipeSort:'new', recipePhotos:{},
+      growthRecords:[], growthAt:0, growthSeed:0 }
   };
 }
 
@@ -1914,6 +2113,14 @@ function normalizeState(s){
   st.recipes=normRecipes(st.recipes);
   st.recipeAt=Number(st.recipeAt)||0;
   st.recipeFolders=strList(st.recipeFolders,50).map(function(f){ return String(f).replace(/\s+/g,' ').trim().slice(0,30); }).filter(Boolean);
+  st.recipeSort=/^(new|count|recent|never)$/.test(String(st.recipeSort||''))? st.recipeSort : 'new';
+  /* 📏 성장 기록 — 생년월일 기준 개월 수·백분위는 화면에서 계산한다 */
+  st.growthRecords=normGrowthRecords(st.growthRecords);
+  st.growthAt=Number(st.growthAt)||0;
+  st.growthSeed=Number(st.growthSeed)||0;
+  /* 레시피 대표 사진 참조 — 다른 기기에서도 서명 URL로 열리게 photoRefs 로 합쳐 둔다 */
+  st.recipePhotos=normRefMap(st.recipePhotos);
+  Object.keys(st.recipePhotos).forEach(function(id){ if(!out.photoRefs[id]) out.photoRefs[id]=st.recipePhotos[id]; });
   /* 메모 사진 참조 — 다른 기기에서 연 사진도 서명 URL로 열리게 photoRefs 로 합처 둔다 */
   st.memoPhotos=normRefMap(st.memoPhotos);
   Object.keys(st.memoPhotos).forEach(function(id){ if(!out.photoRefs[id]) out.photoRefs[id]=st.memoPhotos[id]; });
@@ -2223,10 +2430,8 @@ function renderCalendar(){
   $('calToggle').setAttribute('aria-label', collapsed?'달력 펼치기':'달력 접기');
   renderMiniCal();
 }
-/* 보기 상단 왼쪽 초소형 달력(칸 22px) — 큰 달력과 같은 달(viewY·viewM)을 본다 */
-function renderMiniCal(){
-  var box=$('vtCal');
-  if(!box) return;
+/* 상단 초소형 달력(칸 22px) — 쓰기·보기 모두 같은 달(viewY·viewM)을 본다 */
+function miniCalHTML(){
   var t=parseYmd(selected);
   if(!viewY){ viewY=t.getFullYear(); viewM=t.getMonth(); }
   var first=new Date(viewY, viewM, 1);
@@ -2255,7 +2460,12 @@ function renderMiniCal(){
     if(ds===selected) cls+=' sel';
     cells.push('<button class="'+cls+'" type="button" data-mcdate="'+ds+'" aria-label="'+fmtFull(ds)+(dayHasRecord(ds)?' 기록 있음':'')+'">'+d.getDate()+'</button>');
   }
-  box.innerHTML=head+'<div class="mc-grid">'+cells.join('')+'</div>';
+  return head+'<div class="mc-grid">'+cells.join('')+'</div>';
+}
+function renderMiniCal(){
+  var html=miniCalHTML();
+  var v=$('vtCal'); if(v) v.innerHTML=html;
+  var w=$('wtCal'); if(w) w.innerHTML=html;
 }
 
 /* ────────────────────────────── render: write ────────────────────────────── */
@@ -2394,7 +2604,7 @@ function sectionHTML(c){
 }
 function autoGrow(ta){
   ta.style.height='auto';
-  ta.style.height=Math.max(76, ta.scrollHeight+2)+'px';
+  ta.style.height=Math.max(104, ta.scrollHeight+2)+'px';
 }
 /* 슬림(빈) 카드를 누르면 그 카드만 펼친다 — 날짜마다 따로 기억한다 */
 var slimOpen={};
@@ -2455,6 +2665,15 @@ function renderSections(){
 function updateDraftBadge(){
   $('draftBadge').hidden = !(current && current.isDraft);
 }
+function updateWtInfo(){
+  var el=$('wtInfo'); if(!el || !current) return;
+  var secs=current.sections||{}, n=0, tot=0;
+  visibleCats().forEach(function(c){
+    var s=secs[c.id];
+    if(hasContent(s)){ n++; tot+=Number(s.m)||0; }
+  });
+  el.innerHTML = n? ('이 날 기록 <b>'+n+'</b>개 영역'+(tot? ' · <b>'+fmtMin(tot)+'</b>':'')) : '아직 기록이 없어요';
+}
 function renderWrite(){
   $('writeDate').textContent=fmtMD(selected);
   $('writeWeekday').textContent='('+DOW[parseYmd(selected).getDay()]+')';
@@ -2462,6 +2681,7 @@ function renderWrite(){
   renderSections();
   updateTodayAnalysis();
   updateDraftBadge();
+  updateWtInfo();
 }
 
 /* ────────────────────────────── analysis tables ────────────────────────────── */
@@ -3348,7 +3568,8 @@ var HIST={restoring:false, warned:false, closing:false, lastNoop:0};
 function navSnap(){
   var lb=($('lightbox') && !$('lightbox').hidden)? 'lightbox' : '';
   return {ldy:1, tab:activeTab, date:selected, sheet: sheetEl? (sheetKey||'sheet') : lb,
-    memo: (activeTab==='memo' && memoOpenId)? memoOpenId : ''};
+    kid: kidOpen? kidTab : '',
+    memo: (kidOpen && kidTab==='memo' && memoOpenId)? memoOpenId : ''};
 }
 function histPushNav(){
   if(HIST.restoring) return;
@@ -3359,7 +3580,7 @@ function histReplaceNav(){
   try{ history.replaceState(navSnap(), ''); }catch(e){}
 }
 function histBase(){
-  try{ history.replaceState({ldy:1, base:true, tab:activeTab, date:selected, sheet:''}, ''); }catch(e){}
+  try{ history.replaceState({ldy:1, base:true, tab:activeTab, date:selected, sheet:'', kid: kidOpen? kidTab:''}, ''); }catch(e){}
 }
 function applyNavState(s){
   var changed=false;
@@ -3367,8 +3588,14 @@ function applyNavState(s){
   try{
     if($('lightbox') && !$('lightbox').hidden && s.sheet!=='lightbox'){ closeLightbox(true); changed=true; }
     if(sheetEl && !s.sheet){ closeSheet(true); changed=true; }
-    if(s.tab && s.tab!==activeTab){ switchTab(s.tab); changed=true; }
-    if(typeof s.memo==='string' && (s.memo||'')!==memoOpenId && (s.tab||activeTab)==='memo'){
+    var wantKid=String(s.kid||'');
+    if(wantKid !== (kidOpen? kidTab : '')){
+      if(wantKid){ kidOpen=true; kidTab=(wantKid==='memo')?'memo':'growth'; renderKid(); }
+      else hideKidPage();
+      changed=true;
+    }
+    if(s.tab && s.tab!=='memo' && s.tab!==activeTab){ switchTab(s.tab); changed=true; }
+    if(typeof s.memo==='string' && (s.memo||'')!==memoOpenId && kidOpen && kidTab==='memo'){
       memoOpenId=s.memo||''; renderMemo(); changed=true;
     }
     if(s.date && s.date!==selected){ selectDate(s.date); changed=true; }
@@ -3378,7 +3605,7 @@ function applyNavState(s){
   return changed;
 }
 function histSentinel(){
-  try{ history.pushState({ldy:1, base:true, tab:activeTab, date:selected, sheet:''}, ''); }catch(e){}
+  try{ history.pushState({ldy:1, base:true, tab:activeTab, date:selected, sheet:'', kid: kidOpen? kidTab:''}, ''); }catch(e){}
 }
 function bindHistory(){
   window.addEventListener('popstate', function(e){
@@ -3439,6 +3666,400 @@ function closeSheet(internal){
   HIST.closing=false;
   /* 저장·삭제처럼 코드로 시트를 닫았을 때도 history에 '열린 시트' 기록이 남지 않게 맞춰 둔다 */
   if(had && !HIST.restoring) histReplaceNav();
+}
+
+
+/* ────────────────────────────── 🧒 아이 페이지 (래니😚 → 📏 성장 · 📝 메모장) ────────────────────────────── */
+var kidOpen=false, kidTab='growth';
+function renderKid(){
+  var pg=$('kidPage'); if(!pg) return;
+  pg.hidden=!kidOpen;
+  if(!kidOpen) return;
+  var g=(kidTab==='growth');
+  if($('kidTabGrowth')){ $('kidTabGrowth').classList.toggle('on', g); $('kidTabGrowth').setAttribute('aria-selected', g?'true':'false'); }
+  if($('kidTabMemo')){ $('kidTabMemo').classList.toggle('on', !g); $('kidTabMemo').setAttribute('aria-selected', g?'false':'true'); }
+  if($('kidPaneGrowth')) $('kidPaneGrowth').hidden=!g;
+  if($('kidPaneMemo')) $('kidPaneMemo').hidden=g;
+  var nm=state.child.name||'우리 아이';
+  if($('kidName')) $('kidName').textContent=nm+'😚';
+  var latest=gLatest(), mo=latest? gMonthsOn(latest.date) : null;
+  if($('kidSub')) $('kidSub').textContent=[state.child.grade||'', mo!=null? '만 '+gAgeText(mo) : '', '기록 '+growthList().length+'개'].filter(Boolean).join(' · ');
+  if(g) renderGrowth();
+  else { if($('view-memo')) $('view-memo').hidden=false; renderMemo(); }
+}
+function showKidPage(tab){
+  var was=kidOpen;
+  kidOpen=true;
+  kidTab=(tab==='memo')? 'memo' : 'growth';
+  if(kidTab==='memo') memoOpenId='';
+  renderKid();
+  if(!was) histPushNav(); else histReplaceNav();
+}
+function hideKidPage(){
+  kidOpen=false;
+  if($('kidPage')) $('kidPage').hidden=true;
+}
+function closeKidPage(){
+  if(!kidOpen) return;
+  var st=history.state;
+  if(st && st.ldy && st.kid && !HIST.restoring && !HIST.closing){
+    HIST.closing=true;
+    try{ history.back(); return; }catch(e){ HIST.closing=false; }
+  }
+  hideKidPage();
+  histReplaceNav();
+}
+
+/* ── 📏 성장 기록 데이터 ── */
+var GROWTH_BIRTH='2018-08-09';
+var GROWTH_H_RAW="36:89.7/91.8/93.9/96.5/99.2/101.8/104.4,39:91.2/93.3/95.5/98.1/100.9/103.5/106.1,42:92.7/94.9/97.1/99.8/102.6/105.1/107.8,45:94.2/96.4/98.7/101.4/104.2/106.8/109.5,48:95.6/97.9/100.3/103.1/105.9/108.5/111.2,51:97.1/99.5/101.9/104.7/107.6/110.2/112.9,54:98.6/101/103.5/106.3/109.2/111.9/114.6,57:100.1/102.6/105.1/108/110.9/113.6/116.3,60:101.6/104.1/106.7/109.6/112.6/115.3/118,63:103/105.6/108.2/111.2/114.2/117/119.7,66:104.5/107.1/109.8/112.8/115.8/118.7/121.5,69:105.9/108.6/111.3/114.4/117.5/120.3/123.2,72:107.4/110.1/112.8/115.9/119.1/122/125,75:108.8/111.5/114.3/117.5/120.7/123.7/126.7,78:110.3/113/115.8/119/122.3/125.4/128.4,81:111.7/114.4/117.3/120.5/123.9/127/130.1,84:113.1/115.9/118.8/122.1/125.4/128.6/131.7,87:114.4/117.3/120.2/123.5/127/130.1/133.3,90:115.8/118.7/121.6/125/128.5/131.7/134.9,93:117.1/120/123/126.5/130/133.2/136.4,96:118.5/121.4/124.4/127.9/131.4/134.7/137.9,99:119.8/122.7/125.8/129.3/132.8/136.1/139.4,102:121/124/127.2/130.7/134.3/137.6/140.9,105:122.3/125.4/128.5/132.1/135.7/139/142.4,108:123.6/126.6/129.8/133.4/137.1/140.5/143.9,111:124.8/127.9/131.1/134.8/138.5/142/145.4,114:126/129.1/132.4/136.1/139.9/143.4/147,117:127.2/130.4/133.7/137.5/141.4/145/148.6,120:128.4/131.6/135/138.8/142.8/146.5/150.2,123:129.6/132.9/136.3/140.3/144.3/148.1/151.9,126:130.8/134.2/137.7/141.7/145.8/149.7/153.6,129:132/135.5/139.1/143.2/147.4/151.3/155.3,132:133.2/136.8/140.5/144.7/149/153/157.1,135:134.4/138.1/141.9/146.3/150.7/154.8/159,138:135.7/139.5/143.5/147.9/152.5/156.7/160.8,141:136.9/140.9/145.1/149.7/154.3/158.6/162.8,144:138.2/142.4/146.7/151.4/156.2/160.5/164.7,147:139.6/144/148.4/153.2/158.1/162.4/166.6,150:141.1/145.6/150.1/155/159.9/164.2/168.5,153:142.6/147.2/151.9/156.8/161.7/166/170.2,156:144.2/148.9/153.6/158.6/163.5/167.8/171.9,159:145.8/150.6/155.3/160.3/165.2/169.3/173.3,162:147.4/152.3/157/162/166.7/170.8/174.7,165:149/153.9/158.6/163.5/168.2/172.1/175.8,168:150.6/155.5/160.2/165/169.5/173.3/176.9,171:152.2/157/161.5/166.2/170.6/174.3/177.8,174:153.8/158.4/162.8/167.4/171.6/175.2/178.6,177:155.2/159.7/163.9/168.3/172.4/175.9/179.2,180:156.5/160.8/164.9/169.2/173.2/176.6/179.9,183:157.6/161.7/165.7/169.9/173.8/177.2/180.4,186:158.6/162.6/166.4/170.5/174.3/177.7/180.9,189:159.5/163.3/167/171/174.8/178.1/181.3,192:160.3/163.9/167.5/171.4/175.2/178.5/181.7,195:160.9/164.4/167.9/171.8/175.5/178.8/182.1,198:161.5/164.9/168.3/172.1/175.8/179.2/182.4,201:161.9/165.2/168.6/172.4/176.1/179.5/182.8,204:162.2/165.5/168.9/172.6/176.4/179.7/183.1,207:162.5/165.8/169.1/172.9/176.6/180/183.4,210:162.8/166.1/169.4/173.1/176.9/180.3/183.7,213:163.1/166.3/169.6/173.4/177.1/180.6/184,216:163.3/166.6/169.9/173.6/177.4/180.8/184.3";
+var GROWTH_W_RAW="36:12.3/13/13.8/14.7/15.7/16.7/17.7,39:12.7/13.4/14.3/15.3/16.3/17.4/18.5,42:13/13.8/14.7/15.8/16.9/18.1/19.3,45:13.4/14.3/15.2/16.3/17.5/18.8/20.1,48:13.8/14.7/15.6/16.8/18.1/19.5/20.9,51:14.2/15.1/16.1/17.4/18.8/20.2/21.8,54:14.6/15.5/16.6/17.9/19.4/20.9/22.6,57:15/16/17.1/18.4/20/21.6/23.5,60:15.4/16.4/17.5/19/20.6/22.4/24.3,63:15.8/16.8/18/19.5/21.3/23.1/25.2,66:16.2/17.3/18.5/20.1/21.9/23.9/26.2,69:16.7/17.8/19/20.7/22.7/24.8/27.3,72:17.1/18.3/19.6/21.3/23.4/25.7/28.3,75:17.5/18.8/20.2/22/24.2/26.6/29.5,78:18/19.3/20.8/22.7/25.1/27.6/30.7,81:18.5/19.8/21.4/23.5/25.9/28.7/31.9,84:18.9/20.4/22/24.2/26.9/29.7/33.2,87:19.4/20.9/22.7/25/27.8/30.9/34.5,90:19.9/21.5/23.4/25.8/28.8/32/35.9,93:20.4/22.1/24.1/26.7/29.8/33.2/37.3,96:20.9/22.7/24.8/27.5/30.8/34.4/38.7,99:21.4/23.3/25.5/28.4/31.9/35.7/40.2,102:21.9/24/26.3/29.4/33/37/41.6,105:22.5/24.6/27.1/30.3/34.2/38.3/43.2,108:23/25.3/27.9/31.3/35.4/39.7/44.7,111:23.5/25.9/28.7/32.3/36.6/41.1/46.3,114:24.1/26.6/29.6/33.4/37.8/42.5/47.9,117:24.6/27.3/30.4/34.4/39.1/44/49.5,120:25.2/28.1/31.3/35.5/40.4/45.5/51.2,123:25.8/28.8/32.3/36.7/41.7/47/52.9,126:26.4/29.6/33.2/37.8/43.1/48.5/54.6,129:27.1/30.4/34.2/39/44.5/50.1/56.3,132:27.7/31.2/35.2/40.2/45.9/51.7/58.1,135:28.4/32.1/36.3/41.5/47.4/53.3/59.9,138:29.2/33/37.3/42.8/48.9/55/61.7,141:30/34/38.5/44.1/50.4/56.7/63.6,144:30.8/35/39.6/45.4/51.9/58.4/65.4,147:31.7/36/40.8/46.8/53.4/60/67.2,150:32.7/37.1/42.1/48.2/55/61.7/69,153:33.7/38.2/43.3/49.5/56.4/63.3/70.6,156:34.7/39.4/44.6/50.9/57.9/64.8/72.2,159:35.8/40.5/45.8/52.2/59.3/66.2/73.6,162:36.9/41.7/47/53.5/60.6/67.6/75,165:38/42.9/48.3/54.8/61.9/68.8/76.2,168:39.2/44.1/49.5/56/63.1/70/77.3,171:40.3/45.2/50.6/57.1/64.2/71/78.3,174:41.5/46.4/51.8/58.2/65.2/72/79.1,177:42.6/47.5/52.8/59.2/66.1/72.8/79.9,180:43.7/48.5/53.8/60.1/66.9/73.6/80.5,183:44.7/49.5/54.7/60.9/67.7/74.2/81.1,186:45.7/50.4/55.6/61.7/68.4/74.8/81.6,189:46.6/51.3/56.3/62.4/69/75.3/82.1,192:47.5/52.1/57.1/63.1/69.6/75.9/82.5,195:48.3/52.8/57.7/63.6/70.1/76.4/83,198:49/53.4/58.3/64.2/70.6/76.8/83.5,201:49.5/53.9/58.8/64.6/71/77.3/83.9,204:50.1/54.4/59.2/65/71.4/77.7/84.3,207:50.6/54.9/59.7/65.5/71.8/78/84.7,210:51/55.4/60.1/65.9/72.2/78.4/85.1,213:51.5/55.8/60.6/66.3/72.6/78.8/85.5,216:52/56.3/61/66.7/73/79.2/85.9";
+var GROWTH_TBL={h:null, w:null};
+var G_PCT=[3,10,25,50,75,90,97];
+var G_Z=[-1.880794,-1.281552,-0.674490,0,0.674490,1.281552,1.880794];
+function gParsed(kind){
+  var k=(kind==='w')? 'w':'h';
+  if(!GROWTH_TBL[k]){
+    var raw=(k==='w')? GROWTH_W_RAW : GROWTH_H_RAW;
+    var map={};
+    raw.split(',').forEach(function(seg){
+      var i=seg.indexOf(':');
+      if(i<1) return;
+      var m=parseInt(seg.slice(0,i),10);
+      if(!m) return;
+      var arr=seg.slice(i+1).split('/').map(function(v){ return parseFloat(v)||0; });
+      if(arr.length===7) map[m]=arr;
+    });
+    GROWTH_TBL[k]=map;
+  }
+  return GROWTH_TBL[k];
+}
+function gBirthDate(){
+  var b=String((state.settings||{}).growthBirth||'');
+  return /^\d{4}-\d{2}-\d{2}$/.test(b)? b : GROWTH_BIRTH;
+}
+function gMonthsOn(ds){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(String(ds||''))) return null;
+  var b=parseYmd(gBirthDate()), d=parseYmd(ds);
+  if(isNaN(b.getTime())||isNaN(d.getTime())) return null;
+  var mo=(d.getFullYear()-b.getFullYear())*12+(d.getMonth()-b.getMonth());
+  if(d.getDate()<b.getDate()) mo-=1;
+  return Math.max(0, mo);
+}
+function gAgeText(mo){
+  if(mo==null || !isFinite(mo)) return '';
+  var y=Math.floor(mo/12), m=mo%12;
+  return y+'세'+(m? ' '+m+'개월':'');
+}
+function gErf(x){
+  var sign=(x<0)? -1:1; x=Math.abs(x);
+  var a1=0.254829592,a2=-0.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,pp=0.3275911;
+  var t=1/(1+pp*x);
+  var y=1-(((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-x*x);
+  return sign*y;
+}
+function gNormCdf(z){ return 0.5*(1+gErf(z/Math.SQRT2)); }
+function gRowAt(kind, mo){
+  var map=gParsed(kind);
+  mo=Math.max(36, Math.min(216, Math.round(Number(mo)||0)));
+  var lo=36+Math.floor((mo-36)/3)*3;
+  var hi=Math.min(216, lo+3);
+  var a=map[lo]||map[36], b=map[hi]||a;
+  var t=(hi===lo)? 0 : (mo-lo)/3;
+  return a.map(function(v,i){ return v+(b[i]-v)*t; });
+}
+/* LMS 대신 3·10·25·50·75·90·97 백분위 사이를 z(표준점수)로 잇는다 */
+function gPercentile(kind, mo, v){
+  v=Number(v);
+  if(!isFinite(v) || mo==null || mo<36 || mo>216) return null;
+  var vals=gRowAt(kind, mo), z=null, i;
+  for(i=0;i<6;i++){
+    if(v>=vals[i] && v<=vals[i+1]){
+      var span=vals[i+1]-vals[i];
+      z=(span>0)? G_Z[i]+(v-vals[i])/span*(G_Z[i+1]-G_Z[i]) : G_Z[i];
+      break;
+    }
+  }
+  if(z===null){
+    if(v<vals[0]){
+      var s0=(vals[1]-vals[0])/(G_Z[1]-G_Z[0]);
+      z=G_Z[0]-(vals[0]-v)/(s0>0? s0 : 1);
+    } else {
+      var s6=(vals[6]-vals[5])/(G_Z[6]-G_Z[5]);
+      z=G_Z[6]+(v-vals[6])/(s6>0? s6 : 1);
+    }
+  }
+  return Math.max(0.1, Math.min(99.9, gNormCdf(z)*100));
+}
+function gPctText(p){
+  if(p==null) return '';
+  var r=Math.round(p*10)/10;
+  return (r<1? '1' : (r>99? '99' : String(r)))+' 백분위';
+}
+function gBmi(h, w){
+  if(!(h>0) || !(w>0)) return null;
+  return w/(h*h)*10000;
+}
+/* ── 기록 CRUD ── */
+function growthList(){
+  var l=((state.settings||{}).growthRecords||[]).slice();
+  return l.sort(function(a,b){ return String(a.date).localeCompare(String(b.date)); });
+}
+function growthById(id){
+  var l=growthList();
+  for(var i=0;i<l.length;i++){ if(l[i].id===id) return l[i]; }
+  return null;
+}
+function growthTouch(){ if(state.settings) state.settings.growthAt=Date.now(); }
+function normGrowthItem(r){
+  if(!r || typeof r!=='object') return null;
+  var date=/^\d{4}-\d{2}-\d{2}$/.test(String(r.date||''))? String(r.date) : '';
+  if(!date) return null;
+  var h=Number(r.h), w=Number(r.w);
+  h=(isFinite(h) && h>=40 && h<=200)? Math.round(h*10)/10 : null;
+  w=(isFinite(w) && w>=5 && w<=120)? Math.round(w*10)/10 : null;
+  var bone=String(r.bone||'').replace(/\s+/g,' ').trim().slice(0,20);
+  var memo=String(r.memo||'').replace(/\u0000/g,'').slice(0,600);
+  if(h==null && w==null && !bone && !memo.trim()) return null;
+  var id=String(r.id||'').trim().slice(0,60);
+  if(!/^[A-Za-z0-9_\-]{1,60}$/.test(id)) id='g'+wishHash(date+'|'+h+'|'+w);
+  return { id:id, date:date, h:h, w:w, bone:bone, memo:memo, at:Number(r.at)||0 };
+}
+function normGrowthRecords(v){
+  if(!Array.isArray(v)) return [];
+  var out=[], byDate={};
+  v.forEach(function(raw){
+    var g=normGrowthItem(raw);
+    if(!g) return;
+    var prev=byDate[g.date];
+    if(prev){   /* 같은 날짜는 한 건만 — 더 최근에 고친 쪽을 남긴다 */
+      if((g.at||0) >= (prev.at||0)){ out[out.indexOf(prev)]=g; byDate[g.date]=g; }
+      return;
+    }
+    byDate[g.date]=g; out.push(g);
+  });
+  out.sort(function(a,b){ return String(a.date).localeCompare(String(b.date)); });
+  return out.slice(-400);
+}
+function gDateShort(ds){
+  var d=parseYmd(ds);
+  if(isNaN(d.getTime())) return String(ds||'');
+  return String(d.getFullYear()).slice(2)+'.'+pad2(d.getMonth()+1)+'.'+pad2(d.getDate());
+}
+function gLatest(){ var l=growthList(); return l.length? l[l.length-1] : null; }
+function gPrevOf(rec){
+  var l=growthList(), out=null;
+  for(var i=0;i<l.length;i++){
+    if(l[i].date < rec.date || (l[i].date===rec.date && l[i].id!==rec.id)) out=l[i];
+  }
+  return out;
+}
+/* 화면 그리기 */
+function gCardHTML(label, unit, v, p, prev, prevKey){
+  if(v==null) return '<div class="g-card"><div class="k">'+label+'</div><div class="v">—</div><div class="d">기록 없음</div></div>';
+  var diff='';
+  if(prev && prev[prevKey]!=null){
+    var dv=Math.round((v-prev[prevKey])*10)/10;
+    if(dv!==0) diff='<div class="d'+(dv>0?' up':'')+'">직전 '+esc(gDateShort(prev.date))+' 대비 '+(dv>0?'+':'')+dv+unit+'</div>';
+    else diff='<div class="d">직전 '+esc(gDateShort(prev.date))+'과 같아요</div>';
+  }
+  return '<div class="g-card"><div class="k">'+label+'</div><div class="v">'+v+'<small>'+unit+'</small></div>'
+    +(p!=null? '<div class="p'+(p<3||p>97?' warn':'')+'">'+esc(gPctText(p))+'</div>' : '')
+    +diff+'</div>';
+}
+function growthSvg(kind){
+  var W=320, H=170, L=31, R=8, T=10, B=20;
+  var recs=growthList().filter(function(r){ return r[kind]!=null; });
+  var yMin=Infinity, yMax=-Infinity, x, i;
+  var pts3=[], pts50=[], pts97=[];
+  for(var m=36;m<=216;m+=6){
+    var row=gRowAt(kind,m);
+    pts3.push([m,row[0]]); pts50.push([m,row[3]]); pts97.push([m,row[6]]);
+    yMin=Math.min(yMin,row[0]); yMax=Math.max(yMax,row[6]);
+  }
+  recs.forEach(function(r){ yMin=Math.min(yMin,r[kind]); yMax=Math.max(yMax,r[kind]); });
+  if(!isFinite(yMin) || !isFinite(yMax) || yMax<=yMin){ yMin=0; yMax=1; }
+  var pad=(yMax-yMin)*0.06; yMin-=pad; yMax+=pad;
+  function X(mo){ return L+(mo-36)/(216-36)*(W-L-R); }
+  function Y(v){ return T+(1-(v-yMin)/(yMax-yMin))*(H-T-B); }
+  function path(arr){ return arr.map(function(q,k){ return (k?'L':'M')+X(q[0]).toFixed(1)+' '+Y(q[1]).toFixed(1); }).join(''); }
+  var g='';
+  /* 가로 눈금 4개 + 값 */
+  for(i=0;i<=4;i++){
+    var vv=yMin+(yMax-yMin)*i/4, yy=Y(vv);
+    g+='<line x1="'+L+'" y1="'+yy.toFixed(1)+'" x2="'+(W-R)+'" y2="'+yy.toFixed(1)+'" stroke="#eee9df" stroke-width="1"/>';
+    g+='<text x="'+(L-3)+'" y="'+(yy+2.6).toFixed(1)+'" text-anchor="end" font-size="7" fill="#9aa8a3">'+(Math.round(vv*10)/10)+'</text>';
+  }
+  /* 세로 눈금: 3·6·9·12·15·18세 */
+  [36,72,108,144,180,216].forEach(function(mo){
+    var xx=X(mo);
+    g+='<line x1="'+xx.toFixed(1)+'" y1="'+T+'" x2="'+xx.toFixed(1)+'" y2="'+(H-B)+'" stroke="#f4f0e7" stroke-width="1"/>';
+    g+='<text x="'+xx.toFixed(1)+'" y="'+(H-B+9)+'" text-anchor="middle" font-size="7" fill="#9aa8a3">'+(mo/12)+'세</text>';
+  });
+  g+='<path d="'+path(pts3)+'" fill="none" stroke="#c9d8d4" stroke-width="1.1" stroke-dasharray="3 2"/>';
+  g+='<path d="'+path(pts97)+'" fill="none" stroke="#c9d8d4" stroke-width="1.1" stroke-dasharray="3 2"/>';
+  g+='<path d="'+path(pts50)+'" fill="none" stroke="#9ecfc7" stroke-width="1.4"/>';
+  if(recs.length){
+    var line=recs.map(function(r){ var mo=gMonthsOn(r.date); return mo==null? null : [mo, r[kind]]; }).filter(Boolean);
+    if(line.length>1) g+='<path d="'+path(line)+'" fill="none" stroke="#0d7a70" stroke-width="1.8" stroke-linejoin="round"/>';
+    line.forEach(function(q){
+      g+='<circle cx="'+X(q[0]).toFixed(1)+'" cy="'+Y(q[1]).toFixed(1)+'" r="2.6" fill="#0d7a70" stroke="#fff" stroke-width="1"/>';
+    });
+    var last=line[line.length-1];
+    if(last){
+      var lx=X(last[0]), ly=Y(last[1]);
+      var tx=Math.min(W-R-3, lx+5), anchor=(lx>W-70)? 'end':'start';
+      if(anchor==='end') tx=Math.max(L+2,lx-5);
+      g+='<text x="'+tx.toFixed(1)+'" y="'+(ly-4).toFixed(1)+'" text-anchor="'+anchor+'" font-size="8" font-weight="700" fill="#0b5f57">'+(last[1])+(kind==='h'?'cm':'kg')+'</text>';
+    }
+  }
+  return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="성장 곡선 그래프"><rect x="0" y="0" width="'+W+'" height="'+H+'" fill="#fff" rx="8"/>'+g+'</svg>';
+}
+var growthKind='h';
+function renderGrowth(){
+  var top=$('growthTop'), cards=$('growthCards'), chart=$('growthChart'), bone=$('growthBone'), list=$('growthList');
+  if(!top) return;
+  var latest=gLatest(), prev=latest? gPrevOf(latest):null;
+  var mo=latest? gMonthsOn(latest.date) : null;
+  top.innerHTML='<div class="g-top"><b>📏 성장 기록</b>'
+    +(latest? '<span class="g-age">최근 '+esc(fmtFull(latest.date))+(mo!=null? ' · 만 '+esc(gAgeText(mo)):'')+'</span>' : '<span class="g-age">생년월일 '+esc(gBirthDate())+' 기준으로 개월 수를 계산해요</span>')
+  +'</div>';
+  var ph=gPercentile('h', mo, latest&&latest.h), pw=gPercentile('w', mo, latest&&latest.w);
+  cards.innerHTML = latest
+    ? gCardHTML('키','cm',latest.h, ph, prev, 'h')+gCardHTML('몸무게','kg',latest.w, pw, prev, 'w')
+    : '<div class="g-card" style="grid-column:1/-1"><div class="k">아직 기록이 없어요</div><div class="d">아래 <b>＋ 성장 기록 추가</b>를 눌러 키·몸무게를 넣어 보세요.</div></div>';
+  chart.innerHTML='<div class="g-chart-head">'
+    +'<button class="lchip'+(growthKind==='h'?' on':'')+'" type="button" data-gkind="h">키</button>'
+    +'<button class="lchip'+(growthKind==='w'?' on':'')+'" type="button" data-gkind="w">몸무게</button>'
+    +'<span class="lg">— 50 · ┄ 3·97 백분위</span>'
+  +'</div>'+growthSvg(growthKind);
+  if(bone){
+    var bm=latest&&latest.bone;
+    bone.hidden=!bm;
+    if(bm) bone.innerHTML='🦴 뼈나이 · <b>'+esc(bm)+'</b> <span style="color:var(--muted);font-weight:700">— '+esc(gDateShort(latest.date))+' 검사</span>';
+  }
+  var all=growthList().slice().reverse();
+  if(!all.length){
+    list.innerHTML='<div class="card g-empty"><b>성장 기록이 비어 있어요</b>키·몸무게를 넣으면 또래 백분위와 성장 곡선 위 위치를 함께 보여 드려요.</div>';
+    return;
+  }
+  list.innerHTML=all.map(function(r){
+    var m=gMonthsOn(r.date), hp=gPercentile('h', m, r.h), wp=gPercentile('w', m, r.w);
+    var vals=[];
+    if(r.h!=null) vals.push('키 '+r.h+'cm'+(hp!=null?' <i>'+gPctText(hp)+'</i>':''));
+    if(r.w!=null) vals.push('몸무게 '+r.w+'kg'+(wp!=null?' <i>'+gPctText(wp)+'</i>':''));
+    var bmi=gBmi(r.h,r.w);
+    if(bmi) vals.push('BMI '+(Math.round(bmi*10)/10));
+    return '<div class="g-item" data-gid="'+esc(r.id)+'">'
+      +'<button class="g-item-main" type="button" data-gedit="'+esc(r.id)+'">'
+        +'<span class="dt">'+esc(gDateShort(r.date))+' <span>'+esc(gAgeText(m))+'</span>'+(r.bone? ' <span>🦴 '+esc(r.bone)+'</span>':'')+'</span>'
+        +'<span class="vals">'+vals.map(function(v){ return '<span>'+v+'</span>'; }).join('')+'</span>'
+        +(r.memo? '<span class="memo">'+esc(r.memo)+'</span>':'')
+      +'</button>'
+      +'<span class="acts"><button type="button" data-gedit="'+esc(r.id)+'" aria-label="수정">✏️</button>'
+      +'<button type="button" data-gdel="'+esc(r.id)+'" aria-label="삭제">🗑️</button></span>'
+    +'</div>';
+  }).join('');
+}
+function openGrowthEditor(id){
+  var src=id? growthById(id) : null;
+  var d=src? {date:src.date, h:src.h, w:src.w, bone:src.bone||'', memo:src.memo||''}
+           : {date: todayStr(), h:null, w:null, bone:'', memo:''};
+  var html='<div class="grab"></div>'
+    +'<div class="sheet-head"><h2>'+(src? '✏️ 성장 기록 고치기':'📏 성장 기록 추가')+'</h2><button class="x" data-close aria-label="닫기">✕</button></div>'
+    +'<div class="sheet-block">'
+      +'<div class="field"><label>날짜</label><input class="inp" id="grDate" type="date" value="'+esc(d.date)+'" max="'+todayStr()+'"></div>'
+      +'<div class="two-fields" style="display:flex;gap:8px">'
+        +'<div class="field" style="flex:1"><label>키 (cm)</label><input class="inp" id="grH" type="number" inputmode="decimal" step="0.1" min="40" max="200" value="'+(d.h!=null? d.h:'')+'" placeholder="127.4"></div>'
+        +'<div class="field" style="flex:1"><label>몸무게 (kg)</label><input class="inp" id="grW" type="number" inputmode="decimal" step="0.1" min="5" max="120" value="'+(d.w!=null? d.w:'')+'" placeholder="30.6"></div>'
+      +'</div>'
+      +'<div class="field"><label>뼈나이 (선택)</label><input class="inp" id="grBone" maxlength="20" value="'+esc(d.bone)+'" placeholder="예: 6세 7개월"></div>'
+      +'<div class="field"><label>진료 메모 (선택)</label><textarea class="inp" id="grMemo" maxlength="600" rows="3" style="height:auto;min-height:72px;padding:9px 11px;line-height:1.6" placeholder="예: 퍼스트아이소아과 성장검사 · BMI 18.9 정상">'+esc(d.memo)+'</textarea></div>'
+      +'<div class="two-btns" style="margin-top:4px">'
+        +'<button class="btn-line teal" type="button" data-grsave>저장</button>'
+        +'<button class="btn-line" type="button" data-close>취소</button>'
+      +'</div>'
+    +'</div>';
+  openSheet(html, function(root){
+    var m=root.querySelector('#grMemo'); if(m) m.value=d.memo;
+    root.addEventListener('click', function(e){
+      if(e.target.closest('[data-grsave]')){ e.preventDefault(); saveGrowth(root, src? src.id:''); }
+    });
+  }, 'growth-edit');
+}
+function saveGrowth(root, id){
+  root=root||sheetEl;
+  var q=function(sel){ var el=root? root.querySelector(sel):null; return el? el : null; };
+  var dateEl=q('#grDate');
+  var ds=String(dateEl? dateEl.value:'');
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(ds)){ toast('날짜를 골라 주세요'); return; }
+  if(ds>todayStr()){ toast('오늘보다 뒤 날짜는 넣을 수 없어요'); return; }
+  var h=parseFloat(String((q('#grH')||{}).value||''));
+  var w=parseFloat(String((q('#grW')||{}).value||''));
+  h=isFinite(h)? h : null; w=isFinite(w)? w : null;
+  if(h!=null && (h<40 || h>200)){ toast('키는 40~200cm 사이로 넣어 주세요'); return; }
+  if(w!=null && (w<5 || w>120)){ toast('몸무게는 5~120kg 사이로 넣어 주세요'); return; }
+  var bone=String((q('#grBone')||{}).value||'').replace(/\s+/g,' ').trim().slice(0,20);
+  var memo=String((q('#grMemo')||{}).value||'').trim().slice(0,600);
+  if(h==null && w==null && !bone && !memo){ toast('키나 몸무게를 넣어 주세요'); return; }
+  var list=growthList();
+  var target=null;
+  if(id){ for(var i=0;i<list.length;i++){ if(list[i].id===id) target=list[i]; } }
+  if(!target){ for(var j=0;j<list.length;j++){ if(list[j].date===ds) target=list[j]; } }   /* 같은 날짜는 한 건만 */
+  var item=normGrowthItem({
+    id: target? target.id : ('g'+Date.now().toString(36)+Math.random().toString(36).slice(2,4)),
+    date: ds, h: h, w: w, bone: bone, memo: memo, at: Date.now()
+  });
+  if(!item){ toast('저장할 내용이 없어요'); return; }
+  if(target) list[list.indexOf(target)]=item; else list.push(item);
+  state.settings.growthRecords=normGrowthRecords(list);
+  growthTouch(); scheduleSave(); Cloud.pushProfile();
+  closeSheet(true);
+  if(kidOpen) renderKid();
+  toast(id? '성장 기록을 고쳤어요' : '📏 성장 기록을 저장했어요');
+}
+function deleteGrowth(id){
+  var g=growthById(id); if(!g) return;
+  if(!window.confirm(fmtMD(g.date)+' 성장 기록을 지울까요?')) return;
+  state.settings.growthRecords=normGrowthRecords(growthList().filter(function(x){ return x.id!==id; }));
+  growthTouch(); scheduleSave(); Cloud.pushProfile();
+  if(kidOpen) renderKid();
+  toast('성장 기록을 지웠어요');
+}
+/* 초기 시드 — 문진표(기억값)와 2026-11-24 병원 검사 결과. 이미 있는 날짜는 건드리지 않는다 */
+var GROWTH_SEED=[
+  {date:'2021-11-24', h:94.5, w:15.2, bone:'', memo:'성장 문진표에 적은 5년 전 기억값'},
+  {date:'2022-11-24', h:101.7, w:17, bone:'', memo:'성장 문진표에 적은 4년 전 기억값'},
+  {date:'2023-11-24', h:107.6, w:19, bone:'', memo:'성장 문진표에 적은 3년 전 기억값'},
+  {date:'2024-11-24', h:114.2, w:21.8, bone:'', memo:'성장 문진표에 적은 2년 전 기억값'},
+  {date:'2025-11-24', h:120, w:24.5, bone:'', memo:'성장 문진표에 적은 1년 전 기억값'},
+  {date:'2026-11-24', h:127.4, w:30.6, bone:'6세 7개월', memo:'퍼스트아이소아과 성장검사 · BMI 18.9(비만도 115% 정상) · 뼈나이 AI 6세 7개월(의사 판독 6세 11개월, 실제나이 -20개월) · 유전적 기대치 174.0cm · 뼈나이 기반 예측키 A 175.8±3.8cm / B 179.7cm'}
+];
+function gSeedId(ds){ return 'g'+wishHash('seed|'+ds); }
+/* 아직 시드(문진표·병원 결과)만 들어 있는 상태인지 — 클라우드에 이미 기록이 있으면 그쪽을 따른다 */
+function growthIsSeedOnly(){
+  var l=growthList();
+  if(!l.length) return true;
+  var ok=true;
+  l.forEach(function(g){ if(gSeedId(g.date)!==g.id) ok=false; });
+  return ok;
+}
+function ensureGrowthSeed(){
+  var st=state.settings||{};
+  if(st.growthSeed) return false;
+  var have={};
+  growthList().forEach(function(r){ have[r.date]=1; });
+  var add=[];
+  GROWTH_SEED.forEach(function(x){
+    if(have[x.date]) return;
+    add.push(Object.assign({id:gSeedId(x.date), at:Date.now()}, x));
+  });
+  if(add.length){
+    st.growthRecords=normGrowthRecords(growthList().concat(add));
+    growthTouch();
+  }
+  st.growthSeed=1;
+  return !!add.length;
 }
 
 /* ────────────────────────────── settings sheet ────────────────────────────── */
@@ -3944,7 +4565,7 @@ function backupMergePlan(src){
   return plan;
 }
 function mergeBackupIntoState(src, plan){
-  var rep={added:0, updated:0, cats:0, books:0, memos:0, ratings:0};
+  var rep={added:0, updated:0, cats:0, books:0, memos:0, ratings:0, growth:0};
   /* 1) 영역 — 기존 영역은 그대로, 파일에만 있는 영역만 뒤에 추가 */
   var knownId={}, byName={};
   state.categories.forEach(function(c){ knownId[c.id]=true; byName[normKey(catBase(c))]=c.id; });
@@ -4063,6 +4684,20 @@ function mergeBackupIntoState(src, plan){
       state.settings.recipeFolders=curF;
     }
   }
+  /* 6-5) 📏 성장 기록 — 같은 날짜는 더 최근에 고친 것, 새 날짜는 더한다 */
+  var grB=normGrowthRecords(ss.growthRecords||[]);
+  if(grB.length){
+    var curG=growthList().slice(), byG={};
+    curG.forEach(function(g){ byG[g.date]=g; });
+    var addedG=0;
+    grB.forEach(function(g){
+      var have=byG[g.date];
+      if(!have){ curG.push(g); byG[g.date]=g; addedG++; return; }
+      if((Number(g.at)||0)>(Number(have.at)||0)){ curG[curG.indexOf(have)]=g; byG[g.date]=g; addedG++; }
+    });
+    if(addedG){ state.settings.growthRecords=normGrowthRecords(curG); growthTouch(); rep.growth=addedG; }
+    if(Number(ss.growthSeed)) state.settings.growthSeed=Math.max(Number(state.settings.growthSeed)||0, Number(ss.growthSeed)||0);
+  }
   return rep;
 }
 async function pushImportedDates(dates){
@@ -4176,7 +4811,8 @@ function shiftMonth(n){
   renderCalendar();
 }
 function switchTab(name){
-  if(name!=='write' && name!=='read' && name!=='shelf' && name!=='memo' && name!=='food') name='write';
+  if(name==='memo'){ showKidPage('memo'); return; }
+  if(name!=='write' && name!=='read' && name!=='shelf' && name!=='food') name='write';
   var changed=(name!==activeTab);
   activeTab=name;
   if(changed) memoOpenId='';   /* 탭을 옮기면 메모장은 목록부터 */
@@ -4193,10 +4829,9 @@ function switchTab(name){
   if($('view-write')) $('view-write').hidden = name!=='write';
   if($('view-read')) $('view-read').hidden = name!=='read';
   if($('view-shelf')) $('view-shelf').hidden = name!=='shelf';
-  if($('view-memo')) $('view-memo').hidden = name!=='memo';
   if($('view-food')) $('view-food').hidden = name!=='food';
-  /* 책장·메모장·음식에서는 달력을 접어 두고, 보기는 상단 미니 달력으로 대신한다 */
-  if($('calCard')) $('calCard').style.display = (name==='shelf'||name==='memo'||name==='read'||name==='food')? 'none' : '';
+  /* 달력은 쓰기·보기 상단의 초소형 달력 하나로 통일했다 */
+  if($('calCard')) $('calCard').style.display='none';
   if(name==='write'){ renderWrite();
     var bar=document.querySelector('.actionbar'); if(bar) bar.style.display='flex';
   } else if(name==='read'){
@@ -4287,6 +4922,7 @@ function updateTimeUI(art, m){
   var sec=current.sections[art.getAttribute('data-cat')];
   art.classList.toggle('is-filled', hasContent(sec));
   updateTodayAnalysis();
+  updateWtInfo();
 }
 function compressImage(file, maxDim, quality){
   maxDim=maxDim||1600; quality=quality||0.82;
@@ -5311,11 +5947,22 @@ function normRecipe(r){
   var ing=String(r.ing||r.ingredients||'').replace(/\u0000/g,'').slice(0,4000);
   var note=String(r.note||r.memo||'').replace(/\u0000/g,'').slice(0,4000);
   var thumb=/^https?:\/\//i.test(String(r.thumb||''))? String(r.thumb).slice(0,400) : '';
-  if(!title && !url && !ing.trim() && !note.trim()) return null;
+  var photo=/^[A-Za-z0-9_\-]{1,60}$/.test(String(r.photo||''))? String(r.photo) : '';
+  var cd=[];
+  if(Array.isArray(r.cookedDates)){
+    var cdSeen={};
+    r.cookedDates.forEach(function(d){
+      d=String(d||'');
+      if(/^\d{4}-\d{2}-\d{2}$/.test(d) && !cdSeen[d]){ cdSeen[d]=1; cd.push(d); }
+    });
+  }
+  cd.sort();
+  if(!title && !url && !ing.trim() && !note.trim() && !photo) return null;
   if(!title) title=url? (recipeHost(url)||'레시피') : (ing.trim().split('\n')[0]||'레시피').slice(0,40);
   var id=String(r.id||'').trim().slice(0,60);
   if(!/^[A-Za-z0-9_\-]{1,60}$/.test(id)) id='r'+wishHash(normKey(title)+'|'+url+'|'+(Number(r.createdAt)||0));
-  return { id:id, title:title, folder:folder, url:url, ing:ing, note:note, thumb:thumb, createdAt:Number(r.createdAt)||0 };
+  return { id:id, title:title, folder:folder, url:url, ing:ing, note:note, thumb:thumb,
+    photo:photo, cookedDates:cd.slice(0,2000), createdAt:Number(r.createdAt)||0 };
 }
 function normRecipes(v){
   if(!Array.isArray(v)) return [];
@@ -7243,6 +7890,27 @@ async function syncMemoPhotos(){
     try{ await uploadPhoto(ids[i], 'memo'); }catch(e){}
   }
 }
+async function syncRecipePhotos(){
+  if(!CLOUD.session) return;
+  var ids=[];
+  recipes().forEach(function(r){ if(r.photo && ids.indexOf(r.photo)<0) ids.push(r.photo); });
+  for(var i=0;i<ids.length;i++){
+    var ref=state.photoRefs[ids[i]];
+    if(ref && (ref.path || ref.url)) continue;
+    try{ await uploadPhoto(ids[i], 'recipe'); }catch(e){}
+  }
+}
+function recipePhotoRefs(){
+  var out={};
+  recipes().forEach(function(r){
+    var id=r.photo;
+    if(!id) return;
+    var ref=state.photoRefs[id];
+    if(ref && ref.path) out[id]={path:ref.path, storage:'supabase'};
+    else if(ref && ref.url) out[id]={url:ref.url, storage:'url'};
+  });
+  return out;
+}
 function memoPhotoRefs(){
   var out={}, ids={};
   memos().forEach(function(m){ (m.photos||[]).forEach(function(id){ ids[id]=1; }); });
@@ -7288,23 +7956,99 @@ function recipeFolders(){
   return out;
 }
 function recipeHost(u){
-  var s=String(u||'').trim();
-  var m=s.match(/^https?:\/\/([^\/]+)/i);
+  var t=String(u||'').trim();
+  var m=t.match(/^https?:\/\/([^\/]+)/i);
   return m? m[1].replace(/^www\./i,'') : '';
 }
+/* 대표 사진(직접 올린 사진) > 유튜브 썸네일 > 외부 썸네일 주소 순서 */
 function recipeThumb(r){
+  if(r && r.photo){
+    var u=photoUrl(r.photo);
+    if(u) return {src:u, yt:false, own:true};
+  }
   var yt=ytVideoId(r&&r.url);
   if(yt) return {src:ytThumbUrl(yt), yt:true};
   if(r && r.thumb && /^https?:\/\//i.test(r.thumb)) return {src:r.thumb, yt:false};
   return {src:'', yt:false};
 }
+function recipeCookDates(r){
+  var l=(r&&r.cookedDates)||[];
+  if(!Array.isArray(l)) return [];
+  var seen={}, out=[];
+  l.forEach(function(d){ d=String(d||''); if(/^\d{4}-\d{2}-\d{2}$/.test(d) && !seen[d]){ seen[d]=1; out.push(d); } });
+  return out.sort();
+}
+function recipeCookCount(r){ return recipeCookDates(r).length; }
+function recipeLastCook(r){ var l=recipeCookDates(r); return l.length? l[l.length-1] : ''; }
+function recipeTouchCook(id){
+  var r=recipeById(id);
+  if(!r) return null;
+  var list=recipes().slice(), i=list.indexOf(r);
+  r.cookedDates=recipeCookDates(r);
+  list[i]=r;
+  state.settings.recipes=normRecipes(list);
+  recipeTouch(); scheduleSave(); Cloud.pushProfile();
+  return r;
+}
+function recipeCookToday(id){
+  var r=recipeById(id);
+  if(!r){ toast('레시피를 찾지 못했어요'); return; }
+  var t=todayStr(), ds=recipeCookDates(r);
+  if(ds.indexOf(t)>=0){ toast('오늘은 이미 기록했어요 · '+ds.length+'회', 2000); return; }
+  r.cookedDates=ds.concat([t]);
+  recipeTouchCook(r.id);
+  renderFood();
+  if(openRecipeId===r.id) openRecipeSheet(r.id);   /* 상세 창이 열려 있으면 숫자를 바로 갱신 */
+  toast('🍳 오늘 요리 +1 · 총 '+r.cookedDates.length+'회');
+}
+function recipeUncook(id, date){
+  var r=recipeById(id);
+  if(!r) return;
+  var ds=recipeCookDates(r).filter(function(d){ return d!==date; });
+  r.cookedDates=ds;
+  recipeTouchCook(r.id);
+  renderFood();
+  openRecipeSheet(r.id);
+  toast('그 날짜 기록을 지웠어요 · '+ds.length+'회');
+}
+var RECIPE_SORTS={new:'최신순', count:'많이 해본 순', recent:'최근 만든 순', never:'아직 안 해본 것'};
+function recipeSortMode(){
+  var m=String((state.settings||{}).recipeSort||'new');
+  return RECIPE_SORTS[m]? m : 'new';
+}
+function setRecipeSort(m){
+  state.settings.recipeSort=RECIPE_SORTS[m]? m : 'new';
+  var sel=$('recipeSort'); if(sel) sel.value=state.settings.recipeSort;
+  scheduleSave(); renderFood();
+}
+function sortRecipes(list, mode){
+  mode=recipeSortMode();
+  var out=list.slice();
+  out.sort(function(a,b){
+    if(mode==='count'){
+      var d=recipeCookCount(b)-recipeCookCount(a);
+      if(d) return d;
+      return (Number(b.createdAt)||0)-(Number(a.createdAt)||0);
+    }
+    if(mode==='recent'){
+      var ar=recipeLastCook(a)||'', br=recipeLastCook(b)||'';
+      if(ar!==br) return br.localeCompare(ar);
+      return (Number(b.createdAt)||0)-(Number(a.createdAt)||0);
+    }
+    return (Number(b.createdAt)||0)-(Number(a.createdAt)||0);
+  });
+  if(mode==='never') out=out.filter(function(r){ return recipeCookCount(r)===0; });
+  return out;
+}
 function recipeCardHTML(r){
   var th=recipeThumb(r), host=recipeHost(r.url), href=safeHttpUrl(r.url);
-  var badge=th.yt? '▶️ 유튜브' : (href? '🔗 링크' : '📝 메모');
+  var badge=th.own? '📷 사진' : (th.yt? '▶️ 유튜브' : (href? '🔗 링크' : '📝 메모'));
+  var n=recipeCookCount(r), last=recipeLastCook(r);
   return '<div class="rc-card" data-rcard="'+esc(r.id)+'">'
-    +'<button class="rc-cv" type="button" data-ropen="'+esc(r.id)+'" aria-label="'+esc(r.title+' 자세히 보기')+'">'
+    +'<button class="rc-cv" type="button" data-ropen="'+esc(r.id)+'" aria-label="'+esc(r.title+' 자세히 보기')+'"'+(th.own?' style="aspect-ratio:16/9"':'')+'>'
       +(th.src? '<img src="'+esc(th.src)+'" alt="'+esc(r.title)+'" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">' : '<span class="ph" aria-hidden="true">🍲</span>')
       +'<span class="k" aria-hidden="true">'+badge+'</span>'
+      +(n? '<span class="k2" aria-hidden="true">🍳 '+n+'회'+(last? ' · '+esc(fmtMD(last)):'')+'</span>':'')
     +'</button>'
     +'<div class="rc-row">'
       +'<button class="rc-tb" type="button" data-ropen="'+esc(r.id)+'" aria-label="'+esc(r.title+' 자세히 보기')+'">'
@@ -7312,6 +8056,7 @@ function recipeCardHTML(r){
         +'<span class="rc-fd'+(r.folder?'':' none')+'">'+esc(r.folder||'폴더 없음')+'</span>'
         +(host? '<span class="rc-s">'+esc(host)+'</span>' : (r.ing? '<span class="rc-s">'+esc(String(r.ing).split('\n')[0].slice(0,40))+'</span>':''))
       +'</button>'
+      +'<button class="rc-plus" type="button" data-rcook="'+esc(r.id)+'" title="오늘 요리했다고 기록" aria-label="'+esc(r.title+' 오늘 요리 +1')+'"'+(n&&last===todayStr()?' style="opacity:.55"':'')+'>🍳+1</button>'
       +(href? '<a class="rc-go" href="'+esc(href)+'" target="_blank" rel="noopener noreferrer" data-rlink="1" title="링크 열기" aria-label="'+esc(r.title+' 링크 열기')+'">▶️</a>' : '')
     +'</div>'
   +'</div>';
@@ -7320,10 +8065,12 @@ function renderFood(){
   var body=$('recipeBody'), folds=$('recipeFolds'), sum=$('recipeSum');
   if(!body) return;
   var all=recipes();
-  var counts={};
-  all.forEach(function(r){ var f=r.folder||''; counts[f]=(counts[f]||0)+1; });
+  var counts={}, cookedTotal=0;
+  all.forEach(function(r){ var f=r.folder||''; counts[f]=(counts[f]||0)+1; cookedTotal+=recipeCookCount(r); });
   if(recipeFold && recipeFold!=='__none' && !counts[recipeFold]) recipeFold='';
-  if(sum) sum.innerHTML='<b>🍳 '+all.length+'개</b><span>'+(all.length? '폴더별 레시피를 모아 뒀어요' : '레시피를 모아 두면 초보도 바로 따라 해요')+'</span>';
+  if(sum) sum.innerHTML='<b>🍳 '+all.length+'개</b><span>'+(cookedTotal? '누적 '+cookedTotal+'번 요리했어요' : (all.length? '폴더별 레시피를 모아 뒀어요' : '레시피를 모아 두면 초보도 바로 따라 해요'))+'</span>';
+  var rsel=$('recipeSort');
+  if(rsel) rsel.value=recipeSortMode();
   if(folds){
     if(all.length){
       var chips=[{f:'',label:'전체',n:all.length}];
@@ -7341,27 +8088,37 @@ function renderFood(){
     if(recipeFold) return (r.folder||'')===recipeFold;
     return true;
   });
-  shown=shown.slice().sort(function(a,b){ return (Number(b.createdAt)||0)-(Number(a.createdAt)||0); });
+  shown=sortRecipes(shown, recipeSortMode());
   if(!all.length){
     body.innerHTML='<div class="card rc-empty"><b>아직 레시피가 없어요</b>‘＋ 레시피’를 눌러 유튜브·블로그 링크와 재료를 저장해 두면, 요리할 때 한 번에 열어 볼 수 있어요.</div>';
     return;
   }
   if(!shown.length){
-    body.innerHTML='<div class="card rc-empty"><b>이 폴더에는 레시피가 없어요</b>위의 <b>전체</b>를 눌러 보세요.</div>';
+    body.innerHTML='<div class="card rc-empty"><b>'+(recipeSortMode()==='never'? '아직 안 해본 레시피가 없어요' : '이 폴더에는 레시피가 없어요')+'</b>'
+      +(recipeSortMode()==='never'? '위의 정렬을 <b>최신순</b>으로 바꿔 보세요.' : '위의 <b>전체</b>를 눌러 보세요.')+'</div>';
     return;
   }
   body.innerHTML='<div class="rc-grid">'+shown.map(recipeCardHTML).join('')+'</div>';
 }
+var openRecipeId='';
 function recipeDetailHTML(r){
   var th=recipeThumb(r), href=safeHttpUrl(r.url);
+  var n=recipeCookCount(r), ds=recipeCookDates(r).slice().reverse();
   return '<div class="grab"></div>'
     +'<div class="sheet-head"><h2>🍳 '+esc(r.title)+'</h2><button class="x" data-close aria-label="닫기">✕</button></div>'
     +'<div class="sheet-block">'
-      +(th.yt? '<div class="rc-cv" style="border-radius:10px;margin-bottom:8px">'+'<img src="'+esc(th.src)+'" alt="'+esc(r.title)+'" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">'+'</div>' : '')
+      +(th.src? '<div class="rc-cv" style="border-radius:10px;margin-bottom:8px'+(th.own? ';aspect-ratio:16/9':'')+'">'+'<img src="'+esc(th.src)+'" alt="'+esc(r.title)+'" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">'+'</div>' : '')
       +'<div class="rc-head">'
         +'<span class="rc-chip">'+esc(r.folder||'폴더 없음')+'</span>'
         +(recipeHost(r.url)? '<span class="rc-fd" style="font-size:10px">🔗 '+esc(recipeHost(r.url))+'</span>':'')
       +'</div>'
+      +'<div class="rc-cook-row">'
+        +'<span class="rc-cook">🍳 '+(n? n+'회 · 최근 '+esc(fmtMD(recipeLastCook(r))) : '아직 안 해봤어요')+'</span>'
+        +'<button class="rc-cook-btn" type="button" data-rccook="'+esc(r.id)+'">🍳 +1 오늘</button>'
+      +'</div>'
+      +(ds.length? '<div class="rc-dates">'+ds.map(function(d){
+          return '<span class="rc-date">'+esc(fmtMD(d))+' <button type="button" data-rcuncook="'+esc(d)+'" aria-label="'+esc(fmtMD(d)+' 기록 지우기')+'">✕</button></span>';
+        }).join('')+'</div>' : '')
       +(href? '<a class="rc-link" href="'+esc(href)+'" target="_blank" rel="noopener noreferrer">▶️ 링크 열어 보기</a>' : '')
       +(r.ing? '<div class="rc-ing">'+esc(r.ing)+'</div>' : '')
       +(r.note? '<div class="rc-note">'+esc(r.note)+'</div>' : '')
@@ -7375,8 +8132,13 @@ function recipeDetailHTML(r){
 function openRecipeSheet(id){
   var r=recipeById(id);
   if(!r){ toast('레시피를 찾지 못했어요'); return; }
+  openRecipeId=id;
   openSheet(recipeDetailHTML(r), function(root){
     root.addEventListener('click', function(e){
+      var ck=e.target.closest('[data-rccook]');
+      if(ck){ e.preventDefault(); recipeCookToday(ck.getAttribute('data-rccook')); return; }
+      var un=e.target.closest('[data-rcuncook]');
+      if(un){ e.preventDefault(); recipeUncook(id, un.getAttribute('data-rcuncook')); return; }
       var ed=e.target.closest('[data-rcedit]');
       if(ed){ e.preventDefault(); var rid=ed.getAttribute('data-rcedit'); closeSheet(true); openRecipeEditor(rid); return; }
       var del=e.target.closest('[data-rcdel]');
@@ -7393,10 +8155,47 @@ function recipeDelete(id){
   closeSheet(true); renderFood();
   toast('레시피를 지웠어요');
 }
+/* 📷 대표 사진 — 일기·메모 사진과 같은 방식(압축 → IndexedDB → 클라우드) */
+var recipeEditPhoto='', recipePhotoPick=false;
+async function handleRecipePhoto(files){
+  recipePhotoPick=false;
+  if(!sheetEl || !files || !files.length) return;
+  try{
+    toast('사진을 가볍게 압축하는 중…', 4000);
+    var blob=await compressImage(files[0], 1400, 0.84);
+    var id='rph'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+    await PhotoStore.put(id, blob);
+    var old=recipeEditPhoto;
+    recipeEditPhoto=id;
+    drawRecipePhoto();
+    if(old && old!==id && !recipePhotoUsedElsewhere(old)){ try{ await PhotoStore.del(old); }catch(e){} }
+    toast('대표 사진을 넣었어요 · 저장을 눌러 주세요', 2600);
+  }catch(err){
+    console.warn('recipe photo fail', err);
+    toast('사진을 넣지 못했어요. 다른 사진으로 해보세요');
+  }
+}
+function recipePhotoUsedElsewhere(pid){
+  var used=false;
+  recipes().forEach(function(r){ if(r.photo===pid) used=true; });
+  return used;
+}
+function drawRecipePhoto(){
+  if(!sheetEl) return;
+  var box=sheetEl.querySelector('#rcPhotoPrev');
+  if(!box) return;
+  var u=recipeEditPhoto? photoUrl(recipeEditPhoto):'';
+  box.innerHTML = u
+    ? '<img src="'+esc(u)+'" alt="대표 사진 미리보기">'
+    : '<span class="none">아직 사진이 없어요 — 유튜브 링크는 자동 썸네일이 보여요.</span>';
+  var delBtn=sheetEl.querySelector('[data-rcphotodel]');
+  if(delBtn) delBtn.hidden=!recipeEditPhoto;
+}
 function openRecipeEditor(id){
   var src=id? recipeById(id) : null;
   var d= src? {title:src.title, folder:src.folder||'', url:src.url||'', ing:src.ing||'', note:src.note||''}
             : {title:'', folder:(recipeFold && recipeFold!=='__none')? recipeFold:'', url:'', ing:'', note:''};
+  recipeEditPhoto = src? (src.photo||'') : '';
   var chips=recipeFolders().map(function(f){ return f; });
   RECIPE_FOLDERS.forEach(function(f){ if(chips.indexOf(f)<0) chips.push(f); });
   var foldChips=chips.map(function(f){
@@ -7410,6 +8209,14 @@ function openRecipeEditor(id){
         +'<div class="wish-folds" style="margin-top:2px">'+foldChips+'</div></div>'
       +'<div class="field"><label>링크 (유튜브·블로그)</label><input class="inp" id="rcUrl" type="text" inputmode="url" maxlength="400" value="'+esc(d.url)+'" placeholder="https://youtu.be/… 또는 블로그 주소">'
         +'<div class="hint" style="font-size:10px">유튜브 링크는 카드에 영상 썸네일이 자동으로 보여서 바로 열 수 있어요.</div></div>'
+      +'<div class="field"><label>📷 대표 사진 (인스타·블로그 사진도 OK)</label>'
+        +'<div class="rc-ph"><div class="rc-ph-prev" id="rcPhotoPrev"></div>'
+        +'<div class="rc-ph-btns">'
+          +'<button class="btn-line teal" type="button" data-rcphoto>📷 대표 사진 올리기</button>'
+          +'<button class="btn-line" type="button" data-rcphotodel hidden>✕ 사진 빼기</button>'
+        +'</div></div>'
+        +'<div class="hint" style="font-size:10px">인스타·블로그는 자동 썸네일이 안 뜨기도 해요. 내가 찍은 사진·캡처를 올리면 카드에 그 사진이 먼저 보여요.</div>'
+      +'</div>'
       +'<div class="field"><label>재료</label><textarea class="inp" id="rcIng" maxlength="4000" rows="4" style="height:auto;min-height:86px;padding:9px 11px;line-height:1.6" placeholder="예: 다진 소고기 200g · 양파 반 개 · 간장 2큰술"></textarea></div>'
       +'<div class="field"><label>메모 (순서·팁)</label><textarea class="inp" id="rcNote" maxlength="4000" rows="4" style="height:auto;min-height:76px;padding:9px 11px;line-height:1.6" placeholder="예: 양파는 채 썰고, 센 불 3분 → 약불 5분"></textarea></div>'
       +'<div class="two-btns" style="margin-top:4px">'
@@ -7421,6 +8228,7 @@ function openRecipeEditor(id){
     var ing=root.querySelector('#rcIng'), note=root.querySelector('#rcNote');
     if(ing) ing.value=d.ing;
     if(note) note.value=d.note;
+    drawRecipePhoto();
     root.addEventListener('click', function(e){
       var pf=e.target.closest('[data-rpickfold]');
       if(pf){
@@ -7435,6 +8243,20 @@ function openRecipeEditor(id){
         });
         return;
       }
+      if(e.target.closest('[data-rcphoto]')){
+        e.preventDefault();
+        recipePhotoPick=true;
+        $('photoInput').value='';
+        $('photoInput').click();
+        return;
+      }
+      if(e.target.closest('[data-rcphotodel]')){
+        e.preventDefault();
+        recipeEditPhoto='';
+        drawRecipePhoto();
+        toast('대표 사진을 뺐어요 · 저장을 눌러 주세요');
+        return;
+      }
       if(e.target.closest('[data-rcsave]')){
         e.preventDefault();
         saveRecipeDraft(root, id||'');
@@ -7446,10 +8268,13 @@ function openRecipeEditor(id){
 function saveRecipeDraft(root, id){
   root=root||sheetEl;
   var g=function(i){ var el=root? root.querySelector(i) : null; return el? String(el.value||'') : ''; };
+  var prev= id? recipeById(id) : null;
   var it=normRecipe({
     id:id||('r'+Date.now().toString(36)+Math.random().toString(36).slice(2,5)),
     title:g('#rcTitle'), folder:g('#rcFolder'), url:g('#rcUrl'),
     ing:g('#rcIng'), note:g('#rcNote'),
+    photo: recipeEditPhoto||'',
+    cookedDates: prev? recipeCookDates(prev) : [],
     createdAt: id? (Number((recipeById(id)||{}).createdAt)||Date.now()) : Date.now()
   });
   if(!it){ toast('레시피 이름을 넣어 주세요'); return; }
@@ -7457,11 +8282,11 @@ function saveRecipeDraft(root, id){
   for(var i=0;i<list.length;i++){ if(list[i].id===it.id) idx=i; }
   if(idx>=0) list[idx]=it; else list.unshift(it);
   state.settings.recipes=normRecipes(list);
+  if(it.photo && !state.photoRefs[it.photo]) state.photoRefs[it.photo]={local:true};
   recipeTouch(); scheduleSave(); Cloud.pushProfile();
   closeSheet(true); renderFood();
   toast(id? '레시피를 고쳤어요' : '🍳 레시피를 저장했어요');
 }
-
 function bindShelf(){
   var form=$('shelfForm');
   if(form) form.addEventListener('submit', function(e){ e.preventDefault(); });
@@ -7662,18 +8487,51 @@ function bindEvents(){
   if($('tabFood')) $('tabFood').addEventListener('click', function(){ switchTab('food'); });
   bindShelf();
 
-  /* 보기 상단 미니 달력 */
-  var vcal=$('vtCal');
-  if(vcal) vcal.addEventListener('click', function(e){
+  /* 🧒 래니😚 — 성장·메모장 페이지 */
+  var pbtn=$('profileBtn');
+  if(pbtn) pbtn.addEventListener('click', function(){ showKidPage('growth'); });
+  var kidTabs=document.querySelector('.kid-tabs');
+  if(kidTabs) kidTabs.addEventListener('click', function(e){
+    var b=e.target.closest('[data-kid]');
+    if(!b) return;
+    var t=(b.getAttribute('data-kid')==='memo')? 'memo':'growth';
+    if(kidOpen && t===kidTab) return;
+    kidTab=t;
+    if(t==='memo') memoOpenId='';
+    renderKid();
+    histReplaceNav();
+  });
+  var kback=$('kidBack');
+  if(kback) kback.addEventListener('click', function(){ closeKidPage(); });
+  var gpane=$('kidPaneGrowth');
+  if(gpane) gpane.addEventListener('click', function(e){
+    var k=e.target.closest('[data-gkind]');
+    if(k){ growthKind=(k.getAttribute('data-gkind')==='w')?'w':'h'; renderGrowth(); return; }
+    var ed=e.target.closest('[data-gedit]');
+    if(ed){ openGrowthEditor(ed.getAttribute('data-gedit')); return; }
+    var dl=e.target.closest('[data-gdel]');
+    if(dl){ deleteGrowth(dl.getAttribute('data-gdel')); return; }
+  });
+  var gadd=$('growthAdd');
+  if(gadd) gadd.addEventListener('click', function(){ openGrowthEditor(''); });
+
+  /* 보기·쓰기 상단 미니 달력 */
+  var miniCalClick=function(e){
     var d=e.target.closest('[data-mcdate]');
     if(d){ selectDate(d.getAttribute('data-mcdate')); return; }
     var n=e.target.closest('[data-mc]');
     if(n){ shiftMonth(parseInt(n.getAttribute('data-mc'),10)||0); return; }
-  });
+  };
+  var vcal=$('vtCal'); if(vcal) vcal.addEventListener('click', miniCalClick);
+  var wcal=$('wtCal'); if(wcal) wcal.addEventListener('click', miniCalClick);
+  var todayW=$('btnTodayW');
+  if(todayW) todayW.addEventListener('click', function(){ selectDate(todayStr()); toast('오늘로 이동했어요'); });
 
   /* 🍳 음식 · 레시피 */
   var foodView=$('view-food');
   if(foodView) foodView.addEventListener('click', function(e){
+    var cookNow=e.target.closest('[data-rcook]');
+    if(cookNow){ e.preventDefault(); e.stopPropagation(); recipeCookToday(cookNow.getAttribute('data-rcook')); return; }
     if(e.target.closest('[data-rlink]')) return;   /* 링크는 새 탭으로 */
     var fo=e.target.closest('[data-refold]');
     if(fo){ e.preventDefault(); recipeFold=fo.getAttribute('data-refold')||''; renderFood(); return; }
@@ -7682,6 +8540,11 @@ function bindEvents(){
   });
   var foodAdd=$('recipeAdd');
   if(foodAdd) foodAdd.addEventListener('click', function(){ openRecipeEditor(null); });
+  var rsort=$('recipeSort');
+  if(rsort){
+    rsort.value=recipeSortMode();
+    rsort.addEventListener('change', function(){ setRecipeSort(rsort.value); });
+  }
 
   /* 날짜 이동 */
   $('prevDay').addEventListener('click', function(){ selectDate(addDays(selected,-1)); });
@@ -7827,6 +8690,7 @@ function bindEvents(){
   $('photoInput').addEventListener('change', function(e){
     var files=Array.prototype.slice.call(e.target.files||[]);
     e.target.value='';
+    if(recipePhotoPick && sheetEl && sheetEl.querySelector('[data-rcphoto]')){ handleRecipePhoto(files); return; }
     if(memoDraft && sheetEl && sheetEl.querySelector('#memoBodyIn')){ handleMemoPhotoFiles(files); return; }
     handlePhotoFiles(files);
   });
@@ -8287,6 +9151,7 @@ function queueSync(fn){
 async function pushProfileNow(){
   if(!CLOUD.session) return;
   try{ await syncMemoPhotos(); }catch(e){}
+  try{ await syncRecipePhotos(); }catch(e){}
   var cats=state.categories.map(function(c){
     return {id:c.id, name:c.name, timer:!!c.timer, group:c.group, hidden:!!c.hidden, order:c.order};
   });
@@ -8305,8 +9170,13 @@ async function pushProfileNow(){
       return {id:m.id, title:m.title, body:m.body||'', folder:m.folder||'', photos:(m.photos||[]).slice(), collapsed:!!m.collapsed, updatedAt:Number(m.updatedAt)||0};
     }), memoAt:Number(st.memoAt)||0, memoPhotos:memoPhotoRefs(),
     recipes:(st.recipes||[]).map(function(r){
-      return {id:r.id, title:r.title, folder:r.folder||'', url:r.url||'', ing:r.ing||'', note:r.note||'', thumb:r.thumb||'', createdAt:Number(r.createdAt)||0};
-    }), recipeAt:Number(st.recipeAt)||0, recipeFolders:(st.recipeFolders||[]).slice(0,50)
+      return {id:r.id, title:r.title, folder:r.folder||'', url:r.url||'', ing:r.ing||'', note:r.note||'', thumb:r.thumb||'',
+        photo:r.photo||'', cookedDates:(r.cookedDates||[]).slice(0,2000), createdAt:Number(r.createdAt)||0};
+    }), recipeAt:Number(st.recipeAt)||0, recipeFolders:(st.recipeFolders||[]).slice(0,50),
+    recipeSort:st.recipeSort||'new', recipePhotos:recipePhotoRefs(),
+    growthRecords:(st.growthRecords||[]).map(function(g){
+      return {id:g.id, date:g.date, h:(g.h==null? null:g.h), w:(g.w==null? null:g.w), bone:g.bone||'', memo:g.memo||'', at:Number(g.at)||0};
+    }), growthAt:Number(st.growthAt)||0, growthSeed:Number(st.growthSeed)||0, growthBirth:gBirthDate()
   }, updated_at:new Date().toISOString()};
   var r=await sbApi('/rest/v1/diary_profiles?on_conflict=user_id',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},body:body});
   if(!r.ok) throw new Error(sbErrText(r));
@@ -8418,6 +9288,18 @@ async function mergeCloud(profRow, rows){
       state.settings.recipes=crList; state.settings.recipeAt=cr;
       if(Array.isArray(cs.recipeFolders)) state.settings.recipeFolders=strList(cs.recipeFolders,50);
     } else if(cr<lr || JSON.stringify(lrList)!==JSON.stringify(crList)) needProfilePush=true;
+    if(/^(new|count|recent|never)$/.test(String(cs.recipeSort||'')) && !state.settings.recipeSort) state.settings.recipeSort=cs.recipeSort;
+    var cRP=normRefMap(cs.recipePhotos);
+    Object.keys(cRP).forEach(function(id){ if(!state.photoRefs[id]) state.photoRefs[id]=cRP[id]; });
+    /* 📏 성장 기록 — 마지막으로 바꾼 쪽을 따른다 */
+    var cg=Number(cs.growthAt)||0, lg=Number(state.settings.growthAt)||0;
+    var cgList=normGrowthRecords(cs.growthRecords), lgList=normGrowthRecords(state.settings.growthRecords);
+    if(cg>lg || (cg>0 && Number(cs.growthSeed) && growthIsSeedOnly())){
+      /* 다른 기기에서 이미 성장 기록을 쓰고 있었다면(시드만 있는 새 기기) 클라우드 쪽을 따른다 */
+      state.settings.growthRecords=cgList; state.settings.growthAt=cg||lg;
+      if(Number(cs.growthSeed)) state.settings.growthSeed=Number(cs.growthSeed);
+      if(cg<lg) needProfilePush=true;
+    } else if(cg<lg || JSON.stringify(lgList)!==JSON.stringify(cgList)) needProfilePush=true;
   } else {
     try{ await pushProfileNow(); }catch(e){}
   }
@@ -8578,8 +9460,9 @@ function schedulePhotoRerender(){
   photoRerenderTimer=setTimeout(function(){
     if($('appRoot').hidden) return;
     if(activeTab==='read') renderRead();
-    else if(activeTab==='memo') renderMemo();
     else if(activeTab==='shelf') renderShelf();
+    else if(activeTab==='food') renderFood();
+    if(kidOpen) renderKid();
     else renderSections();
   }, 350);
 }
@@ -8647,10 +9530,12 @@ function lockAppForGate(){
     var ct=$('childTitle'); if(ct) ct.innerHTML='나의 학습노트';
     var m=$('mascot'); if(m) m.textContent='✏️';
     document.title='학습 · 성장 다이어리';
-    ['sections','readContent','shelfBody','shelfSum','wishBody','wishFolds','memoBody','memoDetail','memoFolds','memoSum','cumStats','todayTable','todayStats','weekTable','calGrid','jumpBar','viewCatChips','rangeInfo','shSubTabs','vtCal','recipeBody','recipeFolds','recipeSum'].forEach(function(id){
+    ['sections','readContent','shelfBody','shelfSum','wishBody','wishFolds','memoBody','memoDetail','memoFolds','memoSum','cumStats','todayTable','todayStats','weekTable','calGrid','jumpBar','viewCatChips','rangeInfo','shSubTabs','vtCal','wtCal','recipeBody','recipeFolds','recipeSum','growthTop','growthCards','growthChart','growthBone','growthList','kidName','kidSub'].forEach(function(id){
       var el=$(id); if(el) el.innerHTML='';
     });
     memoOpenId='';
+    if($('kidPage')) $('kidPage').hidden=true;
+    kidOpen=false;
     var dc=$('draftBadge'); if(dc) dc.hidden=true;
   }catch(e){}
   appRendered=false;
@@ -8845,6 +9730,7 @@ var Cloud={
 /* ────────────────────────────── boot ────────────────────────────── */
 async function boot(){
   await loadState();
+  ensureGrowthSeed();
   shelfTab=(state.settings && state.settings.shelfTab==='video')? 'video' : 'book';
   var td=parseYmd(todayStr());
   viewY=td.getFullYear(); viewM=td.getMonth();
