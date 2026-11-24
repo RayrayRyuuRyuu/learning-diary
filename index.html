@@ -5208,7 +5208,8 @@ async function sbPutPhotoBlob(path, blob){
   var enc=String(path).split('/').map(encodeURIComponent).join('/');
   var r=await sbApi('/storage/v1/object/diary-photos/'+enc, {
     method:'POST',
-    headers:{'Content-Type':'image/jpeg','x-upsert':'true','cache-control':'max-age=3600'},
+    /* 회전 결과가 다른 기기에도 빨리 보이도록 짧게 캐시한다 */
+    headers:{'Content-Type':'image/jpeg','x-upsert':'true','cache-control':'max-age=60'},
     body:blob
   });
   if(!r.ok) throw new Error('사진을 클라우드에 올리지 못했어요');
