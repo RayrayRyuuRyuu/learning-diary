@@ -6741,7 +6741,7 @@ function openMemoEditor(id, opts){
         var before=ta.value.slice(0,s0), after=ta.value.slice(s1);
         var glue=(before && !/\n$/.test(before))? '\n':'';
         ta.value=before+glue+ins+after;
-        var at=before.length+glue.length+6;   /* ‘{{토글 ’ 뒤 = 제목 자리 */
+        var at=before.length+glue.length+5;   /* ‘{{토글 ’ 뒤 = 제목 자리 */
         ta.focus();
         try{ ta.setSelectionRange(at, at+2); }catch(_){}
         return;
