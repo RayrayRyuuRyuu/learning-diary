@@ -149,39 +149,39 @@ main{padding:12px 13px 8px;display:flex;flex-direction:column;gap:12px}
 .tiny{font-size:12px}
 
 /* ── Calendar ───────────────────────────── */
-.cal-card{padding:11px 11px 9px;overflow:hidden}
-.cal-head{display:flex;align-items:center;gap:2px}
+.cal-card{padding:7px 8px 5px;overflow:hidden}
+.cal-head{display:flex;align-items:center;gap:0}
 .cal-title{
-  flex:1;text-align:center;font-size:15.5px;font-weight:800;letter-spacing:-.02em;
-  padding:4px 0;color:var(--ink);
+  flex:1;text-align:center;font-size:13px;font-weight:800;letter-spacing:-.02em;
+  padding:1px 0;color:var(--ink);
 }
 .cal-nav{
-  width:34px;height:34px;border-radius:10px;display:grid;place-items:center;
-  color:var(--ink-2);font-size:16px;line-height:1;
+  width:27px;height:27px;border-radius:8px;display:grid;place-items:center;
+  color:var(--ink-2);font-size:14px;line-height:1;
   transition:background .15s ease;
 }
 .cal-nav:active{background:var(--line-2)}
 .cal-toggle{
-  width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:var(--muted);
-  font-size:15px;transition:transform .2s ease,background .15s ease;
+  width:27px;height:27px;border-radius:8px;display:grid;place-items:center;color:var(--muted);
+  font-size:12px;transition:transform .2s ease,background .15s ease;
 }
 .cal-toggle:active{background:var(--line-2)}
 .cal-card.collapsed .cal-toggle{transform:rotate(180deg)}
 .cal-card.collapsed .cal-body{display:none}
-.cal-week,.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
-.cal-week{margin:4px 0 2px}
+.cal-week,.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px}
+.cal-week{margin:2px 0 1px}
 .cal-week span{
-  text-align:center;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.04em;padding:3px 0;
+  text-align:center;font-size:9.5px;font-weight:700;color:var(--muted);letter-spacing:.02em;padding:1px 0;
 }
 .cal-week span:first-child{color:#cf6b62}
 .cal-week span:last-child{color:#5b86c4}
 .cal-cell{
-  position:relative;height:42px;border-radius:12px;display:grid;place-items:center;
+  position:relative;height:29px;border-radius:8px;display:grid;place-items:center;
   transition:background .14s ease,transform .12s ease;
 }
 .cal-cell .num{
-  width:31px;height:31px;border-radius:50%;display:grid;place-items:center;
-  font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;
+  width:24px;height:24px;border-radius:50%;display:grid;place-items:center;
+  font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;
   transition:background .14s ease,color .14s ease,box-shadow .14s ease;
 }
 .cal-cell.sun .num{color:#c9605a}
@@ -193,16 +193,17 @@ main{padding:12px 13px 8px;display:flex;flex-direction:column;gap:12px}
 .cal-cell.sel.has .num{background:linear-gradient(160deg,#128a7d,#0b6a63);color:#fff}
 .cal-cell:active .num{transform:scale(.9)}
 .cal-cell .dot{
-  position:absolute;bottom:3px;left:50%;transform:translateX(-50%);
-  width:4px;height:4px;border-radius:50%;background:var(--amber);opacity:.9;
+  position:absolute;bottom:1px;left:50%;transform:translateX(-50%);
+  width:3px;height:3px;border-radius:50%;background:var(--amber);opacity:.9;
 }
 .cal-cell.sel .dot{background:#fff}
 .cal-foot{
-  display:flex;align-items:center;gap:12px;padding:7px 3px 1px;margin-top:3px;
-  border-top:1px dashed var(--line);font-size:11.5px;color:var(--muted);
+  display:flex;align-items:center;gap:8px;padding:4px 2px 0;margin-top:2px;
+  border-top:1px dashed var(--line);font-size:10px;font-weight:700;color:var(--muted);
 }
-.legend{display:inline-flex;align-items:center;gap:5px;font-weight:600}
-.legend i{width:11px;height:11px;border-radius:50%;display:inline-block}
+.cal-foot .mini-btn{padding:3px 8px;font-size:10px;border-radius:7px}
+.legend{display:inline-flex;align-items:center;gap:4px;font-weight:600}
+.legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
 .legend .lg-rec{background:var(--sun)}
 .legend .lg-today{box-shadow:inset 0 0 0 2px var(--teal-2)}
 .mini-btn{
@@ -284,6 +285,14 @@ main{padding:12px 13px 8px;display:flex;flex-direction:column;gap:12px}
 .yt-meta{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
 .yt-meta b{font-size:13px;line-height:1.35;letter-spacing:-.02em;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .sec-body{padding:0}
+/* 빈 영역 카드는 슬림하게 — 누르면 그 카드만 시간·서식 줄이 펼쳐진다 */
+.sec.slim:not(.open){border-radius:13px}
+.sec.slim:not(.open) .sec-head{padding:6px 8px 6px 11px}
+.sec.slim:not(.open) .sec-name{font-size:13.5px}
+.sec.slim:not(.open) .time-row,.sec.slim:not(.open) .fmt-row{display:none}
+.sec.slim:not(.open) .sec-text{height:33px !important;min-height:0;padding:6px 12px 8px;font-size:13.5px;line-height:1.4}
+.sec.slim:not(.open) .photos{display:none}
+.sec.slim:not(.open) .sec-head .photo-btn{opacity:.82}
 /* 글+사진 영역은 최대 높이를 고정하고 안에서 스크롤 — 한 영역에 많이 써도 아래 영역으로 쉽게 내려간다 */
 .sec-scroll{
   max-height:300px;overflow-y:auto;-webkit-overflow-scrolling:touch;
@@ -421,21 +430,21 @@ table.tbl{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-nume
 .btn.sm{height:38px;font-size:13px;border-radius:11px}
 
 /* ── Read view ──────────────────────────── */
-.read-head{padding:13px 13px 11px;display:flex;flex-direction:column;gap:9px}
-.rh-top{display:flex;align-items:flex-start;gap:8px}
+.read-head{padding:9px 10px;display:flex;flex-direction:column;gap:6px}
+.rh-top{display:flex;align-items:flex-start;gap:7px}
 .rh-date{flex:1;min-width:0}
-.rh-date .d1{font-size:16.5px;font-weight:900;letter-spacing:-.025em}
-.rh-date .d2{font-size:11.5px;color:var(--muted);font-weight:700;margin-top:1px}
+.rh-date .d1{font-size:14.5px;font-weight:900;letter-spacing:-.025em}
+.rh-date .d2{font-size:10.5px;color:var(--muted);font-weight:700;margin-top:1px}
 .copy-btn{
-  display:inline-flex;align-items:center;gap:5px;flex:0 0 auto;
-  background:var(--teal);color:#fff;border-radius:11px;padding:9px 11px;
-  font-size:12px;font-weight:800;box-shadow:0 6px 14px -10px rgba(15,118,110,1);
+  display:inline-flex;align-items:center;gap:4px;flex:0 0 auto;
+  background:var(--teal);color:#fff;border-radius:9px;padding:6px 8px;
+  font-size:10.5px;font-weight:800;box-shadow:0 6px 14px -10px rgba(15,118,110,1);
 }
 .copy-btn:active{filter:brightness(.95)}
-.sum-chips{display:flex;flex-wrap:wrap;gap:5px}
+.sum-chips{display:flex;flex-wrap:wrap;gap:4px}
 .sum-chip{
-  font-size:12px;font-weight:800;color:#5c776f;
-  background:#f5f2ea;border:1px solid var(--line);border-radius:9px;padding:5px 8px;
+  font-size:10px;font-weight:800;color:#5c776f;
+  background:#f5f2ea;border:1px solid var(--line);border-radius:7px;padding:3px 6px;
 }
 .sum-chip b{color:var(--teal-3);margin-left:3px}
 .sum-chip.all{background:linear-gradient(160deg,#fff7e6,#fdefd2);border-color:#f3e2bd;color:#8a6413}
@@ -593,13 +602,13 @@ table.tbl{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-nume
 .bk-item .bk-cover.poster{background:#efeae1}
 .bk-sub{font-size:10.5px;color:var(--muted);line-height:1.28;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 /* ── 📚 책장 ─────────────────────────── */
-.shelf-top{padding:13px 13px 12px}
-.shelf-sum{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
+.shelf-top{padding:10px 10px 9px}
+.shelf-sum{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
 .shelf-sum b{font-size:19px;font-weight:900;letter-spacing:-.02em;color:var(--ink)}
 .shelf-sum span{font-size:13px;color:var(--muted);font-weight:800}
-.shelf-form{display:flex;gap:7px;margin-top:10px}
-.shelf-form .inp{flex:1;min-width:0;height:40px}
-.shelf-form .btn-line{width:auto;flex:0 0 auto;padding:0 13px;height:40px;font-size:13px}
+.shelf-form{display:flex;gap:6px;margin-top:7px}
+.shelf-form .inp{flex:1;min-width:0;height:36px;font-size:13px;border-radius:10px}
+.shelf-form .btn-line{width:auto;flex:0 0 auto;padding:0 11px;height:36px;font-size:11.5px;border-radius:10px}
 .shelf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-items:start}
 .bk-card{position:relative;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-sm);overflow:hidden}
 .bk-card-main{display:flex;flex-direction:column;width:100%;text-align:left;padding:0}
@@ -651,10 +660,9 @@ table.tbl{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-nume
 /* ── 책장 도구 (선택·숨김·언어 거르기) ── */
 .shelf-tools{display:flex;align-items:center;gap:6px;margin-top:9px;flex-wrap:wrap}
 .shelf-tools .mini-btn{margin-left:0;border:1px solid var(--line);background:#fff;color:var(--ink-2)}
-.shelf-tools .mini-btn:first-child{margin-left:auto}
-.shelf-tools .mini-btn.on{background:var(--teal);border-color:var(--teal);color:#fff}
-.shelf-lang{display:flex;gap:5px;margin-top:9px;flex-wrap:wrap}
-.shelf-lang .lchip{height:31px;padding:0 12px;border-radius:9px;border:1px solid var(--line);background:#fff;font-size:12px;font-weight:800;color:var(--ink-2);letter-spacing:-.01em}
+.shelf-tools .mini-btn:first-child{margin-left:auto}.shelf-tools .mini-btn.on{background:var(--teal);border-color:var(--teal);color:#fff}
+.shelf-lang{display:flex;gap:4px;margin-top:7px;flex-wrap:wrap}
+.shelf-lang .lchip{height:26px;padding:0 9px;border-radius:8px;border:1px solid var(--line);background:#fff;font-size:10.5px;font-weight:800;color:var(--ink-2);letter-spacing:-.02em}
 .shelf-lang .lchip.on{background:var(--teal-soft);border-color:var(--teal-soft-2);color:var(--teal-3)}
 .shelf-lang .lchip:active{background:var(--teal-soft-2)}
 .sel-bar{
@@ -676,9 +684,9 @@ body.shelf-sel #view-shelf{padding-bottom:78px}
 .bk-grp{position:absolute;top:5px;left:5px;z-index:2;background:rgba(13,122,112,.92);color:#fff;font-size:9.5px;font-weight:900;line-height:1;padding:4px 5px;border-radius:6px;letter-spacing:-.02em}
 .sel-mode .bk-card .bk-badge,.sel-mode .vid-card .vid-k{opacity:.55}
 /* ── ⭐ 책장 별점 · 정렬 ── */
-.shelf-sort{display:flex;align-items:center;gap:7px;margin-top:9px}
-.shelf-sort label{font-size:11.5px;font-weight:800;color:var(--muted);letter-spacing:.02em;flex:0 0 auto}
-.shelf-sort select{flex:1;min-width:0;height:34px;border:1px solid var(--line);border-radius:9px;background:#fff;padding:0 9px;font-size:12.5px;font-weight:800;color:var(--ink-2)}
+.shelf-sort{display:flex;align-items:center;gap:6px;margin-top:7px}
+.shelf-sort label{font-size:10.5px;font-weight:800;color:var(--muted);letter-spacing:.02em;flex:0 0 auto}
+.shelf-sort select{flex:1;min-width:0;height:29px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:0 8px;font-size:11.5px;font-weight:800;color:var(--ink-2)}
 .shelf-sort select:focus{border-color:var(--teal-2);outline:none;box-shadow:0 0 0 3px var(--teal-soft)}
 .bk-rate{position:absolute;bottom:5px;right:5px;z-index:2;background:rgba(255,253,250,.94);color:var(--amber);font-size:10px;font-weight:900;line-height:1;padding:3px 5px;border-radius:6px;border:1px solid rgba(201,138,28,.28);letter-spacing:-.01em;white-space:nowrap}
 .rate-row{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
@@ -688,19 +696,35 @@ body.shelf-sel #view-shelf{padding-bottom:78px}
 .rate-row .star::before{content:'☆'}
 .rate-row .clr{margin-left:auto;height:30px;padding:0 10px;border-radius:9px;border:1px solid var(--line);background:#fff;font-size:11.5px;font-weight:800;color:var(--muted)}
 .rate-note{font-size:11.5px;font-weight:800;color:var(--amber);margin-left:4px}
-/* ── 📌 위시리스트 ── */
-.wish-tools{display:flex;align-items:center;gap:6px;margin:0 0 9px;flex-wrap:wrap}
-.wish-tools .mini-btn{border:1px solid var(--line);background:#fff;color:var(--ink-2)}
+/* ── 📌 위시리스트 · 책장 상단 재배치 ── */
+.sub-tabs{display:flex;gap:4px;margin:0 0 8px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding-bottom:1px}
+.sub-tabs::-webkit-scrollbar{display:none}
+.sub-tab{
+  flex:0 0 auto;height:27px;padding:0 9px;border-radius:8px;border:1px solid var(--line);background:#fff;
+  font-size:11px;font-weight:800;color:var(--ink-2);letter-spacing:-.02em;white-space:nowrap;
+  display:inline-flex;align-items:center;gap:3px;
+}
+.sub-tab.on{background:var(--teal-soft);border-color:var(--teal-soft-2);color:var(--teal-3)}
+.sub-tab b{font-weight:900;font-size:9.5px;opacity:.7}
+.shelf-head-row{display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
+.shelf-head-row .shelf-sum{flex:1;min-width:0;overflow:hidden}
+.shelf-head-row .shelf-sum b{font-size:15px}
+.shelf-head-row .shelf-sum span{font-size:10.5px}
+.shelf-tools{display:flex;align-items:center;gap:4px;margin:0;flex-wrap:nowrap}
+.shelf-tools .mini-btn{margin:0;height:26px;padding:0 8px;font-size:10.5px;border-radius:8px;white-space:nowrap;border:1px solid var(--line);background:#fff;color:var(--ink-2)}
+.shelf-tools .mini-btn.on{background:var(--teal);border-color:var(--teal);color:#fff}
+.wish-tools{display:flex;align-items:center;gap:4px;margin:0;flex-wrap:nowrap;flex:0 0 auto}
+.wish-tools .mini-btn{height:27px;padding:0 8px;font-size:10.5px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink-2);white-space:nowrap}
 .wish-tools .mini-btn.on{background:var(--teal);border-color:var(--teal);color:#fff}
-.wish-tools .mini-btn.grow{margin-left:auto}
-.wish-folds{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
-.wish-folds .lchip{height:31px;padding:0 11px;border-radius:9px;border:1px solid var(--line);background:#fff;font-size:12px;font-weight:800;color:var(--ink-2);letter-spacing:-.01em}
+.wish-tools .mini-btn.grow{margin-left:0}
+.wish-folds{display:flex;gap:4px;flex-wrap:wrap;margin:7px 0 0}
+.wish-folds .lchip{height:23px;padding:0 7px;border-radius:6px;border:1px solid var(--line);background:#fff;font-size:10px;font-weight:800;color:var(--ink-2);letter-spacing:-.02em}
 .wish-folds .lchip.on{background:var(--teal-soft);border-color:var(--teal-soft-2);color:var(--teal-3)}
 .wish-folds .lchip:active{background:var(--teal-soft-2)}
 .wish-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-items:start}
 .wish-card{position:relative;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-sm);text-align:left}
 .wish-card.sel{outline:2.5px solid var(--teal-2);outline-offset:-2px;box-shadow:0 0 0 3px rgba(13,148,136,.14)}
-.wish-cv{position:relative;width:100%;aspect-ratio:3/4;background:#efeae1;display:grid;place-items:center;font-size:24px;color:#bcb7a6;overflow:hidden}
+.wish-cv{position:relative;width:100%;aspect-ratio:3/2;background:#efeae1;display:grid;place-items:center;font-size:20px;color:#bcb7a6;overflow:hidden}
 .wish-cv .bk-ph{position:absolute;inset:0;display:grid;place-items:center;font-size:28px;color:#bcb7a6}
 .wish-cv img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;background:#fff}
 .wish-k{position:absolute;top:4px;right:4px;background:rgba(13,122,112,.92);color:#fff;font-size:9.5px;font-weight:800;line-height:1;padding:3px 5px;border-radius:6px;letter-spacing:-.01em}
@@ -709,6 +733,21 @@ body.shelf-sel #view-shelf{padding-bottom:78px}
 .wish-ch{font-size:10px;font-weight:700;color:var(--muted);padding:1px 7px 7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .wish-go{display:flex;align-items:center;justify-content:center;gap:3px;height:27px;margin:0 7px 7px;border-radius:8px;background:var(--teal-soft);border:1px solid var(--teal-soft-2);color:var(--teal-3);font-size:11px;font-weight:900;text-decoration:none;letter-spacing:-.01em}
 .wish-go:active{background:#dff0eb}
+/* ── 찜한 책·영화 표지 찾기 (알라딘·포스터) ── */
+.wcv{margin-top:7px;padding:8px;border:1px dashed var(--line);border-radius:10px;background:#fbf9f4}
+.wcv-tabs{margin:0 0 6px}
+.wcv .bk-form{margin-top:0;gap:5px}
+.wcv .bk-form .inp{height:34px;font-size:12.5px}
+.wcv .bk-form .btn-line{height:34px;padding:0 10px;font-size:11.5px}
+.wcv-res{margin-top:7px}
+.wcv .bk-grid{grid-template-columns:repeat(3,1fr);gap:6px}
+.wcv .bk-t{font-size:10px}
+.wcv-head{display:flex;gap:6px}
+.wcv-head .inp{flex:1;min-width:0}
+.wcv-head .btn-line{flex:0 0 auto;width:auto;padding:0 10px;height:42px;font-size:12px}
+.wcv-head .btn-line.on{background:var(--teal-soft);border-color:var(--teal-soft-2);color:var(--teal-3)}
+.wcv-prev{margin-top:6px}
+.wcv-prev img{max-height:110px;width:auto;border-radius:8px;border:1px solid var(--line);background:#fff}
 .wish-card .selmark{position:absolute;top:5px;left:5px;z-index:3;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.92);border:1.5px solid var(--line);display:grid;place-items:center;font-size:12px;font-weight:900;color:transparent}
 .wish-card.sel .selmark{background:var(--teal);border-color:var(--teal);color:#fff}
 .wish-empty{padding:26px 14px;text-align:center;color:var(--muted);font-size:13px;line-height:1.7}
@@ -717,39 +756,62 @@ body.shelf-sel #view-shelf{padding-bottom:78px}
 .sel-bar button.move{background:var(--amber-soft);border-color:#efdcb2;color:#8a5f11}
 body.wish-sel #view-shelf{padding-bottom:78px}
 /* ── 📝 메모장 ── */
+/* ── 📝 메모장 (목록 → 메모 페이지) ── */
 .memo-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .memo-top .shelf-sum{flex:1;min-width:0}
-.memo-top .btn-line{width:auto;flex:0 0 auto;padding:0 13px;height:38px;font-size:13px}
-.memo-list{display:flex;flex-direction:column;gap:10px}
-.memo-card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm);overflow:hidden}
-.memo-head{display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:11px 12px}
-.memo-head .chev{flex:0 0 auto;font-size:11px;color:var(--muted);transition:transform .16s ease;transform:rotate(0deg)}
-.memo-card.collapsed .memo-head .chev{transform:rotate(-90deg)}
-.memo-head b{flex:1;min-width:0;font-size:14px;font-weight:900;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.memo-head .at{flex:0 0 auto;font-size:10.5px;font-weight:800;color:var(--muted)}
-.memo-body{padding:0 12px 12px}
-.memo-text{font-size:13.5px;line-height:1.68;color:var(--ink);white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere}
+.memo-top .btn-line{width:auto;flex:0 0 auto;padding:0 12px;height:34px;font-size:12px;border-radius:10px}
+.memo-list{display:flex;flex-direction:column;gap:7px}
+.memo-item{display:flex;flex-direction:column;gap:3px;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-sm);padding:10px 12px}
+.memo-item:active{background:#f9f6ef}
+.mi-top{display:flex;align-items:center;gap:6px}
+.mi-fd{font-size:10px;font-weight:800;color:var(--teal-3);background:var(--teal-soft);border:1px solid var(--teal-soft-2);border-radius:6px;padding:1px 5px;letter-spacing:-.01em}
+.mi-fd.none{color:var(--muted);background:#f4f1e9;border-color:var(--line)}
+.mi-at{margin-left:auto;font-size:10px;font-weight:800;color:var(--muted)}
+.mi-t{font-size:14px;font-weight:900;letter-spacing:-.02em;line-height:1.3;color:var(--ink);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mi-sum{font-size:12px;color:var(--ink-2);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mi-sum.none{color:var(--muted)}
+.mi-meta{font-size:10px;font-weight:800;color:var(--muted)}
+.memo-page{display:flex;flex-direction:column;gap:9px}
+.mp-head{display:flex;align-items:center;gap:8px}
+.mp-back{height:30px;padding:0 10px;border-radius:9px;border:1px solid var(--line);background:#fff;font-size:12px;font-weight:800;color:var(--teal-3)}
+.mp-back:active{background:var(--teal-soft)}
+.mp-at{margin-left:auto;font-size:10px;font-weight:800;color:var(--muted)}
+.memo-page-card{padding:13px 14px}
+.mp-fd{display:inline-block;font-size:10px;font-weight:800;color:var(--teal-3);background:var(--teal-soft);border:1px solid var(--teal-soft-2);border-radius:6px;padding:2px 6px;margin-bottom:6px}
+.mp-t{font-size:18px;font-weight:900;letter-spacing:-.02em;line-height:1.3;margin-bottom:8px}
+.memo-text{font-size:14px;line-height:1.7;color:var(--ink);white-space:normal;word-break:break-word;overflow-wrap:anywhere}
 .memo-text.empty{color:var(--muted);font-size:12.5px}
-.memo-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}
-.memo-photos button{position:relative;aspect-ratio:1;border-radius:9px;overflow:hidden;border:1px solid var(--line);background:#f2f4f2}
+.memo-p{white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere}
+.memo-tg{border:1px solid var(--line);border-radius:10px;background:#faf7f0;margin:7px 0;overflow:hidden}
+.memo-tg summary{display:flex;align-items:center;gap:6px;padding:7px 9px;font-size:13px;font-weight:800;color:var(--teal-3);cursor:pointer;list-style:none}
+.memo-tg summary::-webkit-details-marker{display:none}
+.memo-tg .mtg-ic{transition:transform .16s ease;font-size:10px}
+.memo-tg[open] .mtg-ic{transform:rotate(90deg)}
+.memo-tg-b{padding:0 9px 8px;border-top:1px dashed var(--line-2)}
+.memo-tg-b .memo-p{font-size:13px;color:var(--ink-2);padding-top:6px}
+.memo-tb{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:5px}
+.memo-tb .mini-btn{padding:4px 8px;font-size:11px;margin:0}
+.memo-tb .hint{flex:1;min-width:0;font-size:10.5px;line-height:1.4}
+.memo-photos{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:9px}
+.memo-photos button{position:relative;aspect-ratio:1;border-radius:7px;overflow:hidden;border:1px solid var(--line);background:#f2f4f2}
 .memo-photos button img{width:100%;height:100%;object-fit:cover}
 .memo-act{display:flex;gap:6px;margin-top:9px}
-.memo-act .btn-line{height:32px;font-size:12px}
+.memo-act .btn-line{height:36px;font-size:12px;border-radius:11px}
 .memo-empty{padding:26px 14px;text-align:center;color:var(--muted);font-size:13px;line-height:1.7}
 .memo-empty b{display:block;color:var(--ink-2);font-size:14.5px;margin-bottom:5px}
 /* ── 📊 누적 시간 카드 ── */
-.cum-card{padding:12px 13px}
-.cum-head{display:flex;align-items:center;gap:7px}
-.cum-head h3{font-size:14.5px;font-weight:800;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
-.cum-head .mini-btn{margin-left:auto;border:1px solid var(--teal-soft-2);background:var(--teal-soft);color:var(--teal-3)}
-.cum-rows{display:flex;flex-direction:column;gap:7px;margin-top:9px}
-.cum-row{background:#faf7f0;border:1px solid var(--line-2);border-radius:11px;padding:7px 10px}
-.cum-row .lbl{font-size:11.5px;font-weight:900;color:var(--ink-2);display:flex;align-items:baseline;gap:5px}
-.cum-row .lbl s{text-decoration:none;font-size:10.5px;font-weight:800;color:var(--muted)}
-.cum-row .bar3{display:flex;gap:6px;margin-top:4px}
+.cum-card{padding:9px 10px}
+.cum-head{display:flex;align-items:center;gap:6px}
+.cum-head h3{font-size:12.5px;font-weight:800;letter-spacing:-.01em;display:flex;align-items:center;gap:5px}
+.cum-head .mini-btn{margin-left:auto;border:1px solid var(--teal-soft-2);background:var(--teal-soft);color:var(--teal-3);padding:3px 8px;font-size:10px;border-radius:7px}
+.cum-rows{display:flex;flex-direction:column;gap:5px;margin-top:6px}
+.cum-row{background:#faf7f0;border:1px solid var(--line-2);border-radius:9px;padding:5px 8px}
+.cum-row .lbl{font-size:10.5px;font-weight:900;color:var(--ink-2);display:flex;align-items:baseline;gap:4px}
+.cum-row .lbl s{text-decoration:none;font-size:9.5px;font-weight:800;color:var(--muted)}
+.cum-row .bar3{display:flex;gap:5px;margin-top:2px}
 .cum-row .b3{flex:1;min-width:0}
-.cum-row .b3 .k{font-size:10px;font-weight:800;color:var(--muted);white-space:nowrap}
-.cum-row .b3 .v{font-size:14px;font-weight:900;color:var(--teal-3);letter-spacing:-.02em;white-space:nowrap}
+.cum-row .b3 .k{font-size:9px;font-weight:800;color:var(--muted);white-space:nowrap}
+.cum-row .b3 .v{font-size:12.5px;font-weight:900;color:var(--teal-3);letter-spacing:-.02em;white-space:nowrap}
 .cum-row .b3.oth .v{color:#a07a2a}
 .cum-row .b3.allv .v{color:var(--ink)}
 .cum-row .mbars{display:flex;align-items:flex-end;gap:3px;height:34px;margin-top:8px}
@@ -857,13 +919,15 @@ body.kb-open .actionbar{bottom:var(--kb,0px)}
 .spin{display:inline-block;animation:spin .9s linear infinite}
 
 /* ── 보기 도구: 기간 · 영역 · 복사/PDF ─────────────── */
-.view-tools{padding:10px 11px 11px;display:flex;flex-direction:column;gap:9px}
-.view-tools .search-box{height:40px}
-.range-chips{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding:1px 1px 2px}
+.view-tools{padding:8px 9px 9px;display:flex;flex-direction:column;gap:6px}
+.view-tools .search-box{height:36px;border-radius:10px;padding:0 9px}
+.view-tools .search-box input{font-size:13px}
+.view-tools .search-box .ic{font-size:13px}
+.range-chips{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding:1px 1px 2px}
 .range-chips::-webkit-scrollbar{display:none}
 .rchip{
-  flex:0 0 auto;font-size:12px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;
-  color:var(--ink-2);background:#fff;border:1px solid var(--line);border-radius:10px;padding:7px 10px;
+  flex:0 0 auto;font-size:10.5px;font-weight:800;letter-spacing:-.02em;white-space:nowrap;
+  color:var(--ink-2);background:#fff;border:1px solid var(--line);border-radius:8px;padding:5px 7px;
   transition:background .14s ease,color .14s ease,border-color .14s ease;
 }
 .rchip.on{background:var(--teal);border-color:var(--teal);color:#fff;box-shadow:0 5px 12px -9px rgba(15,118,110,.95)}
@@ -877,22 +941,22 @@ body.kb-open .actionbar{bottom:var(--kb,0px)}
 .date-inp:focus{border-color:var(--teal-2);outline:none;box-shadow:0 0 0 3px var(--teal-soft)}
 .range-custom .tilde{flex:0 0 auto;color:var(--muted);font-weight:800;font-size:12px}
 .range-custom .mini-btn{flex:0 0 auto;margin-left:0}
-.cat-chips{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding:1px 1px 2px}
+.cat-chips{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding:1px 1px 2px}
 .cat-chips::-webkit-scrollbar{display:none}
 .cchip{
-  flex:0 0 auto;font-size:11.5px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;
-  color:var(--ink-2);background:#f7f4ed;border:1px solid var(--line);border-radius:9px;padding:5px 8px;
+  flex:0 0 auto;font-size:10.5px;font-weight:800;letter-spacing:-.02em;white-space:nowrap;
+  color:var(--ink-2);background:#f7f4ed;border:1px solid var(--line);border-radius:7px;padding:4px 6px;
 }
 .cchip.on{background:var(--teal-soft);border-color:var(--teal-soft-2);color:var(--teal-3)}
 .cchip:active{transform:scale(.97)}
-.view-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-top:1px}
-.view-meta .result-count{margin-right:auto}
-.view-acts{display:flex;gap:6px;margin-left:auto}
+.view-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding-top:0}
+.view-meta .result-count{margin-right:auto;font-size:10.5px}
+.view-acts{display:flex;gap:5px;margin-left:auto}
 .act-btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:4px;flex:0 0 auto;
-  font-size:11.5px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;
+  display:inline-flex;align-items:center;justify-content:center;gap:3px;flex:0 0 auto;
+  font-size:10.5px;font-weight:800;letter-spacing:-.02em;white-space:nowrap;
   background:var(--teal-soft);color:var(--teal-3);border:1px solid var(--teal-soft-2);
-  border-radius:10px;padding:8px 10px;
+  border-radius:8px;padding:6px 8px;
 }
 .act-btn.pdf{background:var(--teal);color:#fff;border-color:var(--teal);box-shadow:0 6px 14px -10px rgba(15,118,110,1)}
 .act-btn:active{transform:scale(.97)}
@@ -904,23 +968,23 @@ body.kb-open .actionbar{bottom:var(--kb,0px)}
 }
 .rv-title{font-size:15px;font-weight:900;letter-spacing:-.02em;line-height:1.35}
 .rv-sub{font-size:11.5px;color:var(--muted);font-weight:700;margin-top:-4px}
-.rv-day{display:flex;flex-direction:column;gap:8px;margin:0}
+.rv-day{display:flex;flex-direction:column;gap:7px;margin:0}
 .rv-day-head{
-  display:flex;align-items:center;gap:8px;width:100%;text-align:left;
-  padding:8px 11px;border-radius:12px;border:1px solid #9ad2ca;
+  display:flex;align-items:center;gap:6px;width:100%;text-align:left;
+  padding:6px 9px;border-radius:10px;border:1px solid #9ad2ca;
   background:linear-gradient(180deg,#e4f4f0,#d4eee9);
   box-shadow:0 4px 10px -9px rgba(11,95,89,.9);
 }
 .rv-day-head:active{filter:brightness(.985)}
 .rv-day-date{
-  flex:1;min-width:0;font-size:13px;font-weight:900;letter-spacing:-.01em;color:#0d5c54;
+  flex:1;min-width:0;font-size:12px;font-weight:900;letter-spacing:-.01em;color:#0d5c54;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .rv-day-sub{
-  flex:0 0 auto;font-size:11px;font-weight:800;color:#0b5f59;
-  background:#fff;border:1px solid #b7ddd6;border-radius:8px;padding:2px 7px;white-space:nowrap;
+  flex:0 0 auto;font-size:10px;font-weight:800;color:#0b5f59;
+  background:#fff;border:1px solid #b7ddd6;border-radius:7px;padding:1px 6px;white-space:nowrap;
 }
-.rv-day-chev{flex:0 0 auto;color:#4b8e86;font-size:13px;font-weight:800;line-height:1}
+.rv-day-chev{flex:0 0 auto;color:#4b8e86;font-size:12px;font-weight:800;line-height:1}
 .print-only{display:none}
 #printArea{display:none}
 /* 인쇄(PDF) 전용 서식 — 화면에서는 #printArea가 숨는다 */
@@ -1047,13 +1111,13 @@ body.kb-open .actionbar{bottom:var(--kb,0px)}
 }
 @media (max-width:359px){
   .cal-nav[data-nav="-12"],.cal-nav[data-nav="12"]{display:none}
-  .cal-cell{height:38px}
-  .cal-cell .num{width:28px;height:28px;font-size:13px}
+  .cal-cell{height:28px}
+  .cal-cell .num{width:22px;height:22px;font-size:11.5px}
   .btn{font-size:13.5px}
 }
 /* 탭 4개(쓰기·보기·책장·메모장)가 모니터 360px에서도 한 줄에 들어가도록 */
 .tabs{grid-template-columns:repeat(4,1fr)}
-#shTabs{grid-template-columns:repeat(3,1fr)}
+#shTabs{grid-template-columns:repeat(2,1fr)}
 .tab .tl-long{display:none}
 .tab .tl-short{display:inline}
 @media (max-width:430px){
@@ -1282,29 +1346,37 @@ body.kb-open .actionbar{bottom:var(--kb,0px)}
         </div>
       </div>
 
-      <section class="card cum-card" id="cumStats"></section>
-
       <div id="searchResults" hidden></div>
       <div id="readContent"></div>
+
+      <section class="card cum-card" id="cumStats"></section>
     </section>
 
     <!-- ══ 책장 ══ -->
     <section id="view-shelf" hidden>
       <div class="card shelf-top">
-        <div class="cv-tabs" role="tablist" aria-label="책장 보기" id="shTabs" style="margin-bottom:10px">
+        <div class="cv-tabs" role="tablist" aria-label="책장 보기" id="shTabs" style="margin-bottom:7px">
           <button class="cv-tab on" id="shTabBook" type="button" data-sh="book" role="tab" aria-selected="true">📚 책</button>
           <button class="cv-tab" id="shTabVideo" type="button" data-sh="video" role="tab" aria-selected="false">🎬 영상</button>
-          <button class="cv-tab" id="shTabWish" type="button" data-sh="wish" role="tab" aria-selected="false">📌 위시리스트</button>
         </div>
-        <div class="shelf-sum" id="shelfSum"><b>0권</b><span>누적 0회</span></div>
-        <div class="shelf-tools">
-          <button class="mini-btn" id="shelfHiddenBtn" type="button" hidden>🙈 숨긴 0개</button>
-          <button class="mini-btn" id="shelfSelBtn" type="button" aria-pressed="false" title="여러 개를 골라 합치거나 숨기기">☑️ 선택</button>
+        <div class="sub-tabs" role="tablist" aria-label="목록 고르기" id="shSubTabs"></div>
+        <div class="shelf-head-row">
+          <div class="shelf-sum" id="shelfSum"><b>0권</b><span>누적 0회</span></div>
+          <div class="shelf-tools" id="shelfTools">
+            <button class="mini-btn" id="shelfHiddenBtn" type="button" hidden>🙈 숨긴 0개</button>
+            <button class="mini-btn" id="shelfSelBtn" type="button" aria-pressed="false" title="여러 개를 골라 합치거나 숨기기">☑️ 선택</button>
+          </div>
+          <div class="wish-tools" id="wishTools" hidden>
+            <button class="mini-btn" type="button" data-wishadd>＋ 찜하기</button>
+            <button class="mini-btn" type="button" data-wishsel aria-pressed="false">☑️ 선택</button>
+            <button class="mini-btn" type="button" data-wishjson aria-label="목록 JSON 불러오기">⬆️ JSON</button>
+          </div>
         </div>
         <form class="shelf-form" id="shelfForm" autocomplete="off">
           <input class="inp" id="shelfQuery" type="search" placeholder="제목·저자로 찾기" maxlength="40" enterkeyhint="search" aria-label="책장에서 찾기">
           <button class="btn-line teal" id="shelfAdd" type="button">＋ 책 추가</button>
         </form>
+        <div class="wish-folds" id="wishFolds" hidden></div>
         <div class="shelf-lang" id="shelfLang" role="group" aria-label="책장 거르기">
           <button class="lchip on" type="button" data-lang="all" aria-pressed="true">전체</button>
           <button class="lchip" type="button" data-lang="kr" aria-pressed="false">한글책</button>
@@ -1338,14 +1410,16 @@ body.kb-open .actionbar{bottom:var(--kb,0px)}
 
     <!-- ══ 메모장 ══ -->
     <section id="view-memo" hidden>
-      <div class="card shelf-top">
+      <div class="card shelf-top" id="memoTop">
         <div class="memo-top">
           <div class="shelf-sum" id="memoSum"><b>📝 0개</b><span>날짜와 상관없이 꺼내 보는 메모</span></div>
           <button class="btn-line teal" id="memoAdd" type="button">＋ 새 메모</button>
         </div>
-        <p class="hint" style="margin-top:7px">제목을 누르면 접히고 펼쳐져요. 사진도 붙일 수 있고, 로그인하면 클라우드에도 함께 저장돼요.</p>
+        <div class="wish-folds" id="memoFolds" hidden></div>
+        <p class="hint" id="memoHint" style="margin-top:7px">메모를 누르면 크게 볼 수 있어요.</p>
       </div>
       <div id="memoBody"></div>
+      <div id="memoDetail" hidden></div>
     </section>
   </main>
 </div>
@@ -1421,7 +1495,7 @@ function defaultState(){
     photoRefs:{},
     bookshelf:[],
     settings:{ calCollapsed:false, tipDismissed:false, lastBackupAt:0,
-      shelfTab:'book', shelfLang:'all', videoGroup:'title', videoFilter:'all', shelfSort:'new',
+      shelfTab:'book', shelfSub:{book:'read', video:'read'}, shelfLang:'all', videoGroup:'title', videoFilter:'all', shelfSort:'new',
       shelfGroups:[], shelfHidden:[], shelfOverrides:{}, shelfExtra:{}, templates:{},
       shelfRatings:{}, wishlist:[], wishAt:0, memos:[], memoAt:0, memoPhotos:{} }
   };
@@ -1690,6 +1764,13 @@ function normalizeState(s){
   st.shelfLang=/^(all|kr|en)$/.test(String(st.shelfLang||''))? st.shelfLang:'all';
   st.videoGroup=(st.videoGroup==='channel')? 'channel':'title';
   st.shelfTab=(st.shelfTab==='wish')? 'wish' : ((st.shelfTab==='video')? 'video':'book');
+  /* 예전엔 위시리스트가 세 번째 탭이었다 — 이제는 책·영상 아래 서브 탭으로 들어간다 */
+  var sub=st.shelfSub;
+  if(!sub || typeof sub!=='object') sub={};
+  if(st.shelfTab==='wish'){ st.shelfTab='book'; sub.book='wish'; }
+  sub.book = /^(read|wish)$/.test(sub.book||'')? sub.book : 'read';
+  sub.video = /^(read|movie|yt)$/.test(sub.video||'')? sub.video : 'read';
+  st.shelfSub=sub;
   st.videoFilter=/^(all|yt|movie|channel)$/.test(String(st.videoFilter||''))? st.videoFilter : ((st.videoGroup==='channel')? 'channel':'all');
   st.videoGroup=(st.videoFilter==='channel')? 'channel':'title';
   st.shelfSort=SHELF_SORTS[String(st.shelfSort||'')]? st.shelfSort:'new';
@@ -2122,8 +2203,10 @@ function sectionHTML(c){
   var sec=current.sections[c.id] || {m:0,t:'',p:[]};
   var m=Math.max(0, Math.round(Number(sec.m)||0));
   var filled=hasContent(sec);
+  var slim=!filled;
+  var open=slim && !!slimOpen[(current?current.date:'')+'|'+c.id];
   var ph='<'+catBase(c)+'> 내용을 입력해 주세요.';
-  return '<article class="sec'+(filled?' is-filled':'')+'" data-cat="'+c.id+'">'
+  return '<article class="sec'+(filled?' is-filled':'')+(slim? ' slim':'')+(open? ' open':'')+'" data-cat="'+c.id+'">'
     +'<div class="sec-head'+(isEnglish(c)?'':' other')+'">'
       +'<i class="gd" aria-hidden="true"></i>'
       +'<div class="sec-name">'+secNameHTML(c)+'</div>'
@@ -2142,6 +2225,16 @@ function sectionHTML(c){
 function autoGrow(ta){
   ta.style.height='auto';
   ta.style.height=Math.max(76, ta.scrollHeight+2)+'px';
+}
+/* 슬림(빈) 카드를 누르면 그 카드만 펼친다 — 날짜마다 따로 기억한다 */
+var slimOpen={};
+function openSlimCard(art){
+  if(!art || !art.classList.contains('slim') || art.classList.contains('open')) return;
+  art.classList.add('open');
+  if(current) slimOpen[current.date+'|'+art.getAttribute('data-cat')]=1;
+  var ta=art.querySelector('textarea');
+  if(ta) autoGrow(ta);
+  markScrollable();
 }
 /* 내용이 넘치는 영역 카드에는 아래쪽 그림자를 보여 스크롤이 있음을 알린다 */
 function markScrollable(){
@@ -3084,7 +3177,8 @@ var sheetEl=null, sheetKey='';
 var HIST={restoring:false, warned:false, closing:false, lastNoop:0};
 function navSnap(){
   var lb=($('lightbox') && !$('lightbox').hidden)? 'lightbox' : '';
-  return {ldy:1, tab:activeTab, date:selected, sheet: sheetEl? (sheetKey||'sheet') : lb};
+  return {ldy:1, tab:activeTab, date:selected, sheet: sheetEl? (sheetKey||'sheet') : lb,
+    memo: (activeTab==='memo' && memoOpenId)? memoOpenId : ''};
 }
 function histPushNav(){
   if(HIST.restoring) return;
@@ -3104,6 +3198,9 @@ function applyNavState(s){
     if($('lightbox') && !$('lightbox').hidden && s.sheet!=='lightbox'){ closeLightbox(true); changed=true; }
     if(sheetEl && !s.sheet){ closeSheet(true); changed=true; }
     if(s.tab && s.tab!==activeTab){ switchTab(s.tab); changed=true; }
+    if(typeof s.memo==='string' && (s.memo||'')!==memoOpenId && (s.tab||activeTab)==='memo'){
+      memoOpenId=s.memo||''; renderMemo(); changed=true;
+    }
     if(s.date && s.date!==selected){ selectDate(s.date); changed=true; }
   }catch(e){ /* 복원 중 오류는 화면을 망가뜨리지 않게 넘긴다 */ }
   HIST.restoring=false;
@@ -3164,11 +3261,14 @@ function openSheet(html, mount, key){
   if(mount) mount(b);
   if(wasOpen) histReplaceNav(); else histPushNav();
 }
-function closeSheet(){
+function closeSheet(internal){
+  var had=!!sheetEl;
   if(sheetEl){ sheetEl.remove(); sheetEl=null; }
   sheetKey='';
   document.body.style.overflow='';
   HIST.closing=false;
+  /* 저장·삭제처럼 코드로 시트를 닫았을 때도 history에 '열린 시트' 기록이 남지 않게 맞춰 둔다 */
+  if(had && !HIST.restoring) histReplaceNav();
 }
 
 /* ────────────────────────────── settings sheet ────────────────────────────── */
@@ -3892,6 +3992,7 @@ function switchTab(name){
   if(name!=='write' && name!=='read' && name!=='shelf' && name!=='memo') name='write';
   var changed=(name!==activeTab);
   activeTab=name;
+  if(changed) memoOpenId='';   /* 탭을 옮기면 메모장은 목록부터 */
   $('tabWrite').classList.toggle('active', name==='write');
   $('tabRead').classList.toggle('active', name==='read');
   if($('tabShelf')) $('tabShelf').classList.toggle('active', name==='shelf');
@@ -4986,13 +5087,14 @@ function normMemoItem(m){
   var body=typeof m.body==='string'? m.body : (typeof m.text==='string'? m.text : '');
   body=body.replace(/\u0000/g,'').slice(0,20000);
   var title=String(m.title||'').replace(/\s+/g,' ').trim().slice(0,80);
+  var folder=String(m.folder||'').replace(/\s+/g,' ').trim().slice(0,30);
   var photos=strList(m.photos, 60).filter(function(id){ return /^[A-Za-z0-9_\-]{1,80}$/.test(id); });
   if(!title && !body.trim() && !photos.length) return null;
   if(!title) title=String(body.trim().split('\n')[0]||'').slice(0,40) || '메모';
   var at=Number(m.updatedAt||m.at||0)||0;
   var id=String(m.id||'').trim().slice(0,60);
   if(!/^[A-Za-z0-9_\-]{1,60}$/.test(id)) id='m'+wishHash(normKey(title)+'|'+at+'|'+body.slice(0,30));
-  return { id:id, title:title, body:body, photos:photos, collapsed:!!m.collapsed, updatedAt:at };
+  return { id:id, title:title, body:body, folder:folder, photos:photos, collapsed:!!m.collapsed, updatedAt:at };
 }
 function normMemos(v){
   if(!Array.isArray(v)) return [];
@@ -5422,9 +5524,33 @@ function shelfLangOf(title){
   if(/[A-Za-z]/.test(rest)) return 'en';
   return 'all';
 }
+/* 책장 두 탭 아래 서브 탭 — 읽은 책/찜한 책, 본 영상/찜한 영화/찜한 유튜브 */
+var SHELF_SUBS={
+  book:[['read','📚 읽은 책'],['wish','📌 찜한 책']],
+  video:[['read','🎬 본 영상'],['movie','📌 찜한 영화'],['yt','📌 찜한 유튜브']]
+};
+function shelfSubKey(){
+  var s=(state.settings && state.settings.shelfSub)||{};
+  if(shelfTab==='video') return (s.video==='movie'||s.video==='yt')? s.video : 'read';
+  return (s.book==='wish')? 'wish' : 'read';
+}
+function shelfSubSet(k){
+  if(!state.settings.shelfSub) state.settings.shelfSub={book:'read', video:'read'};
+  if(shelfTab==='video') state.settings.shelfSub.video=(k==='movie'||k==='yt')? k : 'read';
+  else state.settings.shelfSub.book=(k==='wish')? 'wish' : 'read';
+  shelfTouch(); scheduleSave();
+}
+function wishTypeOfSub(){
+  var k=shelfSubKey();
+  if(shelfTab==='book' && k==='wish') return 'book';
+  if(shelfTab==='video' && k==='movie') return 'video';
+  if(shelfTab==='video' && k==='yt') return 'youtube';
+  return '';
+}
 function renderShelf(){
   syncShelfTabs();
-  if(shelfTab==='wish'){ renderShelfWish(); return; }
+  var wt=wishTypeOfSub();
+  if(wt){ renderShelfWish(wt); return; }
   if(shelfTab==='video'){ renderShelfVideo(); return; }
   var body=$('shelfBody');
   if(!body) return;
@@ -5499,45 +5625,70 @@ function renderShelfVideo(){
   syncShelfBar();
 }
 function syncShelfTabs(){
-  var b=$('shTabBook'), v=$('shTabVideo'), w=$('shTabWish');
-  var isVid=(shelfTab==='video'), isWish=(shelfTab==='wish');
-  if(b){ b.classList.toggle('on', shelfTab==='book'); b.setAttribute('aria-selected', shelfTab==='book'? 'true':'false'); }
+  var b=$('shTabBook'), v=$('shTabVideo');
+  var isVid=(shelfTab==='video'), sub=shelfSubKey(), wt=wishTypeOfSub();
+  if(b){ b.classList.toggle('on', !isVid); b.setAttribute('aria-selected', !isVid? 'true':'false'); }
   if(v){ v.classList.toggle('on', isVid); v.setAttribute('aria-selected', isVid? 'true':'false'); }
-  if(w){ w.classList.toggle('on', isWish); w.setAttribute('aria-selected', isWish? 'true':'false'); }
+  /* 서브 탭 */
+  var st=$('shSubTabs');
+  if(st){
+    var subs=SHELF_SUBS[isVid? 'video':'book'];
+    st.innerHTML=subs.map(function(x){
+      var on=(sub===x[0]);
+      return '<button class="sub-tab'+(on?' on':'')+'" type="button" role="tab" data-sub="'+x[0]+'" aria-selected="'+(on?'true':'false')+'">'+x[1]+'</button>';
+    }).join('');
+    st.setAttribute('aria-label', isVid? '영상 목록 고르기':'책 목록 고르기');
+  }
   var body=$('shelfBody'), wish=$('wishBody');
-  if(body) body.hidden=isWish;
-  if(wish) wish.hidden=!isWish;
+  if(body) body.hidden=!!wt;
+  if(wish) wish.hidden=!wt;
   var qi=$('shelfQuery'), add=$('shelfAdd'), lang=$('shelfLang'), vf=$('shVideoFilter'), sortRow=$('shelfSortRow'), form=$('shelfForm');
+  var tools=$('shelfTools'), wtools=$('wishTools'), folds=$('wishFolds');
   if(form) form.hidden=false;
-  if(qi) qi.placeholder = isWish? '찜한 책·영상 찾기' : (isVid? '제목·채널로 찾기' : '제목·저자로 찾기');
-  if(add) add.hidden=isVid||isWish;
+  if(qi) qi.placeholder = wt? '찜한 책·영상 찾기' : (isVid? '제목·채널로 찾기' : '제목·저자로 찾기');
+  if(add) add.hidden = !!wt || isVid;
+  if(tools) tools.hidden=!!wt;
+  if(wtools) wtools.hidden=!wt;
+  if(folds) folds.hidden=!wt;
   if(lang){
+    lang.hidden = !!wt || isVid;
     Array.prototype.forEach.call(lang.querySelectorAll('[data-lang]'), function(ch){
       var on=(state.settings.shelfLang||'all')===ch.getAttribute('data-lang');
-      ch.hidden=isVid||isWish;
-      ch.classList.toggle('on', on && !isVid && !isWish);
-      ch.setAttribute('aria-pressed', (on && !isVid && !isWish)? 'true':'false');
+      ch.classList.toggle('on', on && !wt && !isVid);
+      ch.setAttribute('aria-pressed', (on && !wt && !isVid)? 'true':'false');
     });
   }
   if(vf){
-    vf.hidden=!isVid;
+    vf.hidden = !(isVid && !wt);
     Array.prototype.forEach.call(vf.querySelectorAll('[data-vfilter]'), function(ch){
       var on=(state.settings.videoFilter||'all')===ch.getAttribute('data-vfilter');
-      ch.classList.toggle('on', on && isVid);
-      ch.setAttribute('aria-pressed', (on && isVid)? 'true':'false');
+      ch.classList.toggle('on', on && isVid && !wt);
+      ch.setAttribute('aria-pressed', (on && isVid && !wt)? 'true':'false');
     });
   }
-  if(sortRow) sortRow.hidden=isWish;
+  if(sortRow) sortRow.hidden=!!wt;
   var sortSel=$('shelfSort');
   if(sortSel) sortSel.value=state.settings.shelfSort||'new';
   var sel=$('shelfSelBtn');
-  if(sel) sel.hidden=isWish;
+  if(sel) sel.hidden=!!wt;
   var hidBtn=$('shelfHiddenBtn');
-  if(hidBtn && isWish) hidBtn.hidden=true;
+  if(hidBtn && wt) hidBtn.hidden=true;
+  syncWishTools();
+}
+/* 위시리스트 버튼 줄(찜하기·선택·JSON) — 개수 줄 바로 아래 */
+function syncWishTools(){
+  var box=$('wishTools');
+  if(!box) return;
+  var sel=box.querySelector('[data-wishsel]');
+  if(sel){
+    sel.classList.toggle('on', wishSelectMode);
+    sel.textContent=wishSelectMode? '✕ 선택 끝':'☑️ 선택';
+    sel.setAttribute('aria-pressed', wishSelectMode? 'true':'false');
+  }
 }
 function syncShelfBar(){
   var sel=$('shelfSelBtn'), hidBtn=$('shelfHiddenBtn'), bar=$('shelfSelBar');
-  if(shelfTab==='wish'){ if(bar) bar.hidden=true; if(sel) sel.hidden=true; return; }
+  if(wishTypeOfSub()){ if(bar) bar.hidden=true; if(sel) sel.hidden=true; return; }
   var n=shelfSelCount();
   if(sel){
     sel.hidden=false;
@@ -5558,16 +5709,25 @@ function syncShelfBar(){
   }
 }
 function setShelfTab(t){
-  t=(t==='video')? 'video' : ((t==='wish')? 'wish' : 'book');
+  t=(t==='video')? 'video' : 'book';
   var changed=(shelfTab!==t);
   shelfTab=t;
   if(state.settings) state.settings.shelfTab=t;
   if(changed){
     shelfSel={}; shelfSelectMode=false;
-    if(t==='wish'){ wishSel={}; wishSelectMode=false; }
+    wishSel={}; wishSelectMode=false;
+    shelfQuery=''; var qi=$('shelfQuery'); if(qi) qi.value='';
     document.body.classList.remove('shelf-sel','sel-mode','wish-sel');
     renderShelf(); scheduleSave();
-  } else syncShelfTabs();
+  } else renderShelf();
+}
+function setShelfSub(k){
+  if(shelfSubKey()===k){ syncShelfTabs(); return; }
+  shelfSubSet(k);
+  shelfSel={}; shelfSelectMode=false;
+  wishSel={}; wishSelectMode=false;
+  document.body.classList.remove('shelf-sel','sel-mode','wish-sel');
+  renderShelf();
 }
 /* ── 다중 선택 ── */
 var shelfSelectMode=false, shelfSel={};
@@ -5976,11 +6136,15 @@ function wishCardHTML(it){
     +(it.url? '<a class="wish-go" href="'+esc(it.url)+'" target="_blank" rel="noopener noreferrer" data-wlink="1">▶️ 열기</a>':'')
   +'</div>';
 }
-function renderShelfWish(){
+function renderShelfWish(type){
   var body=$('wishBody');
   if(!body) return;
-  var all=wishAll();
-  if(wishFold && wishFold!=='__none' && wishFolders().indexOf(wishFold)<0) wishFold='';
+  type=/^(book|video|youtube)$/.test(type||'')? type : (wishTypeOfSub()||'book');
+  var kindName = type==='book'? '책' : (type==='youtube'? '유튜브' : '영화·시리즈');
+  var all=wishAll().filter(function(it){ return it.type===type; });
+  var counts={};
+  all.forEach(function(it){ var f=it.folder||''; counts[f]=(counts[f]||0)+1; });
+  if(wishFold && wishFold!=='__none' && !counts[wishFold]) wishFold='';
   var q=shelfQueryText();
   var list=all.filter(function(it){
     if(wishFold==='__none'){ if(it.folder) return false; }
@@ -5994,30 +6158,25 @@ function renderShelfWish(){
   list=list.slice().sort(function(a,b){ return (Number(b.createdAt)||0)-(Number(a.createdAt)||0); });
   var sum=$('shelfSum');
   if(sum){
-    var bk=0, vd=0;
-    all.forEach(function(it){ if(it.type==='book') bk++; else vd++; });
-    sum.innerHTML='<b>📌 '+all.length+'개</b><span>읽고 싶은 책 '+bk+' · 볼 영상 '+vd+'</span>';
+    sum.innerHTML='<b>📌 '+all.length+(type==='book'?'권':'편')+'</b><span>찜한 '+kindName+(list.length!==all.length? ' · 보기 '+list.length:'')+'</span>';
   }
-  var counts=wishCounts();
-  var h='<div class="card" style="padding:12px 13px">'
-    +'<div class="wish-tools">'
-      +'<button class="mini-btn" type="button" data-wishadd>＋ 찜하기</button>'
-      +'<button class="mini-btn'+(wishSelectMode?' on':'')+'" type="button" data-wishsel aria-pressed="'+(wishSelectMode?'true':'false')+'">'+(wishSelectMode? '✕ 선택 끝':'☑️ 선택')+'</button>'
-      +'<button class="mini-btn grow" type="button" data-wishjson>⬆️ 목록 JSON 불러오기</button>'
-    +'</div>';
-  if(all.length){
-    var chips=[{f:'',label:'전체',n:all.length}];
-    wishFolders().forEach(function(f){ chips.push({f:f,label:f,n:counts[f]||0}); });
-    if(counts['']) chips.push({f:'__none',label:'폴더 없음',n:counts['']});
-    h+='<div class="wish-folds" role="group" aria-label="위시리스트 폴더">'
-      +chips.map(function(c){
+  /* 폴더 칩 — 작고 총총하게 */
+  var folds=$('wishFolds');
+  if(folds){
+    if(all.length){
+      var chips=[{f:'',label:'전체',n:all.length}];
+      wishFolders().forEach(function(f){ if(counts[f]) chips.push({f:f,label:f,n:counts[f]}); });
+      if(counts['']) chips.push({f:'__none',label:'폴더 없음',n:counts['']});
+      folds.innerHTML=chips.map(function(c){
         var on=(wishFold===(c.f||''));
         return '<button class="lchip'+(on?' on':'')+'" type="button" data-wfold="'+esc(c.f)+'" aria-pressed="'+(on?'true':'false')+'">'+esc(c.label)+' <b style="font-weight:900;opacity:.6">'+c.n+'</b></button>';
-      }).join('')+'</div>';
+      }).join('');
+      folds.hidden=false;
+    } else { folds.innerHTML=''; folds.hidden=false; }
   }
-  h+='</div>';
+  var h='';
   if(!all.length){
-    h+='<div class="card wish-empty"><b>아직 찜한 게 없어요</b>‘＋ 찜하기’로 책·영상을 모으거나, <b>⬆️ 목록 JSON 불러오기</b>로 미리 만든 목록을 한 번에 담을 수 있어요.</div>';
+    h+='<div class="card wish-empty"><b>아직 찜한 '+(type==='book'? '책':'영상')+'이 없어요</b>‘＋ 찜하기’로 '+kindName+'을 모으거나, <b>⬆️ JSON</b>으로 미리 만든 목록을 한 번에 담을 수 있어요.</div>';
   } else if(!list.length){
     h+='<div class="card wish-empty"><b>'+(q? '‘'+esc(shelfQuery)+'’로 찾은 게 없어요':'이 폴더에는 아직 없어요')+'</b>위의 <b>전체</b>를 눌러 보세요.</div>';
   } else {
@@ -6034,6 +6193,7 @@ function renderShelfWish(){
   } else document.body.classList.remove('wish-sel');
   var bar=$('shelfSelBar'); if(bar) bar.hidden=true;
   body.innerHTML=h;
+  syncWishTools();
 }
 function wishFieldHTML(d){
   var type=d.type||'book';
@@ -6049,13 +6209,125 @@ function wishFieldHTML(d){
     +'<div class="field"><label>폴더</label><input class="inp" id="wFolder" maxlength="30" value="'+esc(d.folder||'')+'" placeholder="폴더 이름 (비워도 돼요)">'
       +'<div class="shelf-lang" id="wFoldChips" style="margin-top:2px">'+foldChips+'</div></div>'
     +'<div class="field"><label>링크 (유튜브·인터넷 주소)</label><input class="inp" id="wUrl" inputmode="url" maxlength="1000" value="'+esc(d.url||'')+'" placeholder="https://…"></div>'
-    +'<div class="field"><label>표지 그림 주소 (선택)</label><input class="inp" id="wCover" inputmode="url" maxlength="1000" value="'+esc(d.coverUrl||'')+'" placeholder="https://… (비워도 돼요)"></div>'
+    +'<div class="field"><label>표지 그림 (선택)</label>'
+      +'<div class="wcv-head"><input class="inp" id="wCover" inputmode="url" maxlength="1000" value="'+esc(d.coverUrl||'')+'" placeholder="https://… (비워도 돼요)">'
+        +'<button class="btn-line" type="button" data-wcvopen>🔍 찾기</button></div>'
+      +'<div class="wcv-prev" id="wCoverPrevBox"'+(d.coverUrl?'':' hidden')+'><img id="wCoverPrev" src="'+esc(d.coverUrl||'')+'" alt="표지 미리보기" referrerpolicy="no-referrer" onerror="this.parentNode.hidden=true"></div>'
+      +'<div id="wCvWrap" hidden>'+wishCvBlockHTML()+'</div>'
+    +'</div>'
     +'<div class="field"><label>메모 (선택)</label><textarea class="inp" id="wNote" rows="3" maxlength="600" style="height:auto;padding:9px 11px;line-height:1.5">'+esc(d.note||'')+'</textarea></div>';
 }
-function openWishEditor(id){
+/* ── 위시리스트 표지·포스터 검색 (알라딘 book-search · 위키/TVMaze 포스터) ── */
+function wishCvBlockHTML(){
+  return '<div class="wcv" data-wcv>'
+    +'<div class="sub-tabs wcv-tabs">'
+      +'<button class="sub-tab on" type="button" data-wcvm="book">📚 책 표지</button>'
+      +'<button class="sub-tab" type="button" data-wcvm="movie">🎬 영화 포스터</button>'
+    +'</div>'
+    +'<div class="bk-form" style="margin-top:0">'
+      +'<input class="inp" data-wcvq type="search" maxlength="60" placeholder="책 제목·저자" autocomplete="off" enterkeyhint="search">'
+      +'<button class="btn-line teal" type="button" data-wcvgo>검색</button>'
+    +'</div>'
+    +'<div class="wcv-res" data-wcvres><p class="bk-hint" style="margin:0">찾은 표지·포스터를 누르면 그림 주소가 채워져요.</p></div>'
+  +'</div>';
+}
+async function searchWishCovers(mode, q){
+  var items=[];
+  if(mode==='movie'){ try{ items=await searchMovies(q); }catch(e){} return items; }
+  try{ items=await searchAladinBooks(q); }catch(e){}
+  if(!items.length && Date.now()>=bookGoogleUntil){ try{ items=await searchGoogleBooks(q); }catch(e){} }
+  if(!items.length || !items.some(function(it){ return !!it.cover; })){
+    try{
+      var alt=await searchOpenLibrary(q);
+      var have={}; items.forEach(function(it){ have[normKey(it.title)]=1; });
+      alt.forEach(function(it){ if(!have[normKey(it.title)]){ items.push(it); have[normKey(it.title)]=1; } });
+    }catch(e){}
+  }
+  return items;
+}
+function bindWishCv(root, onPick, initMode){
+  var box=root? root.querySelector('[data-wcv]') : null;
+  if(!box) return;
+  var mode=(initMode==='movie')? 'movie':'book', busy=false, items=[];
+  var res=box.querySelector('[data-wcvres]');
+  var qi=box.querySelector('[data-wcvq]');
+  function setMode(m){
+    mode=(m==='movie')? 'movie':'book';
+    Array.prototype.forEach.call(box.querySelectorAll('[data-wcvm]'), function(b){
+      var on=(b.getAttribute('data-wcvm')===mode);
+      b.classList.toggle('on', on); b.setAttribute('aria-pressed', on? 'true':'false');
+    });
+    if(qi) qi.setAttribute('placeholder', mode==='movie'? '영화·시리즈 제목':'책 제목·저자');
+    items=[];
+    if(res) res.innerHTML='<p class="bk-hint" style="margin:0">'+(mode==='movie'? '영화·시리즈 포스터를 찾아요. 예) 주토피아':'책 표지를 찾아요. 예) 마당을 나온 암탉')+'</p>';
+  }
+  async function run(){
+    var q=qi? String(qi.value||'').replace(/\s+/g,' ').trim() : '';
+    if(!q){ if(qi) qi.focus(); return; }
+    if(busy) return;
+    busy=true;
+    if(res) res.innerHTML='<div class="bk-state"><span class="spin">◌</span> ‘'+esc(q)+'’ 찾는 중…</div>';
+    var list=[];
+    try{ list=await searchWishCovers(mode, q); }catch(e){}
+    busy=false;
+    if(!root.isConnected || !box.isConnected) return;
+    items=sortBooks(list||[]);
+    if(!items.length){
+      if(res) res.innerHTML='<div class="bk-state idle"><b>찾은 '+(mode==='movie'? '포스터':'표지')+'가 없어요</b>제목을 짧게 줄여 다시 찾아보세요.</div>';
+      return;
+    }
+    if(res) res.innerHTML='<div class="bk-grid">'+items.map(coverItemHTML).join('')+'</div>';
+  }
+  box.addEventListener('click', function(e){
+    var tb=e.target.closest('[data-wcvm]');
+    if(tb){ e.preventDefault(); setMode(tb.getAttribute('data-wcvm')); return; }
+    if(e.target.closest('[data-wcvgo]')){ e.preventDefault(); run(); return; }
+    var it=e.target.closest('[data-ci]');
+    if(it){
+      e.preventDefault();
+      var pick=items[parseInt(it.getAttribute('data-ci'),10)||0];
+      if(pick && pick.cover && onPick) onPick(pick);
+      return;
+    }
+  });
+  if(qi) qi.addEventListener('keydown', function(e){
+    if(e.key==='Enter'){ e.preventDefault(); run(); }
+  });
+  setMode(mode);
+}
+/* 찜한 책·영화 표지 바로 찾기 — 누르면 지금 폼의 표지 주소만 바꾼다 */
+function wishCvToggle(root, btn){
+  var wrap=root.querySelector('#wCvWrap');
+  if(!wrap) return;
+  var open=!wrap.hidden;
+  wrap.hidden=open;
+  if(btn) btn.classList.toggle('on', !open);
+  if(!open && !wrap.getAttribute('data-bound')){
+    wrap.setAttribute('data-bound','1');
+    var tyEl=root.querySelector('[data-wtype].on');
+    var ty=tyEl? tyEl.getAttribute('data-wtype') : '';
+    bindWishCv(wrap, function(pick){
+      var ci=root.querySelector('#wCover');
+      if(ci) ci.value=pick.cover||'';
+      var ti=root.querySelector('#wTitle');
+      if(ti && !String(ti.value||'').trim() && pick.title) ti.value=pick.title;
+      var ch=root.querySelector('#wChannel');
+      if(ch && !String(ch.value||'').trim()){
+        var who=(pick.authors&&pick.authors[0])||pick.author||pick.channel||'';
+        if(who) ch.value=String(who).slice(0,60);
+      }
+      var box=root.querySelector('#wCoverPrevBox');
+      var img=root.querySelector('#wCoverPrev');
+      if(img){ img.src=pick.cover; if(box) box.hidden=false; }
+      toast('표지를 넣었어요 · 저장을 눌러 주세요');
+    }, ty==='video'? 'movie':'book');
+  }
+}
+function openWishEditor(id, defType){
   var src=id? wishById(id) : null;
+  var dt=/^(book|video|youtube)$/.test(defType||'')? defType : (wishTypeOfSub()||'book');
   var d=src? {id:src.id, type:src.type, title:src.title, channel:src.channel, folder:src.folder, url:src.url, note:src.note, coverUrl:src.coverUrl, createdAt:src.createdAt}
-           : {id:'', type:(wishFold && wishFold!=='__none')? 'book':'book', title:'', channel:'', folder:(wishFold && wishFold!=='__none')? wishFold:'', url:'', note:'', coverUrl:'', createdAt:0};
+           : {id:'', type:dt, title:'', channel:'', folder:(wishFold && wishFold!=='__none')? wishFold:'', url:'', note:'', coverUrl:'', createdAt:0};
   var html='<div class="grab"></div>'
     +'<div class="sheet-head"><h2>'+(src? '✏️ 찜 수정':'📌 찜하기')+'</h2><button class="x" data-close aria-label="닫기">✕</button></div>'
     +'<div class="sheet-block">'+wishFieldHTML(d)
@@ -6068,6 +6340,8 @@ function openWishEditor(id){
   openSheet(html, function(root){
     var cur={type:d.type, folder:d.folder};
     root.addEventListener('click', function(e){
+      var cvb=e.target.closest('[data-wcvopen]');
+      if(cvb){ e.preventDefault(); wishCvToggle(root, cvb); return; }
       var ty=e.target.closest('[data-wtype]');
       if(ty){
         e.preventDefault();
@@ -6137,6 +6411,7 @@ function openWishSheet(id){
       +'</div>'
       +(it.url? '<a class="btn-line teal" href="'+esc(it.url)+'" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;text-decoration:none;margin-bottom:8px">▶️ 링크 열기</a>':'<p class="hint">저장된 링크가 없어요. ✏️ 수정에서 유튜브·인터넷 주소를 넣을 수 있어요.</p>')
       +(it.note? '<p class="memo-text" style="margin-top:9px">'+esc(it.note)+'</p>':'')
+      +((it.type==='book'||it.type==='video')? '<button class="btn-line" type="button" data-wcvopen style="margin-top:9px">🔍 '+(it.type==='book'? '표지':'포스터')+' 찾기</button><div id="wCvWrap" hidden>'+wishCvBlockHTML()+'</div>' : '')
     +'</div>'
     +'<div class="two-btns" style="margin-bottom:8px">'
       +'<button class="btn-line" type="button" data-wedit="'+esc(it.id)+'">✏️ 수정</button>'
@@ -6149,6 +6424,26 @@ function openWishSheet(id){
     +'</div>';
   openSheet(html, function(root){
     root.addEventListener('click', function(e){
+      var cvb=e.target.closest('[data-wcvopen]');
+      if(cvb){
+        e.preventDefault();
+        var wrap=root.querySelector('#wCvWrap');
+        if(!wrap) return;
+        var opened=!wrap.hidden;
+        wrap.hidden=opened;
+        cvb.classList.toggle('on', !opened);
+        if(!opened && !wrap.getAttribute('data-bound')){
+          wrap.setAttribute('data-bound','1');
+          bindWishCv(wrap, function(pick){
+            var t=wishById(it.id);
+            if(!t || !pick.cover) return;
+            t.coverUrl=pick.cover; wishTouch(); scheduleSave(); Cloud.pushProfile();
+            openWishSheet(it.id);
+            toast('표지를 바꿨어요');
+          }, it.type==='video'? 'movie':'book');
+        }
+        return;
+      }
       if(e.target.closest('[data-wedit]')){ e.preventDefault(); openWishEditor(it.id); return; }
       if(e.target.closest('[data-wmove1]')){ e.preventDefault(); openWishMove([it.id], it.folder||''); return; }
       if(e.target.closest('[data-wdone]')){ e.preventDefault(); wishComplete(it.id); return; }
@@ -6241,44 +6536,149 @@ function importWishlistOnly(list){
 }
 
 /* ── 📝 메모장 (날짜에 묶이지 않는 메모 + 사진) ── */
-var memoDraft=null;
+var memoDraft=null, memoOpenId='', memoFold='';
 function memos(){ return (state.settings.memos||[]); }
 function memoById(id){ var l=memos(); for(var i=0;i<l.length;i++){ if(l[i].id===id) return l[i]; } return null; }
 function memoTouch(){ if(state.settings) state.settings.memoAt=Date.now(); }
+function memoFolders(){
+  var seen={}, out=[];
+  memos().forEach(function(m){ var f=String(m.folder||''); if(f && !seen[f]){ seen[f]=1; out.push(f); } });
+  out.sort();
+  return out;
+}
+/* ── 본문 토글: {{토글 제목}} … {{/토글}} · 붙여넣은 <details>도 같은 모양으로 바꿔 읽는다 ── */
+var MEMO_DETAILS_RE=/<details[^>]*>\s*<summary[^>]*>([\s\S]*?)<\/summary>([\s\S]*?)<\/details>/gi;
+function memoToggleBlocks(src){
+  var s=String(src||'').replace(MEMO_DETAILS_RE, function(_, t, inner){
+    var tt=String(t||'').replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim();
+    return '{{토글 '+tt+'}}\n'+String(inner||'').trim()+'\n{{/토글}}';
+  });
+  var opens=(s.match(/\{\{\s*토글\s*[^}\n]*\}\}/g)||[]).length;
+  var closes=(s.match(/\{\{\s*\/\s*토글\s*\}\}/g)||[]).length;
+  while(closes<opens){ s+='\n{{/토글}}'; closes++; }
+  return s;
+}
+function memoPlainHTML(s){
+  return s? '<div class="memo-p">'+esc(s)+'</div>' : '';
+}
+function memoBodyHTML(text){
+  var src=memoToggleBlocks(text);
+  var re=/\{\{\s*토글\s*([^}\n]*)\}\}([\s\S]*?)\{\{\s*\/\s*토글\s*\}\}/g;
+  var out='', last=0, m;
+  while((m=re.exec(src))!==null){
+    out+=memoPlainHTML(src.slice(last, m.index));
+    var title=String(m[1]||'').replace(/\s+/g,' ').trim()||'토글';
+    out+='<details class="memo-tg"><summary><span class="mtg-ic" aria-hidden="true">▸</span>'+esc(title)+'</summary>'
+      +'<div class="memo-tg-b">'+memoPlainHTML(m[2].replace(/^\n+/,'').replace(/\n+$/,''))+'</div></details>';
+    last=m.index+m[0].length;
+  }
+  out+=memoPlainHTML(src.slice(last));
+  return out;
+}
+function memoSummary(m){
+  var t=String(m.body||'').replace(/\{\{\s*\/?\s*토글[^}]*\}\}/g,' ').replace(/\s+/g,' ').trim();
+  if(!t && (m.photos||[]).length) return '사진 '+(m.photos||[]).length+'장';
+  return t.slice(0,90);
+}
 function renderMemo(){
-  var body=$('memoBody');
-  if(!body) return;
   var list=memos();
+  var top=$('memoTop'), body=$('memoBody'), det=$('memoDetail');
+  if(memoOpenId && !memoById(memoOpenId)) memoOpenId='';
+  var cur=memoOpenId? memoById(memoOpenId) : null;
   var sum=$('memoSum');
-  if(sum) sum.innerHTML='<b>📝 '+list.length+'개</b><span>'+(list.length? '제목을 누르면 접히고 펼쳐져요' : '아직 메모가 없어요')+'</span>';
+  if(sum) sum.innerHTML='<b>📝 '+list.length+'개</b><span>'+(cur? '메모 읽는 중' : (list.length? '폴더·제목을 누르면 펼쳐져요' : '아직 메모가 없어요'))+'</span>';
+  if(top) top.hidden=!!cur;
+  var folds=$('memoFolds');
+  if(body) body.hidden=!!cur;
+  if(det) det.hidden=!cur;
+  if(cur){
+    if(folds) folds.hidden=true;
+    if(det) det.innerHTML=memoDetailHTML(cur);
+    return;
+  }
+  if(det) det.innerHTML='';
+  /* 폴더 칩 */
+  if(folds){
+    var counts={};
+    list.forEach(function(m){ var f=m.folder||''; counts[f]=(counts[f]||0)+1; });
+    if(memoFold && memoFold!=='__none' && !counts[memoFold]) memoFold='';
+    if(list.length){
+      var chips=[{f:'',label:'전체',n:list.length}];
+      memoFolders().forEach(function(f){ chips.push({f:f,label:f,n:counts[f]||0}); });
+      if(counts['']) chips.push({f:'__none',label:'폴더 없음',n:counts['']});
+      folds.innerHTML=chips.map(function(c){
+        var on=(memoFold===(c.f||''));
+        return '<button class="lchip'+(on?' on':'')+'" type="button" data-mefold="'+esc(c.f)+'" aria-pressed="'+(on?'true':'false')+'">'+esc(c.label)+' <b style="font-weight:900;opacity:.6">'+c.n+'</b></button>';
+      }).join('');
+      folds.hidden=false;
+    } else folds.hidden=true;
+  }
   if(!list.length){
     body.innerHTML='<div class="card memo-empty"><b>아직 메모가 없어요</b>‘＋ 새 메모’로 아이의 연도별 계획, 목표, 학원·교재 메모처럼 날짜와 상관없는 내용을 적어 두세요.</div>';
     return;
   }
-  body.innerHTML='<div class="memo-list">'+list.map(memoCardHTML).join('')+'</div>';
+  var shown=list.filter(function(m){
+    if(memoFold==='__none') return !m.folder;
+    if(memoFold) return (m.folder||'')===memoFold;
+    return true;
+  });
+  if(!shown.length){
+    body.innerHTML='<div class="card memo-empty"><b>이 폴더에는 메모가 없어요</b>위의 <b>전체</b>를 눌러 보세요.</div>';
+    return;
+  }
+  body.innerHTML='<div class="memo-list">'+shown.map(memoCardHTML).join('')+'</div>';
 }
 function memoCardHTML(m){
-  var collapsed=!!m.collapsed;
-  var h='<div class="memo-card'+(collapsed? ' collapsed':'')+'" data-memo="'+esc(m.id)+'">'
-    +'<button class="memo-head" type="button" data-memohead="'+esc(m.id)+'" aria-expanded="'+(collapsed? 'false':'true')+'">'
-      +'<span class="chev" aria-hidden="true">▼</span><b>'+esc(m.title)+'</b>'
-      +'<span class="at">'+esc(m.updatedAt? fmtStamp(m.updatedAt):'')+'</span>'
-    +'</button>';
-  if(!collapsed){
-    h+='<div class="memo-body">'
-      +(m.body && m.body.trim()? '<div class="memo-text">'+esc(m.body)+'</div>'
-        : (m.photos.length? '' : '<div class="memo-text empty">내용이 비어 있어요. ✏️ 수정으로 적어 보세요.</div>'))
-      +(m.photos && m.photos.length? '<div class="memo-photos">'+m.photos.map(function(pid,i){
+  var sum=memoSummary(m);
+  var ph=(m.photos||[]).length;
+  return '<button class="memo-item" type="button" data-memoopen="'+esc(m.id)+'">'
+    +'<span class="mi-top">'
+      +(m.folder? '<span class="mi-fd">'+esc(m.folder)+'</span>' : '<span class="mi-fd none">폴더 없음</span>')
+      +'<span class="mi-at">'+esc(m.updatedAt? fmtStamp(m.updatedAt):'')+'</span>'
+    +'</span>'
+    +'<b class="mi-t">'+esc(m.title)+'</b>'
+    +(sum? '<span class="mi-sum">'+esc(sum)+'</span>' : '<span class="mi-sum none">내용이 비어 있어요</span>')
+    +(ph? '<span class="mi-meta">📷 사진 '+ph+'장</span>' : '')
+  +'</button>';
+}
+function memoDetailHTML(m){
+  return '<div class="memo-page">'
+    +'<div class="mp-head">'
+      +'<button class="mp-back" type="button" data-memoback>← 목록</button>'
+      +'<span class="mp-at">'+esc(m.updatedAt? fmtStamp(m.updatedAt)+' 수정':'')+'</span>'
+    +'</div>'
+    +'<article class="card memo-page-card">'
+      +(m.folder? '<div class="mp-fd">📁 '+esc(m.folder)+'</div>' : '')
+      +'<h2 class="mp-t">'+esc(m.title)+'</h2>'
+      +(m.body && m.body.trim()? '<div class="memo-text">'+memoBodyHTML(m.body)+'</div>'
+        : ((m.photos||[]).length? '' : '<p class="hint">내용이 비어 있어요. ✏️ 수정으로 적어 보세요.</p>'))
+      +((m.photos||[]).length? '<div class="memo-photos">'+m.photos.map(function(pid,i){
           return '<button type="button" data-memophoto="'+esc(m.id)+'" data-pid="'+esc(pid)+'" data-idx="'+i+'" aria-label="사진 크게 보기">'+photoImgHTML(pid, m.title+' 사진', 'loading="lazy"')+'</button>';
         }).join('')+'</div>':'')
-      +'<div class="memo-act">'
-        +'<button class="btn-line teal" type="button" data-memopic="'+esc(m.id)+'">📷 사진</button>'
-        +'<button class="btn-line" type="button" data-memoedit="'+esc(m.id)+'">✏️ 수정</button>'
-        +'<button class="btn-line danger" type="button" data-memodel="'+esc(m.id)+'">🗑️ 삭제</button>'
-      +'</div>'
-    +'</div>';
-  }
-  return h+'</div>';
+    +'</article>'
+    +'<div class="memo-act">'
+      +'<button class="btn-line" type="button" data-memoedit="'+esc(m.id)+'">✏️ 수정</button>'
+      +'<button class="btn-line" type="button" data-memopic="'+esc(m.id)+'">📷 사진</button>'
+      +'<button class="btn-line danger" type="button" data-memodel="'+esc(m.id)+'">🗑️ 삭제</button>'
+    +'</div>'
+  +'</div>';
+}
+function openMemoPage(id){
+  if(!memoById(id)){ toast('메모를 찾지 못했어요'); return; }
+  if(memoOpenId===id){ renderMemo(); return; }
+  memoOpenId=id;
+  renderMemo();
+  if(!HIST.restoring) histPushNav();
+  window.scrollTo(0,0);
+}
+function closeMemoPage(){
+  if(!memoOpenId) return;
+  if(HIST.restoring){ memoOpenId=''; renderMemo(); return; }
+  var st=history.state;
+  if(st && st.ldy && st.memo){ try{ history.back(); return; }catch(e){} }
+  memoOpenId='';
+  renderMemo();
+  window.scrollTo(0,0);
 }
 function memoPhotoStripHTML(){
   if(!memoDraft) return '';
@@ -6295,13 +6695,21 @@ function drawMemoPhotoStrip(root){
 function openMemoEditor(id, opts){
   opts=opts||{};
   var src=id? memoById(id) : null;
-  memoDraft= src? { id:src.id, title:src.title, body:src.body, photos:(src.photos||[]).slice(), collapsed:!!src.collapsed, updatedAt:Number(src.updatedAt)||0 }
-              : { id:'m'+Date.now().toString(36)+Math.random().toString(36).slice(2,5), title:'', body:'', photos:[], collapsed:false, updatedAt:0 };
+  memoDraft= src? { id:src.id, title:src.title, body:src.body, folder:src.folder||'', photos:(src.photos||[]).slice(), collapsed:!!src.collapsed, updatedAt:Number(src.updatedAt)||0 }
+              : { id:'m'+Date.now().toString(36)+Math.random().toString(36).slice(2,5), title:'', body:'', folder:(memoFold && memoFold!=='__none')? memoFold:'', photos:[], collapsed:false, updatedAt:0 };
+  var foldChips=memoFolders().map(function(f){
+    return '<button class="lchip'+(memoDraft.folder===f?' on':'')+'" type="button" data-mpickfold="'+esc(f)+'">'+esc(f)+'</button>';
+  }).join('');
   var html='<div class="grab"></div>'
     +'<div class="sheet-head"><h2>'+(src? '✏️ 메모 고치기':'📝 새 메모')+'</h2><button class="x" data-close aria-label="닫기">✕</button></div>'
     +'<div class="sheet-block">'
       +'<div class="field"><label>제목</label><input class="inp" id="memoTitle" maxlength="80" value="'+esc(memoDraft.title)+'" placeholder="예: 래현 2027 로드맵"></div>'
-      +'<div class="field"><label>내용</label><textarea class="inp" id="memoBodyIn" rows="7" maxlength="20000" style="height:auto;min-height:130px;padding:9px 11px;line-height:1.6" placeholder="자유롭게 적어 두세요">'+esc(memoDraft.body)+'</textarea></div>'
+      +'<div class="field"><label>폴더 (선택)</label><input class="inp" id="memoFolder" maxlength="30" value="'+esc(memoDraft.folder)+'" placeholder="예: 계획 · 교재 · 학원">'
+        +(foldChips? '<div class="wish-folds" id="memoFoldChips" style="margin-top:2px">'+foldChips+'</div>' : '')+'</div>'
+      +'<div class="field"><label>내용</label>'
+        +'<div class="memo-tb"><button class="mini-btn" type="button" data-mdtoggle>➕ 토글</button>'
+          +'<span class="hint">토글은 <b>{{토글 제목}}</b> … <b>{{/토글}}</b> 사이 글이 접혀요</span></div>'
+        +'<textarea class="inp" id="memoBodyIn" rows="7" maxlength="20000" style="height:auto;min-height:130px;padding:9px 11px;line-height:1.6" placeholder="자유롭게 적어 두세요. 긴 목록은 ➕ 토글로 접어 두면 읽기 편해요.">'+esc(memoDraft.body)+'</textarea></div>'
       +'<div class="field"><label>사진</label><div id="memoPhotoStrip">'+memoPhotoStripHTML()+'</div>'
         +'<button class="btn-line teal" type="button" data-mdpic style="margin-top:8px">📷 사진 넣기</button></div>'
       +'<div class="two-btns" style="margin-top:4px">'
@@ -6311,6 +6719,33 @@ function openMemoEditor(id, opts){
     +'</div>';
   openSheet(html, function(root){
     root.addEventListener('click', function(e){
+      var pf=e.target.closest('[data-mpickfold]');
+      if(pf){
+        e.preventDefault();
+        var f=pf.getAttribute('data-mpickfold')||'';
+        var inp=root.querySelector('#memoFolder');
+        var cur=(inp&&inp.value.trim())||'';
+        var nv=(cur===f)? '':f;
+        if(inp) inp.value=nv;
+        Array.prototype.forEach.call(root.querySelectorAll('[data-mpickfold]'), function(x){
+          x.classList.toggle('on', x.getAttribute('data-mpickfold')===nv);
+        });
+        return;
+      }
+      if(e.target.closest('[data-mdtoggle]')){
+        e.preventDefault();
+        var ta=root.querySelector('#memoBodyIn');
+        if(!ta) return;
+        var ins='{{토글 제목}}\n\n{{/토글}}';
+        var s0=ta.selectionStart||0, s1=ta.selectionEnd||0;
+        var before=ta.value.slice(0,s0), after=ta.value.slice(s1);
+        var glue=(before && !/\n$/.test(before))? '\n':'';
+        ta.value=before+glue+ins+after;
+        var at=before.length+glue.length+6;   /* ‘{{토글 ’ 뒤 = 제목 자리 */
+        ta.focus();
+        try{ ta.setSelectionRange(at, at+2); }catch(_){}
+        return;
+      }
       if(e.target.closest('[data-mdpic]')){
         e.preventDefault();
         $('photoInput').value='';
@@ -6340,10 +6775,12 @@ function saveMemoDraft(root){
   root=root||sheetEl;
   var ti=root? root.querySelector('#memoTitle') : null;
   var bo=root? root.querySelector('#memoBodyIn') : null;
+  var fo=root? root.querySelector('#memoFolder') : null;
   if(ti) memoDraft.title=ti.value;
   if(bo) memoDraft.body=bo.value;
+  if(fo) memoDraft.folder=fo.value;
   var it=normMemoItem({
-    id:memoDraft.id, title:memoDraft.title, body:memoDraft.body,
+    id:memoDraft.id, title:memoDraft.title, body:memoDraft.body, folder:memoDraft.folder,
     photos:memoDraft.photos, collapsed:memoDraft.collapsed, updatedAt:Date.now()
   });
   if(!it){ toast('제목이나 내용을 넣어 주세요'); return; }
@@ -6410,6 +6847,7 @@ function memoDelete(id){
   });
   state.settings.memos=memos().filter(function(x){ return x.id!==id; });
   memoTouch(); scheduleSave(); Cloud.pushProfile();
+  if(memoOpenId===id){ memoOpenId=''; if(!HIST.restoring) histReplaceNav(); }
   renderMemo();
   toast('메모를 지웠어요');
 }
@@ -6423,6 +6861,13 @@ function bindShelf(){
     if(!b) return;
     e.preventDefault();
     setShelfTab(b.getAttribute('data-sh'));
+  });
+  var subs=$('shSubTabs');
+  if(subs) subs.addEventListener('click', function(e){
+    var b=e.target.closest('[data-sub]');
+    if(!b) return;
+    e.preventDefault();
+    setShelfSub(b.getAttribute('data-sub'));
   });
   var qi=$('shelfQuery');
   if(qi) qi.addEventListener('input', function(){ shelfQuery=qi.value||''; renderShelf(); });
@@ -6495,8 +6940,8 @@ function bindShelf(){
       if(card){ e.preventDefault(); openItemSheet(key); }
     });
   }
-  /* 📌 위시리스트 */
-  var wb=$('wishBody');
+  /* 📌 위시리스트 — 버튼 줄이 카드 안으로 올라가 #view-shelf에서 한 번에 받는다 */
+  var wb=$('view-shelf');
   if(wb) wb.addEventListener('click', function(e){
     if(e.target.closest('[data-wlink]')) return;    /* 바깥 링크는 새 탭으로 그대로 연다 */
     if(e.target.closest('[data-wishadd]')){ e.preventDefault(); openWishEditor(null); return; }
@@ -6545,8 +6990,8 @@ function bindShelf(){
     }
     if(id){ e.preventDefault(); openWishSheet(id); }
   });
-  /* 📝 메모장 */
-  var mb=$('memoBody');
+  /* 📝 메모장 — 목록 → 메모 페이지 */
+  var mb=$('view-memo');
   if(mb) mb.addEventListener('click', function(e){
     var mo=e.target.closest('[data-memophoto]');
     if(mo){
@@ -6556,15 +7001,11 @@ function bindShelf(){
       openLightbox((mp.photos||[]).slice(), parseInt(mo.getAttribute('data-idx'),10)||0);
       return;
     }
-    var hd=e.target.closest('[data-memohead]');
-    if(hd){
-      e.preventDefault();
-      var mm=memoById(hd.getAttribute('data-memohead'));
-      if(!mm) return;
-      mm.collapsed=!mm.collapsed;
-      renderMemo(); scheduleSave();
-      return;
-    }
+    var fold=e.target.closest('[data-mefold]');
+    if(fold){ e.preventDefault(); memoFold=fold.getAttribute('data-mefold')||''; renderMemo(); return; }
+    if(e.target.closest('[data-memoback]')){ e.preventDefault(); closeMemoPage(); return; }
+    var op=e.target.closest('[data-memoopen]');
+    if(op){ e.preventDefault(); openMemoPage(op.getAttribute('data-memoopen')); return; }
     var ed=e.target.closest('[data-memoedit]');
     if(ed){ e.preventDefault(); openMemoEditor(ed.getAttribute('data-memoedit')); return; }
     var pc=e.target.closest('[data-memopic]');
@@ -6652,6 +7093,16 @@ function bindEvents(){
       art.classList.toggle('is-filled', hasContent(sec2));
       markEdited();
     }
+  });
+
+  /* 빈 영역 카드 — 누르거나 포커스하면 그 카드만 펼친다 */
+  $('sections').addEventListener('pointerdown', function(e){
+    var art=e.target.closest? e.target.closest('.sec.slim') : null;
+    if(art) openSlimCard(art);
+  }, true);
+  $('sections').addEventListener('focusin', function(e){
+    var art=e.target.closest? e.target.closest('.sec.slim') : null;
+    if(art) openSlimCard(art);
   });
 
   /* 섹션 클릭 */
@@ -6974,16 +7425,23 @@ function syncStickyTop(){
     bar.style.top=(head.offsetHeight-2)+'px';
   }
 }
-/* 상단 초록 헤더 접기 — 아래로 스크롤(60px)하거나 자판이 올라오면 프로필 줄을 숨긴다 */
-var hdrCollapsed=false;
-function syncHeaderCollapse(){
+/* 상단 초록 헤더 접기 — 아래로 80px 넘게 스크롤하면 접고, 20px 위로 올라와야 편다.
+   접힐 때 화면 높이가 52px 줄어 스크롤 위치가 흔들리므로 두 기준 사이를 60px 띄워
+   경계에서 접혔다 펴졌다 반복(떨림)하지 않게 한다. */
+var hdrCollapsed=false, hdrLockT=0;
+function syncHeaderCollapse(force){
   var head=document.querySelector('.topbar');
   if(!head) return;
   var y=window.pageYOffset || document.documentElement.scrollTop || 0;
   var kb=document.body.classList.contains('kb-open');
-  var on=hdrCollapsed? (y>30) : (y>60);
+  var on;
   if(kb) on=true;
+  else if(hdrCollapsed) on=(y>20);   /* 펴는 기준 */
+  else on=(y>80);                    /* 접는 기준 */
   if(on===hdrCollapsed){ return; }
+  var now=Date.now();
+  if(!force && now-hdrLockT<200) return;   /* 한 번 바뀐 뒤 0.2초 안의 흔들림은 무시 */
+  hdrLockT=now;
   hdrCollapsed=on;
   head.classList.toggle('hdr-min', on);
   syncStickyTop();
@@ -7150,13 +7608,19 @@ async function cloudSignUp(email,pw){
   return 'confirm';
 }
 function recoveryRedirect(){
-  try{ if(/^https?:$/.test(location.protocol)) return location.origin+location.pathname; }catch(e){}
+  try{
+    if(!/^https?:$/.test(location.protocol)) return undefined;
+    /* Supabase Redirect URLs에 등록된 주소(폴더 주소)와 똑같이 맞춘다 — index.html은 떼어 낸다 */
+    var path=location.pathname.replace(/index\.html?$/i,'');
+    return location.origin+path;
+  }catch(e){}
   return undefined;
 }
 async function cloudSendRecovery(email){
-  var payload={email:email};
-  var r=recoveryRedirect(); if(r) payload.redirect_to=r;
-  await sbAuthPost('/auth/v1/recover', payload);
+  /* redirect_to 는 본문이 아니라 쿼리 문자열로 보내야 Supabase가 경로까지 살려서 돌려준다 */
+  var r=recoveryRedirect();
+  var path='/auth/v1/recover'+(r? ('?redirect_to='+encodeURIComponent(r)) : '');
+  await sbAuthPost(path, {email:email});
 }
 async function adoptSession(j){
   sbSaveSession({
@@ -7206,7 +7670,7 @@ async function pushProfileNow(){
       return {id:w.id, type:w.type, title:w.title, channel:w.channel||'', folder:w.folder||'', url:w.url||'', note:w.note||'', coverUrl:w.coverUrl||'', createdAt:Number(w.createdAt)||0};
     }), wishAt:Number(st.wishAt)||0,
     memos:(st.memos||[]).map(function(m){
-      return {id:m.id, title:m.title, body:m.body||'', photos:(m.photos||[]).slice(), collapsed:!!m.collapsed, updatedAt:Number(m.updatedAt)||0};
+      return {id:m.id, title:m.title, body:m.body||'', folder:m.folder||'', photos:(m.photos||[]).slice(), collapsed:!!m.collapsed, updatedAt:Number(m.updatedAt)||0};
     }), memoAt:Number(st.memoAt)||0, memoPhotos:memoPhotoRefs()
   }, updated_at:new Date().toISOString()};
   var r=await sbApi('/rest/v1/diary_profiles?on_conflict=user_id',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},body:body});
@@ -7541,9 +8005,10 @@ function lockAppForGate(){
     var ct=$('childTitle'); if(ct) ct.innerHTML='나의 학습노트';
     var m=$('mascot'); if(m) m.textContent='✏️';
     document.title='학습 · 성장 다이어리';
-    ['sections','readContent','shelfBody','shelfSum','wishBody','memoBody','memoSum','cumStats','todayTable','todayStats','weekTable','calGrid','jumpBar','viewCatChips','rangeInfo'].forEach(function(id){
+    ['sections','readContent','shelfBody','shelfSum','wishBody','wishFolds','memoBody','memoDetail','memoFolds','memoSum','cumStats','todayTable','todayStats','weekTable','calGrid','jumpBar','viewCatChips','rangeInfo','shSubTabs'].forEach(function(id){
       var el=$(id); if(el) el.innerHTML='';
     });
+    memoOpenId='';
     var dc=$('draftBadge'); if(dc) dc.hidden=true;
   }catch(e){}
   appRendered=false;
@@ -7738,7 +8203,7 @@ var Cloud={
 /* ────────────────────────────── boot ────────────────────────────── */
 async function boot(){
   await loadState();
-  shelfTab=(state.settings && state.settings.shelfTab==='video')? 'video' : ((state.settings && state.settings.shelfTab==='wish')? 'wish':'book');
+  shelfTab=(state.settings && state.settings.shelfTab==='video')? 'video' : 'book';
   var td=parseYmd(todayStr());
   viewY=td.getFullYear(); viewM=td.getMonth();
   selected=todayStr();
