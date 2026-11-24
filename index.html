@@ -1234,7 +1234,7 @@ body.kb-open .actionbar{bottom:var(--kb,0px)}
 .vt-right .range-custom .mini-btn{font-size:10px;padding:3px 6px;border-radius:7px}
 .vt-acts{display:flex;gap:4px;margin-top:auto}
 .vt-acts .act-btn{flex:1;min-width:0;justify-content:center;font-size:9.5px;padding:4px 1px;letter-spacing:-.04em;border-radius:7px}
-.vt-cats{display:flex;align-items:center;gap:5px;margin-top:2px}
+.vt-cats{display:flex;align-items:center;gap:5px;margin-top:0;min-height:26px}
 .vt-cats .result-count{flex:0 0 auto;font-size:9.5px;white-space:nowrap;margin:0;color:var(--muted)}
 .vt-cats .cat-chips{flex:1;min-width:0;padding:0}
 
@@ -1346,28 +1346,25 @@ body.kb-open .backdrop-fs .sheet{padding-bottom:calc(8px + var(--kb,0px))}
 .sec-text{min-height:135px;max-height:253px;overflow-y:auto;padding:9px 12px;font-size:14.5px;line-height:1.62}
 .sec.slim:not(.open) .sec-text{height:31px !important;padding:5px 12px 7px;font-size:13px}
 
-/* #19 쓰기 화면도 보기처럼 — 왼쪽 미니 달력 + 오른쪽 날짜·바로가기 2열 */
-.wt-top{padding:7px 9px 8px}
-.wt-top .vt-grid{gap:6px}
-.wt-right{display:flex;flex-direction:column;gap:4px;min-width:0}
+/* #19 쓰기 화면도 보기처럼 — 왼쪽 미니 달력 + 오른쪽 날짜·바로가기 2열
+   #38 쓰기·보기 상단을 같은 그리드·크기로 통일 (패딩 8/9/9 · gap 6 · 달력 기본 크기 · 버튼 24/30px) */
+.wt-top{padding:8px 9px 9px;display:flex;flex-direction:column;gap:6px}
+.wt-top .vt-grid{gap:7px}
+.wt-right{display:flex;flex-direction:column;gap:5px;min-width:0}
 .wt-date{display:flex;align-items:center;gap:3px}
-.wt-date .dnav{width:26px;height:26px;flex:0 0 26px;border-radius:8px;background:#fff;border:1px solid var(--line);font-size:14px;color:var(--ink-2);display:grid;place-items:center;line-height:1}
+.wt-date .dnav{width:30px;height:30px;flex:0 0 30px;border-radius:9px;background:#fff;border:1px solid var(--line);font-size:15px;color:var(--ink-2);display:grid;place-items:center;line-height:1}
 .wt-date .datebar-mid{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:3px;overflow:hidden}
 .wt-date .datebar-mid b{font-size:14px;font-weight:900;letter-spacing:-.02em;white-space:nowrap}
 .wt-date .wd{font-size:10px;color:var(--muted);font-weight:700;white-space:nowrap}
 .wt-date .badge{font-size:8.5px;padding:1px 4px;border-radius:5px}
-.wt-today{height:24px;border-radius:7px;background:var(--teal-soft);border:1px solid var(--teal-soft-2);color:var(--teal-3);font-size:10px;font-weight:900;letter-spacing:-.01em}
+.wt-today{height:24px;border-radius:7px;background:var(--teal-soft);border:1px solid var(--teal-soft-2);color:var(--teal-3);font-size:9.5px;font-weight:900;letter-spacing:-.01em}
 .wt-today:active{background:#dff0eb}
 .wt-info{font-size:9.5px;font-weight:800;color:var(--muted);line-height:1.5;margin-top:1px}
 .wt-info b{color:var(--teal-3);font-weight:900}
-.wt-jump{display:flex;flex-wrap:nowrap;gap:3px;margin-top:5px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding-bottom:1px}
+.wt-jump{display:flex;align-items:center;flex-wrap:nowrap;gap:3px;margin-top:0;min-height:26px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding-bottom:1px}
 .wt-jump::-webkit-scrollbar{display:none}
-.wt-jump .jump{flex:0 0 auto;font-size:9.5px;padding:4px 6px;border-radius:7px;gap:3px;font-weight:800}
+.wt-jump .jump{flex:0 0 auto;height:24px;font-size:9.5px;padding:0 6px;border-radius:7px;gap:3px;font-weight:800}
 .wt-jump .jump .d{width:4px;height:4px;flex:0 0 4px}
-.wt-top .vt-cal{padding:2px 3px 3px}
-.wt-top .mc-c{height:20px;font-size:9px}
-.wt-top .mc-head b{font-size:10px}
-.wt-top .mc-nav{width:18px;height:18px;font-size:12px}
 
 /* #20 🧒 아이 페이지(성장·메모장) */
 .brand-wrap{display:flex;align-items:center;gap:8px;max-height:44px;overflow:hidden;position:relative;z-index:1;transition:max-height .22s ease, opacity .16s ease, transform .2s ease, margin .2s ease}
@@ -1529,6 +1526,44 @@ body.memo-order #memoBody{padding-bottom:64px}
   .g-card .v{font-size:17px}
   .wt-jump .jump{font-size:9px;padding:3px 4px}
 }
+
+/* ══ 2026-11-25 (#33~#39) ══ */
+/* #37 글 쓰는 칸 터치 스크롤 — 넘칠 때만 안에서 스크롤되고, 아니면 바깥 페이지가 이어서 움직인다 */
+.sec-scroll{max-height:300px;overflow-y:hidden;overscroll-behavior:auto}
+.sec-scroll.has-more{overflow-y:auto}
+@media (max-height:700px){ .sec-scroll{max-height:250px} }
+
+/* #34·#35 음식 카드 — 사진 위 오른쪽에 🍳 +1, 출처 배지는 감춤, ▶️는 크게 */
+.rc-cv{display:block}
+.rc-cvim{position:absolute;inset:0;display:block;width:100%;height:100%;padding:0;border:0;background:#efeae1;text-align:left}
+.rc-cvim:active{opacity:.94}
+.rc-cv .rc-plus{position:absolute;top:3px;right:3px;z-index:2;height:24px;padding:0 7px;border-radius:7px;border:0;background:rgba(13,122,112,.95);color:#fff;font-size:9.5px;font-weight:900;line-height:1;white-space:nowrap;letter-spacing:-.02em;box-shadow:0 2px 7px -2px rgba(0,0,0,.55)}
+.rc-cv .rc-plus:active{background:rgba(9,96,88,.98);transform:scale(.94)}
+.rc-cv .k{display:none}
+.rc-row{align-items:center;gap:3px;padding:5px 5px 6px}
+.rc-t{font-size:11px}
+.rc-go{width:26px;height:26px;border-radius:8px;font-size:12px;box-shadow:0 1px 3px -1px rgba(13,122,112,.45)}
+.rc-go:active{background:#dff0eb}
+@media (max-width:360px){
+  .rc-go{width:24px;height:24px;font-size:11px;border-radius:7px}
+  .rc-t{font-size:10.5px}
+  .rc-cv .rc-plus{height:22px;font-size:9px;padding:0 6px}
+}
+
+/* #33 올린 사진 ↻ 회전 버튼 */
+.photos .pbar .prot{font-size:11px;font-weight:900;color:var(--teal-3);background:#fff;border:1px solid var(--teal-soft-2);border-radius:8px;padding:5px 8px;white-space:nowrap}
+.photos .pbar .prot:active{background:var(--teal-soft)}
+.photos .pbar .prot[disabled],.photos .pcard .prot[disabled]{opacity:.5}
+.photos .pcard .prot.ov{position:absolute;top:6px;left:6px;z-index:2;display:inline-flex;align-items:center;gap:3px;height:26px;padding:0 8px;border-radius:8px;border:0;background:rgba(22,34,32,.7);color:#fff;font-size:11px;font-weight:900;letter-spacing:-.02em;backdrop-filter:blur(2px);box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.photos .pcard .prot.ov:active{background:rgba(13,122,112,.92)}
+.lb-rot{position:absolute;bottom:calc(46px + var(--safe-b));left:50%;transform:translateX(-50%);height:34px;padding:0 15px;border-radius:17px;background:rgba(255,255,255,.2);color:#fff;font-size:12.5px;font-weight:900;letter-spacing:-.02em;white-space:nowrap}
+.lb-rot:active{background:rgba(255,255,255,.34)}
+.me-ph .mp .rt{position:absolute;top:0;left:0;width:18px;height:18px;background:rgba(255,255,255,.94);color:var(--teal-3);font-size:10px;font-weight:900;display:grid;place-items:center;border-bottom-right-radius:6px;line-height:1}
+.rc-ph-btns{display:flex;flex-wrap:wrap;gap:6px}
+.rc-ph-btns .btn-line{flex:1 1 auto;min-width:0;white-space:nowrap;font-size:11px;padding:0 6px}
+
+/* #39 탭 이름 간단하게 */
+#tabRecord .tl{letter-spacing:-.01em}
 </style>
 </head>
 <body>
@@ -1582,7 +1617,7 @@ body.memo-order #memoBody{padding-bottom:64px}
       <button class="icon-btn" id="btnSettings" aria-label="설정 및 백업">⚙️</button>
     </div>
     <div class="tabs" role="tablist" aria-label="학습노트 모드">
-      <button class="tab active" id="tabRecord" data-tab="record" role="tab" aria-selected="true" title="한 번 더 누르면 쓰기 ↔ 보기"><span class="tl tl-long">📝 기록 · 쓰기</span><span class="tl tl-short">📝 기록 · 쓰기</span></button>
+      <button class="tab active" id="tabRecord" data-tab="record" role="tab" aria-selected="true" title="한 번 더 누르면 쓰기 ↔ 보기"><span class="tl tl-long">📝 기록</span><span class="tl tl-short">📝 기록</span></button>
       <button class="tab" id="tabShelf" data-tab="shelf" role="tab" aria-selected="false"><span class="tl tl-long">📚 책장</span><span class="tl tl-short">📚 책장</span></button>
       <button class="tab" id="tabFood" data-tab="food" role="tab" aria-selected="false"><span class="tl tl-long">🍳 음식</span><span class="tl tl-short">🍳 음식</span></button>
     </div>
@@ -1833,6 +1868,7 @@ body.memo-order #memoBody{padding-bottom:64px}
   <button class="lb-close" id="lbClose" aria-label="닫기">✕</button>
   <button class="lb-nav prev" id="lbPrev" aria-label="이전 사진">‹</button>
   <button class="lb-nav next" id="lbNext" aria-label="다음 사진">›</button>
+  <button class="lb-rot" id="lbRot" type="button" aria-label="사진 90도 회전">↻ 회전</button>
   <div class="lb-count" id="lbCount"></div>
 </div>
 
@@ -2616,10 +2652,15 @@ function photosEditHTML(sec){
     var used=hasPhotoMark(txt,n);
     var ref=state.photoRefs[id]||{};
     var yt=(ref.kind==='youtube');
-    return '<div class="pcard'+(isThumbPhoto(id)?' thumb-card':'')+(yt?' yt-card':'')+'" data-pid="'+id+'">'
+    var thumb=isThumbPhoto(id);
+    var rotBtn='<button class="prot" type="button" data-act="rotphoto" data-pid="'+id+'" aria-label="사진 '+n+' 90도 회전" title="90도씩 시계 방향으로 돌리기">↻ 회전</button>';
+    var rotOv='<button class="prot ov" type="button" data-act="rotphoto" data-pid="'+id+'" aria-label="사진 '+n+' 90도 회전" title="90도씩 시계 방향으로 돌리기">↻ 회전</button>';
+    return '<div class="pcard'+(thumb?' thumb-card':'')+(yt?' yt-card':'')+'" data-pid="'+id+'">'
       +'<button class="pimg" type="button" data-act="viewphoto" data-pids="'+esc(pids.join(','))+'" data-idx="'+i+'" aria-label="'+esc(photoAlt(id,n))+' 크게 보기">'+photoImgHTML(id, photoAlt(id,n))+'</button>'
       +'<button class="del" data-act="delphoto" data-pid="'+id+'" aria-label="사진 삭제">✕</button>'
+      +(thumb? '' : rotOv)
       +'<div class="pbar"><span class="pn">사진 '+n+'</span>'
+        +(thumb? rotBtn : '')
         +(used? '<span class="pused">글 속 '+n+'번 자리에 있음</span>' : '')
         +'<button class="pmark" type="button" data-act="markphoto" data-n="'+n+'" aria-label="사진 '+n+'을 글 커서 위치에 넣기">📍 글 커서 위치에 넣기</button>'
       +'</div>'
@@ -2658,7 +2699,7 @@ function sectionHTML(c){
   var sec=current.sections[c.id] || {m:0,t:'',p:[]};
   var m=Math.max(0, Math.round(Number(sec.m)||0));
   var filled=hasContent(sec);
-  var slim=!filled;
+  var slim=SEC_ALWAYS_OPEN? false : !filled;
   var open=slim && !!slimOpen[(current?current.date:'')+'|'+c.id];
   var ph='<'+catBase(c)+'> 내용을 입력해 주세요.';
   return '<article class="sec'+(filled?' is-filled':'')+(slim? ' slim':'')+(open? ' open':'')+'" data-cat="'+c.id+'">'
@@ -2687,6 +2728,8 @@ function autoGrow(ta){
   ta.style.overflowY=(need>SEC_TEXT_MAX)? 'auto':'hidden';
   if((window.scrollY||0)!==y) window.scrollTo(0,y);
 }
+/* #36 빈 영역도 항상 펼친 상태로 둔다 (접힘·숨김 없음) */
+var SEC_ALWAYS_OPEN=true;
 /* 슬림(빈) 카드를 누르면 그 카드만 펼친다 — 날짜마다 따로 기억한다 */
 var slimOpen={};
 function openSlimCard(art){
@@ -2702,6 +2745,19 @@ function markScrollable(){
   var list=document.querySelectorAll('#sections .sec-scroll');
   Array.prototype.forEach.call(list, function(el){
     el.classList.toggle('has-more', el.scrollHeight > el.clientHeight + 4);
+  });
+  watchSectionImages();
+}
+/* 사진이 늦게 로드돼 높이가 커지면 다시 재서 스크롤을 연다 */
+function watchSectionImages(){
+  var list=document.querySelectorAll('#sections .sec-scroll img');
+  Array.prototype.forEach.call(list, function(im){
+    if(im.__msWatch) return;
+    im.__msWatch=true;
+    var again=function(){ setTimeout(markScrollable, 30); };
+    im.addEventListener('load', again);
+    im.addEventListener('error', again);
+    if(!im.complete) setTimeout(again, 120);
   });
 }
 function renderJumpBar(){
@@ -2741,6 +2797,7 @@ function renderSections(){
   var tas=wrap.querySelectorAll('textarea');
   for(var i=0;i<tas.length;i++) autoGrow(tas[i]);
   markScrollable();
+  setTimeout(markScrollable, 260);
   renderJumpBar();
 }
 function updateDraftBadge(){
@@ -4969,7 +5026,7 @@ function shiftMonth(n){
 }
 /* #30 기록 탭 하나로 쓰기·보기 스위칭 (탭을 한 번 더 누르면 서로 바뀐다) */
 var recordLast='write';
-function recordTabLabel(mode){ return (mode==='read')? '📖 기록 · 보기' : '📝 기록 · 쓰기'; }
+function recordTabLabel(mode){ return (mode==='read')? '📖 보기' : '📝 기록'; }
 function switchTab(name){
   if(name==='memo'){ showKidPage('memo'); return; }
   if(name!=='write' && name!=='read' && name!=='shelf' && name!=='food') name='write';
@@ -5114,6 +5171,93 @@ function compressImage(file, maxDim, quality){
     img.onerror=function(){ URL.revokeObjectURL(url); reject(new Error('사진을 읽을 수 없어요')); };
     img.src=url;
   });
+}
+/* ── #33 올린 사진 90도 회전 — 실제 이미지 바이트까지 돌린다 ──────────────
+   IndexedDB의 blob(또는 URL 그림)을 캔버스로 90° 시계 방향 회전 → 다시 저장 →
+   클라우드 버킷의 같은 경로에 덮어 올린다(x-upsert). URL 참조 그림은 받아진 바이트를
+   버킷으로 옮겨 같은 사진이 다른 기기에서도 돌아간 채로 보이게 한다. */
+function rotateBlob90(blob){
+  return new Promise(function(resolve, reject){
+    if(!blob || !/^image\//.test(blob.type||'image/')){ reject(new Error('이미지가 아니에요')); return; }
+    var url=URL.createObjectURL(blob);
+    var img=new Image();
+    img.onload=function(){
+      try{
+        var w=img.naturalWidth||img.width, h=img.naturalHeight||img.height;
+        if(!w || !h) throw new Error('사진 크기를 읽지 못했어요');
+        var cv=document.createElement('canvas');
+        cv.width=h; cv.height=w;
+        var ctx=cv.getContext('2d');
+        ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,h,w);
+        ctx.translate(h,0); ctx.rotate(Math.PI/2);
+        ctx.drawImage(img,0,0,w,h);
+        var done=function(out){
+          URL.revokeObjectURL(url);
+          if(out) resolve(out);
+          else { try{ resolve(dataURLToBlob(cv.toDataURL('image/jpeg',0.9))); }catch(e){ reject(new Error('회전 실패')); } }
+        };
+        if(cv.toBlob) cv.toBlob(done,'image/jpeg',0.9);
+        else done(null);
+      }catch(err){ URL.revokeObjectURL(url); reject(err); }
+    };
+    img.onerror=function(){ URL.revokeObjectURL(url); reject(new Error('사진을 읽을 수 없어요')); };
+    img.src=url;
+  });
+}
+async function sbPutPhotoBlob(path, blob){
+  var enc=String(path).split('/').map(encodeURIComponent).join('/');
+  var r=await sbApi('/storage/v1/object/diary-photos/'+enc, {
+    method:'POST',
+    headers:{'Content-Type':'image/jpeg','x-upsert':'true','cache-control':'max-age=3600'},
+    body:blob
+  });
+  if(!r.ok) throw new Error('사진을 클라우드에 올리지 못했어요');
+  return true;
+}
+async function rotatePhoto(id, opts){
+  opts=opts||{};
+  if(!id || (!state.photoRefs[id] && !PhotoCache.has(id))){ toast('사진을 찾지 못했어요'); return false; }
+  var rec=PhotoCache.get(id), blob=rec && rec.blob;
+  if(!blob){
+    var u=photoUrl(id);
+    if(!u){ toast('사진을 찾지 못했어요'); return false; }
+    try{
+      var rs=await fetch(u, {mode:'cors', cache:'no-store'});
+      if(!rs.ok) throw new Error('status '+rs.status);
+      var b=await rs.blob();
+      if(!/^image\//.test(b.type||'')) throw new Error('not-image');
+      blob=b;
+    }catch(e){
+      toast('외부 링크로 불러온 그림이라 돌릴 수 없어요', 3000);
+      return false;
+    }
+  }
+  var out;
+  try{ out=await rotateBlob90(blob); }
+  catch(e){ toast('사진을 돌리지 못했어요'); return false; }
+  try{ await PhotoStore.put(id, out); }
+  catch(e){ toast('사진을 저장하지 못했어요 — 저장 공간을 확인해 주세요', 3200); return false; }
+  var ref=state.photoRefs[id]||{};
+  if(CLOUD.session){
+    try{
+      var path=ref.path || (CLOUD.uid+'/'+(opts.folder||'rot')+'/'+id+'.jpg');
+      await sbPutPhotoBlob(path, out);
+      state.photoRefs[id]=Object.assign({}, refThumbFields(ref), {path:path, storage:'supabase'});
+    }catch(e){ console.warn('rotate upload failed', e); }
+  }
+  scheduleSave();
+  return true;
+}
+/* 회전 뒤 그 사진이 보이는 화면만 다시 그린다 */
+function refreshAfterRotate(id){
+  if(activeTab==='write') renderSections();
+  else if(activeTab==='read') renderRead();
+  else if(activeTab==='food') renderFood();
+  else if(activeTab==='shelf') renderShelf();
+  if(kidOpen) renderKid();
+  if($('lightbox') && !$('lightbox').hidden) renderLightbox();
+  if(recipeEditPhoto && recipeEditPhoto===id && sheetEl) drawRecipePhoto();
+  if(memoDraft && sheetEl && sheetEl.querySelector('#memoBodyIn')) drawMemoPhotoStrip();
 }
 async function removePhoto(cid, pid){
   var sec=ensureSec(cid); if(!sec) return;
@@ -7869,6 +8013,7 @@ function memoPhotoStripHTML(){
         +'<span class="ins">글에</span>'
       +'</button>'
       +'<button class="rm" type="button" data-mdphoto="'+esc(pid)+'" aria-label="사진 빼기">✕</button>'
+      +'<button class="rt" type="button" data-mdrot="'+esc(pid)+'" aria-label="사진 90도 회전" title="90도씩 돌리기">↻</button>'
     +'</span>';
   }).join('');
 }
@@ -8054,6 +8199,18 @@ function openMemoEditor(id, opts){
           memoRenumberAfterRemove(i+1);
         }
         drawMemoPhotoStrip(root);
+        return;
+      }
+      var rot=e.target.closest('[data-mdrot]');
+      if(rot){
+        e.preventDefault();
+        var rpid=rot.getAttribute('data-mdrot');
+        if(!rpid || rot.disabled) return;
+        rot.disabled=true;
+        rotatePhoto(rpid, {folder:'memo'}).then(function(ok){
+          rot.disabled=false;
+          if(ok){ drawMemoPhotoStrip(root); toast('사진을 90도 돌렸어요 ↻ · 저장을 눌러 주세요', 2600); }
+        });
         return;
       }
       if(e.target.closest('[data-mdsave]')){
@@ -8276,21 +8433,22 @@ function sortRecipes(list, mode){
 }
 function recipeCardHTML(r){
   var th=recipeThumb(r), host=recipeHost(r.url), href=safeHttpUrl(r.url);
-  var badge=th.own? '📷 사진' : (th.yt? '▶️ 유튜브' : (href? '🔗 링크' : '📝 메모'));
   var n=recipeCookCount(r), last=recipeLastCook(r);
   return '<div class="rc-card" data-rcard="'+esc(r.id)+'">'
-    +'<button class="rc-cv" type="button" data-ropen="'+esc(r.id)+'" aria-label="'+esc(r.title+' 자세히 보기')+'">'
-      +(th.src? '<img src="'+esc(th.src)+'" alt="'+esc(r.title)+'" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">' : '<span class="ph" aria-hidden="true">🍲</span>')
-      +'<span class="k" aria-hidden="true">'+badge+'</span>'
+    +'<div class="rc-cv">'
+      +'<button class="rc-cvim" type="button" data-ropen="'+esc(r.id)+'" aria-label="'+esc(r.title+' 자세히 보기')+'">'
+        +(th.src? '<img src="'+esc(th.src)+'" alt="'+esc(r.title)+'" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">' : '<span class="ph" aria-hidden="true">🍲</span>')
+      +'</button>'
+      +'<span class="k" aria-hidden="true">'+(th.own? '📷 사진' : (th.yt? '▶️ 유튜브' : (href? '🔗 링크' : '📝 메모')))+'</span>'
       +(n? '<span class="k2" aria-hidden="true">🍳 '+n+'회'+(last? ' · '+esc(fmtMD(last)):'')+'</span>':'')
-    +'</button>'
+      +'<button class="rc-plus" type="button" data-rcook="'+esc(r.id)+'" title="오늘 요리했다고 기록" aria-label="'+esc(r.title+' 오늘 요리 +1')+'"'+(n&&last===todayStr()?' style="opacity:.55"':'')+'>🍳 +1</button>'
+    +'</div>'
     +'<div class="rc-row">'
       +'<button class="rc-tb" type="button" data-ropen="'+esc(r.id)+'" aria-label="'+esc(r.title+' 자세히 보기')+'">'
         +'<span class="rc-t">'+esc(r.title)+'</span>'
         +'<span class="rc-fd'+(r.folder?'':' none')+'">'+esc(r.folder||'폴더 없음')+'</span>'
         +(host? '<span class="rc-s">'+esc(host)+'</span>' : (r.ing? '<span class="rc-s">'+esc(String(r.ing).split('\n')[0].slice(0,40))+'</span>':''))
       +'</button>'
-      +'<button class="rc-plus" type="button" data-rcook="'+esc(r.id)+'" title="오늘 요리했다고 기록" aria-label="'+esc(r.title+' 오늘 요리 +1')+'"'+(n&&last===todayStr()?' style="opacity:.55"':'')+'>🍳+1</button>'
       +(href? '<a class="rc-go" href="'+esc(href)+'" target="_blank" rel="noopener noreferrer" data-rlink="1" title="링크 열기" aria-label="'+esc(r.title+' 링크 열기')+'">▶️</a>' : '')
     +'</div>'
   +'</div>';
@@ -8424,6 +8582,8 @@ function drawRecipePhoto(){
     : '<span class="none">아직 사진이 없어요 — 유튜브 링크는 자동 썸네일이 보여요.</span>';
   var delBtn=sheetEl.querySelector('[data-rcphotodel]');
   if(delBtn) delBtn.hidden=!recipeEditPhoto;
+  var rotBtn=sheetEl.querySelector('[data-rcphotrot]');
+  if(rotBtn) rotBtn.hidden=!recipeEditPhoto;
 }
 function openRecipeEditor(id){
   var src=id? recipeById(id) : null;
@@ -8447,6 +8607,7 @@ function openRecipeEditor(id){
         +'<div class="rc-ph"><div class="rc-ph-prev" id="rcPhotoPrev"></div>'
         +'<div class="rc-ph-btns">'
           +'<button class="btn-line teal" type="button" data-rcphoto>📷 대표 사진 올리기</button>'
+          +'<button class="btn-line" type="button" data-rcphotrot hidden>↻ 회전</button>'
           +'<button class="btn-line" type="button" data-rcphotodel hidden>✕ 사진 빼기</button>'
         +'</div></div>'
         +'<div class="hint" style="font-size:10px">인스타·블로그는 자동 썸네일이 안 뜨기도 해요. 내가 찍은 사진·캡처를 올리면 카드에 그 사진이 먼저 보여요.</div>'
@@ -8482,6 +8643,18 @@ function openRecipeEditor(id){
         recipePhotoPick=true;
         $('photoInput').value='';
         $('photoInput').click();
+        return;
+      }
+      if(e.target.closest('[data-rcphotrot]')){
+        e.preventDefault();
+        var rb=e.target.closest('[data-rcphotrot]');
+        var rp=recipeEditPhoto;
+        if(!rp || rb.disabled) return;
+        rb.disabled=true;
+        rotatePhoto(rp, {folder:'recipe'}).then(function(ok){
+          rb.disabled=false;
+          if(ok){ drawRecipePhoto(); toast('대표 사진을 90도 돌렸어요 ↻ · 저장을 눌러 주세요', 2800); }
+        });
         return;
       }
       if(e.target.closest('[data-rcphotodel]')){
@@ -9003,6 +9176,17 @@ function bindEvents(){
       markEdited();
       return;
     }
+    if(a==='rotphoto'){
+      e.preventDefault();
+      var rpid=act.getAttribute('data-pid');
+      if(!rpid || act.disabled) return;
+      act.disabled=true;
+      rotatePhoto(rpid, {folder:'entry'}).then(function(ok){
+        if(ok){ refreshAfterRotate(rpid); toast('사진을 90도 돌렸어요 ↻'); }
+        else if(act) act.disabled=false;
+      });
+      return;
+    }
     if(a==='delphoto'){
       e.preventDefault();
       removePhoto(cid, act.getAttribute('data-pid'));
@@ -9150,6 +9334,17 @@ function bindEvents(){
   $('lbClose').addEventListener('click', closeLightbox);
   $('lbPrev').addEventListener('click', function(){ lbStep(-1); });
   $('lbNext').addEventListener('click', function(){ lbStep(1); });
+  $('lbRot').addEventListener('click', function(e){
+    e.preventDefault();
+    var rid=lbPids[lbIdx];
+    if(!rid || this.disabled) return;
+    var btn=this;
+    btn.disabled=true;
+    rotatePhoto(rid, {}).then(function(ok){
+      btn.disabled=false;
+      if(ok){ renderLightbox(); toast('사진을 90도 돌렸어요 ↻'); }
+    });
+  });
   $('lightbox').addEventListener('click', function(e){
     if(e.target===$('lightbox')) closeLightbox();
   });
