@@ -2356,10 +2356,65 @@ function markPositionFor(cid, sec){
   if(t.trim()) return {start:t.length, end:t.length};
   return null;
 }
+/* 서식 표시([c:] ** __ [[사진N]] …) 한가운데에 끼어들면 글이 깨지므로, 표시 뒤로 밀어 넣는다 */
+var SNAP_TOKENS=[/\[c:#[0-9A-Fa-f]{6}\]/g, /\[\/c\]/g, /\*\*/g, /__/g, /\[b\]/g, /\[\/b\]/g, /\[u\]/g, /\[\/u\]/g, /\[\[\s*사진\s*\d{1,2}\s*\]\]/g];
+function snapOutOfMarks(t, i){
+  t=String(t||'');
+  i=Math.max(0, Math.min(t.length, i|0));
+  for(var k=0;k<SNAP_TOKENS.length;k++){
+    var re=new RegExp(SNAP_TOKENS[k].source,'g'), m;
+    while((m=re.exec(t))!==null){
+      if(i>m.index && i<m.index+m[0].length) return m.index+m[0].length;
+      if(!m[0].length) re.lastIndex++;
+    }
+  }
+  return i;
+}
+function fmtStateAt(t, p){
+  var re=/\[c:(#[0-9A-Fa-f]{6})\]|\[\/c\]|(\*\*)|(__)|(\[b\])|(\[\/b\])|(\[u\])|(\[\/u\])/g, m;
+  var st={b:false, u:false, c:''};
+  while((m=re.exec(t))!==null){
+    if(m.index>=p) break;
+    if(m[1]) st.c=m[1].toLowerCase();
+    else if(m[0]==='[/c]') st.c='';
+    else if(m[0]==='**') st.b=!st.b;
+    else if(m[0]==='__') st.u=!st.u;
+    else if(m[0]==='[b]') st.b=true;
+    else if(m[0]==='[/b]') st.b=false;
+    else if(m[0]==='[u]') st.u=true;
+    else if(m[0]==='[/u]') st.u=false;
+  }
+  return st;
+}
+/* 서식 구간 한가운데에 글자·사진 표시를 넣으면 그 자리에서 서식을 닫고 뒤에서 다시 연다 */
+function fmtBreakInsert(t, s, e, ins){
+  t=String(t||'');
+  ins=String(ins==null? '' : ins);
+  s=snapOutOfMarks(t, Math.max(0, Math.min(t.length, s|0)));
+  e=Math.max(s, Math.min(t.length, (e==null? s : e)|0));
+  /* 서식 구간의 맨 앞이면 그 구간 앞으로 빼서 빈 서식 짝을 만들지 않는다 */
+  for(var g=0; g<4; g++){
+    var s0=fmtStateAt(t, s);
+    if(!s0.c && !s0.b && !s0.u) break;
+    var mOpen=t.slice(Math.max(0, s-16), s).match(/(\[c:#[0-9A-Fa-f]{6}\]|\[b\]|\[u\]|\*\*|__)$/);
+    if(!mOpen) break;
+    s-=mOpen[0].length;
+    e=Math.max(s, e-mOpen[0].length);
+  }
+  var st=fmtStateAt(t, s), reclose='', reopen='';
+  if(st.c) reclose+='[/c]';
+  if(st.u) reclose+='__';
+  if(st.b) reclose+='**';
+  if(st.b) reopen+='**';
+  if(st.u) reopen+='__';
+  if(st.c) reopen+='[c:'+st.c+']';
+  return {text:t.slice(0,s)+reclose+ins+reopen+t.slice(e), offset:s+reclose.length+ins.length};
+}
 function insertPhotoMark(cid, n, pos){
   var sec=ensureSec(cid); if(!sec) return null;
   var token=photoMark(n);
   var t=String(sec.t||'');
+  if(pos){ pos={start:snapOutOfMarks(t,pos.start), end:snapOutOfMarks(t,pos.end)}; }
   /* 같은 사진 표시가 이미 있으면 그 자리에서 빼고 새 위치로 옮긴다 */
   var re=new RegExp(PHOTO_MARK_RE.source,'g'), m;
   while((m=re.exec(t))!==null){
@@ -2374,8 +2429,9 @@ function insertPhotoMark(cid, n, pos){
   }
   var s=pos? Math.max(0, Math.min(t.length, pos.start)) : t.length;
   var e=pos? Math.max(s, Math.min(t.length, pos.end)) : s;
-  sec.t=t.slice(0,s)+token+t.slice(e);
-  var after=s+token.length;
+  var res=fmtBreakInsert(t, s, e, token);
+  sec.t=res.text;
+  var after=res.offset;
   caretMem[caretKey(cid)]={start:after, end:after, at:Date.now()};
   return after;
 }
@@ -2540,6 +2596,8 @@ function richEmit(text, fmt, st, node, off){
 function richEmitPh(el, st){
   var n=parseInt(el.getAttribute('data-n'),10)||0;
   if(!n){ return; }
+  /* 사진 표시가 색·굵게 구간을 가르지 않게, 앞 서식을 닫고 표시를 둔 뒤 다음 글자에서 다시 연다 */
+  st.out+=richFmtDelta(st, RICH_CLOSED);
   var start=st.out.length, tok=photoMark(n);
   if(st.target!=null && st.hit==null && st.target<=start){
     var p=el.parentNode, idx=0;
@@ -2630,6 +2688,15 @@ function richPlaceCaretEnd(el){
 function richSetCaretByOffset(el, offset){
   if(!el) return false;
   var res=richTextFromEl(el, {target:offset});
+  /* 서식 표시 안쪽을 가리키면 가까운 글자 경계로 붙인다 */
+  if((!res.hit || !res.hit.node) && offset!=null){
+    for(var d=1; d<=14 && !(res.hit && res.hit.node); d++){
+      res=richTextFromEl(el, {target:Math.min(offset+d, richEditorText(el).length)});
+    }
+    for(var d2=1; d2<=14 && !(res.hit && res.hit.node); d2++){
+      res=richTextFromEl(el, {target:Math.max(0, offset-d2)});
+    }
+  }
   if(res.hit && res.hit.node){
     var n=res.hit.node, o=res.hit.off;
     if(n.nodeType===3) o=Math.max(0, Math.min(o, n.data.length));
@@ -8593,15 +8660,16 @@ function memoInsertText(txt, root){
   var sel=window.getSelection();
   if(document.activeElement===ed && sel && sel.rangeCount && ed.contains(sel.getRangeAt(0).commonAncestorContainer)) at=richCaretOffset(ed);
   if(at==null && memoDraftSel && memoDraftSel.s!=null) at=memoDraftSel.s;
-  if(at==null) at=richEditorText(ed).length;
-  try{ ed.focus({preventScroll:true}); }catch(_){}
-  richSetCaretByOffset(ed, at);
-  richInsertText(ed, txt);
-  memoDraft.body=richEditorText(ed);
-  var off=richCaretOffset(ed);
-  if(off==null) off=Math.min(at+String(txt||'').length, memoDraft.body.length);
+  if(at==null) at=String(memoDraft.body||'').length;
+  var res=fmtBreakInsert(memoDraft.body, at, at, txt);
+  memoDraft.body=res.text;
+  var off=res.offset;
   memoDraftSel={s:off, e:off};
   if(String(txt||'').indexOf('[[사진')>=0) memoRedrawBody(root, off);
+  else if(ed){
+    try{ ed.focus({preventScroll:true}); }catch(_){}
+    richSetCaretByOffset(ed, off);
+  }
 }
 function memoFmtRowHTML(){
   var dots=FMT_COLORS.map(function(f){
