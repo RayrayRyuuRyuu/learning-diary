@@ -1590,6 +1590,118 @@ body.memo-order #memoBody{padding-bottom:64px}
 
 /* #39 탭 이름 간단하게 */
 #tabRecord .tl{letter-spacing:-.01em}
+
+/* ══ 2026-11-26 (#42~#48) ══ */
+/* 탭 4개(기록 · 책장 · 음식 · 체험) */
+.tabs{grid-template-columns:repeat(4,1fr)}
+
+/* #45 상단: 달력 옆 미니 Today 요약 + 날짜 이동 줄을 아래로 */
+.td-mini{border:1px solid var(--line);border-radius:10px;background:#fff;padding:5px 7px 6px;display:flex;flex-direction:column;gap:2px;overflow:hidden;min-height:156px}
+.tdm-h{display:flex;align-items:baseline;gap:3px;font-size:9.5px;font-weight:800;color:var(--muted);border-bottom:1px dashed var(--line);padding-bottom:3px;margin-bottom:2px;white-space:nowrap;overflow:hidden}
+.tdm-h b{font-size:10px;color:var(--teal-3);font-weight:900}
+.tdm-row{display:flex;align-items:center;gap:4px;font-size:10px;font-weight:800;color:var(--ink-2);line-height:1.4;min-width:0}
+.tdm-row .nmm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tdm-row b{font-size:10px;color:var(--teal-3);white-space:nowrap;font-variant-numeric:tabular-nums}
+.tdm-row .gdd{width:6px;height:6px;border-radius:2px;background:var(--teal-2);flex:0 0 6px}
+.tdm-row.other .gdd{background:#d9a13b}
+.tdm-empty{font-size:10px;color:var(--muted);font-weight:700;line-height:1.5;margin:auto 0;text-align:center;padding:0 4px}
+.tdm-more{font-size:8.5px;color:var(--muted);font-weight:800;text-align:right;margin-top:auto}
+.wt-datebar{display:flex;align-items:center;gap:4px;margin-top:6px}
+.wt-datebar .dnav{width:30px;height:30px;flex:0 0 30px;border-radius:9px;background:#fff;border:1px solid var(--line);font-size:15px;color:var(--ink-2);display:grid;place-items:center;line-height:1}
+.wt-datebar .dnav:active{background:var(--teal-soft)}
+.wt-datebar .datebar-mid{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:3px;overflow:hidden}
+.wt-datebar .datebar-mid b{font-size:14px;font-weight:900;letter-spacing:-.02em;white-space:nowrap}
+.wt-datebar .wd{font-size:10px;color:var(--muted);font-weight:700;white-space:nowrap}
+.wt-datebar .badge{font-size:8.5px;padding:1px 4px;border-radius:5px}
+.wt-datebar .wt-today{flex:0 0 auto;width:52px;height:30px;border-radius:9px}
+.vt-body{margin-top:6px}
+
+/* #44 쓰기 본문을 보기 화면과 같은 글자·줄간격·여백으로 */
+.sec-text{font-size:15px;line-height:1.7;padding:11px 13px 13px;min-height:135px}
+.rich .re-ph{max-width:100%}
+.rich .re-ph img{max-height:none;width:100%;height:auto}
+/* 일반 사진은 보기와 같이 1열 전체 너비 */
+.rich .re-ph:not(.th){display:block;width:100%;margin:8px 0;border-radius:10px}
+.rich .re-ph.th{width:64px;margin:2px 3px 2px 0}
+.rich .re-ph.th img{width:100%}
+.rich .re-ph.th.yt{width:168px}
+.rich .re-ph.th.yt img{height:auto;aspect-ratio:16/9;object-fit:cover}
+/* #42 인라인 사진 칩 자체의 조작 버튼 (컴팩트) */
+.rich .re-ph{position:relative}
+.rich .re-ph .reph-bar{position:absolute;right:2px;bottom:2px;display:flex;gap:2px;line-height:0;z-index:2}
+.rich .re-ph .reph-b{width:17px;height:17px;border-radius:5px;border:0;background:rgba(255,255,255,.94);color:#2b3a37;font-size:9.5px;font-weight:900;display:grid;place-items:center;line-height:1;box-shadow:0 1px 3px rgba(0,0,0,.22);padding:0}
+.rich .re-ph .reph-b:active{background:var(--teal);color:#fff}
+.rich .re-ph .reph-b.rm{color:#b24a4a}
+@media (max-width:360px){
+  .rich .re-ph .reph-b{width:16px;height:16px;font-size:9px}
+  .rich .re-ph.th{width:58px}
+  .rich .re-ph.th.yt{width:150px}
+}
+
+/* #46 음식 상세 사진은 비율 그대로(잘림·여백 없이), 3열 썸네일은 정사각형 */
+.rc-cv{aspect-ratio:1/1}
+.rc-cv.rc-fit{aspect-ratio:auto;display:block;background:#f5f2ea}
+.rc-cv.rc-fit img{position:static;width:100%;height:auto;max-height:56vh;object-fit:contain;background:#f5f2ea}
+/* #47 음식 정렬 버튼 오른쪽 끝 · ▾ 역삼각형 */
+#foodTop .shelf-linerow{justify-content:flex-end;margin-top:0}
+#foodTop .shelf-linerow .wish-folds{flex:1 1 auto}
+#foodTop .shelf-sort{margin-left:auto;display:flex;align-items:center;gap:2px}
+.sort-dec{font-size:10px;font-weight:900;color:var(--ink-2);line-height:1;flex:0 0 auto}
+#foodTop .shelf-sort select,#expSort{padding-left:1px}
+
+/* #48 🧭 체험 탭 */
+.exp-top{padding:8px 9px 9px}
+.exp-head{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.exp-head .shelf-sum{flex:1;min-width:0;display:flex;align-items:baseline;gap:4px;white-space:nowrap;overflow:hidden}
+.exp-head .shelf-sum b{font-size:13px;font-weight:900;letter-spacing:-.03em}
+.exp-head .shelf-sum span{font-size:10px;font-weight:800;color:var(--muted);overflow:hidden;text-overflow:ellipsis}
+.exp-only{height:27px;padding:0 9px;border-radius:8px;font-size:10.5px;font-weight:900;border:1px solid var(--line);background:#fff;color:var(--ink-2);white-space:nowrap;flex:0 0 auto}
+.exp-only.on{background:var(--amber-soft);border-color:#efdcb2;color:#8a5f10}
+.exp-folds{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 5px}
+.exp-folds .lchip{height:24px;padding:0 7px;border-radius:7px;border:1px solid var(--line);background:#fff;font-size:10px;font-weight:800;color:var(--ink-2);white-space:nowrap}
+.exp-folds .lchip.on{background:var(--teal-soft);border-color:var(--teal-soft-2);color:var(--teal-3)}
+.exp-folds .lchip b{font-weight:900;opacity:.55;font-size:9px}
+.exp-sortrow{justify-content:flex-end;margin-top:0}
+.exp-sortrow .shelf-sort{margin-left:auto;display:flex;align-items:center;gap:2px}
+.xg{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;align-items:start}
+.xcard{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-sm);position:relative}
+.xcv{position:relative;display:block;width:100%;aspect-ratio:4/3;background:#efeae1;overflow:hidden;padding:0;border:0}
+.xcv img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.xcv .ph{position:absolute;inset:0;display:grid;place-items:center;font-size:22px;color:#bcb7a6}
+.xcv .k2{position:absolute;left:3px;bottom:3px;background:rgba(22,34,32,.82);color:#fff;font-size:7.5px;font-weight:900;line-height:1;padding:2px 4px;border-radius:4px;max-width:calc(100% - 6px);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.xbadges{position:absolute;top:3px;right:3px;display:flex;gap:3px;z-index:2}
+.xb{width:24px;height:22px;border-radius:6px;border:0;background:rgba(255,255,255,.92);color:#8a8f8c;font-size:11px;line-height:1;display:grid;place-items:center;box-shadow:0 1px 3px rgba(0,0,0,.2);padding:0}
+.xb.on{background:rgba(217,161,59,.96);color:#fff}
+.xb.done.on{background:rgba(13,122,112,.96);color:#fff}
+.xb:active{transform:scale(.92)}
+.xrow{padding:5px 6px 6px;display:flex;flex-direction:column;gap:2px}
+.xt{font-size:11px;font-weight:800;line-height:1.3;letter-spacing:-.02em;color:var(--ink);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:keep-all;text-align:left}
+.xm{font-size:8.5px;font-weight:800;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.xm i{font-style:normal;color:var(--teal-3);font-weight:900}
+.xsum{padding:3px 0 8px;font-size:10px;color:var(--muted);font-weight:700;text-align:center;line-height:1.6}
+.xsum b{display:block;color:var(--ink-2);font-size:12px}
+.x-empty{padding:34px 16px;text-align:center;color:var(--muted);font-size:12.5px;line-height:1.7}
+.x-empty b{display:block;color:var(--ink-2);font-size:14px;margin-bottom:5px}
+/* 상세 시트 */
+.xd-cv{border-radius:10px;overflow:hidden;border:1px solid var(--line);background:#f5f2ea;margin-bottom:8px}
+.xd-cv img{display:block;width:100%;height:auto;max-height:46vh;object-fit:contain}
+.xd-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px}
+.xd-tag{font-size:10px;font-weight:900;color:var(--teal-3);background:var(--teal-soft);border:1px solid var(--teal-soft-2);border-radius:6px;padding:2px 6px}
+.xd-tag.gray{color:var(--muted);background:#f4f1e9;border-color:var(--line)}
+.xd-act{display:flex;gap:5px;margin:0 0 8px;flex-wrap:wrap}
+.xd-act a,.xd-act button{flex:1 1 0;min-width:0;height:34px;border-radius:9px;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:3px;text-decoration:none;white-space:nowrap;border:1px solid var(--line);background:#fff;color:var(--ink-2);padding:0 6px}
+.xd-act a.site{background:var(--teal);border-color:var(--teal);color:#fff}
+.xd-act a.pdf{background:#fff7ec;border-color:#efdcb2;color:#8a5f10}
+.xd-act button.on{background:var(--amber-soft);border-color:#efdcb2;color:#8a5f10}
+.xd-act button.done.on{background:var(--teal-soft);border-color:var(--teal-soft-2);color:var(--teal-3)}
+.xd-pdfs{font-size:10px;color:var(--muted);font-weight:700;margin:-4px 0 8px;line-height:1.6}
+.xd-pdfs a{color:var(--teal-3);text-decoration:underline;text-underline-offset:2px;word-break:break-all}
+@media (max-width:360px){
+  .xg{gap:6px}
+  .xt{font-size:10.5px}
+  .xb{width:22px;height:20px;font-size:10px}
+  .tdm-row{font-size:9.5px}
+}
 </style>
 </head>
 <body>
@@ -1646,6 +1758,7 @@ body.memo-order #memoBody{padding-bottom:64px}
       <button class="tab active" id="tabRecord" data-tab="record" role="tab" aria-selected="true" title="한 번 더 누르면 쓰기 ↔ 보기"><span class="tl tl-long">📝 기록</span><span class="tl tl-short">📝 기록</span></button>
       <button class="tab" id="tabShelf" data-tab="shelf" role="tab" aria-selected="false"><span class="tl tl-long">📚 책장</span><span class="tl tl-short">📚 책장</span></button>
       <button class="tab" id="tabFood" data-tab="food" role="tab" aria-selected="false"><span class="tl tl-long">🍳 음식</span><span class="tl tl-short">🍳 음식</span></button>
+      <button class="tab" id="tabExp" data-tab="exp" role="tab" aria-selected="false"><span class="tl tl-long">🧭 체험</span><span class="tl tl-short">🧭 체험</span></button>
     </div>
   </header>
 
@@ -1724,33 +1837,23 @@ body.memo-order #memoBody{padding-bottom:64px}
       <div class="card wt-top">
         <div class="vt-grid">
           <div class="vt-cal" id="wtCal" aria-label="미니 달력"></div>
-          <div class="wt-right">
-            <div class="wt-date">
-              <button class="dnav" id="prevDay" aria-label="전날">‹</button>
-              <div class="datebar-mid">
-                <b id="writeDate">11/22</b>
-                <span class="wd" id="writeWeekday">(일)</span>
-                <span class="badge" id="draftBadge" hidden>임시저장본</span>
-              </div>
-              <button class="dnav" id="nextDay" aria-label="다음날">›</button>
-            </div>
-            <button class="wt-today" id="btnTodayW" type="button">오늘로</button>
-            <div class="wt-info" id="wtInfo" aria-live="polite"></div>
-          </div>
+          <div class="td-mini" id="wtMini" aria-live="polite"></div>
         </div>
-        <div class="wt-jump" id="jumpBar" aria-label="영역 바로가기"></div>
+        <div class="wt-datebar">
+          <button class="dnav" id="prevDay" aria-label="전날">‹</button>
+          <div class="datebar-mid">
+            <b id="writeDate">11/22</b>
+            <span class="wd" id="writeWeekday">(일)</span>
+            <span class="badge" id="draftBadge" hidden>임시저장본</span>
+          </div>
+          <button class="dnav" id="nextDay" aria-label="다음날">›</button>
+          <button class="wt-today" id="btnTodayW" type="button">오늘로</button>
+        </div>
       </div>
 
       <div id="sections"></div>
 
       <button class="add-cat" id="btnAddCat">＋ 영역 추가 / 편집</button>
-
-      <section class="card analysis" id="todayAnalysis">
-        <h3>Today 결과분석</h3>
-        <div class="sub" id="todaySub">—</div>
-        <div id="todayTable"></div>
-        <div class="stats" id="todayStats"></div>
-      </section>
 
       <section class="card analysis" id="weekAnalysis">
         <h3>Weekly 결과분석</h3>
@@ -1770,7 +1873,18 @@ body.memo-order #memoBody{padding-bottom:64px}
       <div class="card view-tools">
         <div class="vt-grid">
           <div class="vt-cal" id="vtCal" aria-label="미니 달력"></div>
-          <div class="vt-right">
+          <div class="td-mini" id="vtMini" aria-live="polite"></div>
+        </div>
+        <div class="wt-datebar">
+          <button class="dnav" id="vtPrevDay" aria-label="전날">‹</button>
+          <div class="datebar-mid">
+            <b id="readDate">11/22</b>
+            <span class="wd" id="readWeekday">(일)</span>
+          </div>
+          <button class="dnav" id="vtNextDay" aria-label="다음날">›</button>
+          <button class="wt-today" id="btnTodayR" type="button">오늘로</button>
+        </div>
+        <div class="vt-right vt-body">
             <div class="search-box">
               <span class="ic" aria-hidden="true">🔍</span>
               <input id="searchInput" type="search" placeholder="검색 — 학습, 독서, 한자…" autocomplete="off" enterkeyhint="search" aria-label="기록 검색">
@@ -1794,7 +1908,6 @@ body.memo-order #memoBody{padding-bottom:64px}
               <button class="act-btn" data-act="copyall">📋 전체 복사</button>
               <button class="act-btn pdf" data-act="printview">🖨️ PDF 저장</button>
             </div>
-          </div>
         </div>
         <div class="vt-cats">
           <span class="result-count" id="rangeInfo"></span>
@@ -1872,9 +1985,9 @@ body.memo-order #memoBody{padding-bottom:64px}
           <div class="shelf-sum" id="recipeSum"><b>🍳 0개</b><span>레시피를 모아 두면 초보도 바로 따라 해요</span></div>
           <button class="btn-line teal" id="recipeAdd" type="button">＋ 레시피</button>
         </div>
-        <div class="shelf-linerow" id="recipeSortRow" style="margin-top:6px;align-items:flex-start">
+        <div class="shelf-linerow" id="recipeSortRow">
           <div class="wish-folds" id="recipeFolds" hidden style="margin:0"></div>
-          <div class="shelf-sort">
+          <div class="shelf-sort"><span class="sort-dec" aria-hidden="true">▾</span>
             <select id="recipeSort" aria-label="레시피 정렬">
               <option value="new">최신순</option>
               <option value="count">많이 해본 순</option>
@@ -1885,6 +1998,29 @@ body.memo-order #memoBody{padding-bottom:64px}
         </div>
       </div>
       <div id="recipeBody"></div>
+    </section>
+
+    <!-- ══ 🧭 체험 ══ -->
+    <section id="view-exp" hidden>
+      <div class="card exp-top">
+        <div class="exp-head">
+          <div class="shelf-sum" id="expSum"><b>🧭 0곳</b><span>잠수네 체험·캠프 모음</span></div>
+          <button class="mini-btn exp-only" id="expStarOnly" type="button" aria-pressed="false">⭐ 찜만</button>
+        </div>
+        <div class="wish-folds exp-folds" id="expCat" role="group" aria-label="체험 종류"></div>
+        <div class="wish-folds exp-folds" id="expRegion" role="group" aria-label="지역"></div>
+        <div class="shelf-linerow exp-sortrow">
+          <div class="shelf-sort"><span class="sort-dec" aria-hidden="true">▾</span>
+            <select id="expSort" aria-label="체험 정렬">
+              <option value="cat">종류순</option>
+              <option value="name">이름순</option>
+              <option value="region">지역순</option>
+              <option value="star">찜 먼저</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div id="expBody"></div>
     </section>
   </main>
 </div>
@@ -1965,7 +2101,8 @@ function defaultState(){
       shelfGroups:[], shelfHidden:[], shelfOverrides:{}, shelfExtra:{}, templates:{},
       shelfRatings:{}, wishlist:[], wishAt:0, memos:[], memoAt:0, memoPhotos:{},
       recipes:[], recipeAt:0, recipeFolders:[], recipeSort:'new', recipePhotos:{},
-      growthRecords:[], growthAt:0, growthSeed:0 }
+      growthRecords:[], growthAt:0, growthSeed:0,
+      expStar:[], expVisit:{}, expPhotos:{}, expAt:0, expCat:'', expRegion:'', expStarOnly:false, expSort:'cat' }
   };
 }
 
@@ -2174,6 +2311,17 @@ function normalizeState(s){
         order: i
       };
     });
+  }
+  if(s.settings && typeof s.settings==='object'){
+    var st=s.settings;
+    out.settings.expStar=normExpIds(st.expStar);
+    out.settings.expVisit=normExpVisit(st.expVisit);
+    out.settings.expPhotos=normExpPhotos(st.expPhotos);
+    out.settings.expAt=Number(st.expAt)||0;
+    if(typeof st.expCat==='string' && st.expCat) out.settings.expCat=st.expCat.slice(0,20);
+    if(typeof st.expRegion==='string' && st.expRegion) out.settings.expRegion=st.expRegion.slice(0,20);
+    out.settings.expStarOnly=!!st.expStarOnly;
+    if(typeof EXPCAT_SORT==='object' && EXPCAT_SORT[st.expSort]) out.settings.expSort=st.expSort;
   }
   var e={};
   if(s.entries && typeof s.entries==='object'){
@@ -2555,7 +2703,13 @@ function richHTML(text, pids){
       if(pid && PhotoCache.has(pid)){
         var ref=state.photoRefs[pid]||{};
         var cls='re-ph'+(isThumbPhoto(pid)? ' th' : '')+(ref.kind==='youtube'? ' yt' : '');
-        out+='<span class="'+cls+'" contenteditable="false" data-n="'+op.n+'" title="사진 '+op.n+' — 눌러서 크게 보기">'+photoImgHTML(pid,'사진 '+op.n)+'</span>';
+        var canTitle=!!(ref.title || ref.kind==='poster' || ref.kind==='youtube' || ref.kind==='cover' || ref.kind==='book');
+        var chipBar='<span class="reph-bar" contenteditable="false">'
+          +'<button class="reph-b" type="button" data-phact="rot" data-n="'+op.n+'" aria-label="사진 '+op.n+' 90도 회전" title="90도 회전">↻</button>'
+          +'<button class="reph-b rm" type="button" data-phact="del" data-n="'+op.n+'" aria-label="사진 '+op.n+' 삭제" title="사진 삭제">✕</button>'
+          +(canTitle? '<button class="reph-b" type="button" data-phact="title" data-n="'+op.n+'" aria-label="제목 고치기" title="제목 고치기">🏷</button>' : '')
+          +'</span>';
+        out+='<span class="'+cls+'" contenteditable="false" data-n="'+op.n+'" title="사진 '+op.n+'">'+photoImgHTML(pid,'사진 '+op.n)+chipBar+'</span>';
       } else out+=esc(photoMark(op.n));
       continue;
     }
@@ -2894,7 +3048,8 @@ function editVideoTitle(cid, pid){
   if(!pid) return;
   var ref=state.photoRefs[pid]||{};
   var oldT=String(ref.title||'').trim();
-  var v=window.prompt('영상 제목을 넣어 주세요. (본문에도 함께 적혀요)', oldT);
+  var isBook=(ref.kind==='cover' || ref.kind==='book');
+  var v=window.prompt((isBook? '책 제목을 넣어 주세요. (본문에도 함께 적혀요)' : '영상 제목을 넣어 주세요. (본문에도 함께 적혀요)'), oldT);
   if(v==null) return;
   v=String(v).replace(/\s+/g,' ').trim().slice(0,120);
   ref.title=v;
@@ -2916,7 +3071,7 @@ function editVideoTitle(cid, pid){
   }
   markEdited();
   renderSections();
-  toast(v? '영상 제목을 저장했어요' : '영상 제목을 지웠어요');
+  toast(v? (isBook? '책 제목을 저장했어요' : '영상 제목을 저장했어요') : '제목을 지웠어요');
 }
 /* ── 글씨 서식 버튼: 고른 글자(또는 커서)에 실제 색·굵기·밑줄을 바로 적용한다 ── */
 function applyFmt(art, cid, kind, color){
@@ -3164,9 +3319,13 @@ function markIndexes(t){
 function hasPhotoMark(t,n){ return markIndexes(t).indexOf(n)>=0; }
 function photosEditHTML(sec){
   var all=(sec.p||[]).slice();
-  var pids=all.filter(function(id){ return PhotoCache.has(id); });
-  if(!pids.length) return '';
   var txt=String(sec.t||'');
+  /* #42 본문 안에 이미 보이는 사진은 아래 카드를 숨긴다 (글 밖에 남은 사진만 카드로) */
+  var pids=all.filter(function(id){
+    if(!PhotoCache.has(id)) return false;
+    return !hasPhotoMark(txt, all.indexOf(id)+1);
+  });
+  if(!pids.length) return '';
   return pids.map(function(id,i){
     var n=all.indexOf(id)+1;
     var used=hasPhotoMark(txt,n);
@@ -3500,10 +3659,53 @@ function openMonthlyStats(){
 }
 function updateTodayAnalysis(){
   if(!current) return;
-  $('todaySub').textContent = fmtShort(current.date)+' 기준 · 입력하는 즉시 반영돼요';
-  $('todayTable').innerHTML = analysisTableHTML(current.sections);
-  $('todayStats').innerHTML = statsHTML(calcTotals(current.sections));
+  var sub=$('todaySub'); if(sub) sub.textContent = fmtShort(current.date)+' 기준 · 입력하는 즉시 반영돼요';
+  var tbl=$('todayTable'); if(tbl) tbl.innerHTML = analysisTableHTML(current.sections);
+  var st=$('todayStats'); if(st) st.innerHTML = statsHTML(calcTotals(current.sections));
+  renderMiniSummary();
   updateWeekAnalysis();
+}
+/* #45 달력 오른쪽 — 영역별 진행시간만 보는 미니 Today 요약 (비중·% 막대와 3개 총시간 박스 없음) */
+var MINI_LIMIT=7;
+function miniTodayHTML(secs){
+  var rows=[], tot=0;
+  visibleCats().forEach(function(c){
+    var s=secs? secs[c.id] : null;
+    var m=s? Math.max(0, Math.round(Number(s.m)||0)) : 0;
+    if(m>0) rows.push({c:c, m:m});
+  });
+  rows.forEach(function(r){ tot+=r.m; });
+  if(!rows.length){
+    return '<div class="tdm-h">Today</div><div class="tdm-empty">아직 기록이 없어요.<br>영역별 시간을 적으면 여기에 모여요.</div>';
+  }
+  var head='<div class="tdm-h">이 날 <b>'+rows.length+'</b>개 영역 · <b>'+fmtMin(tot)+'</b></div>';
+  var body=rows.slice(0,MINI_LIMIT).map(function(r){
+    return '<div class="tdm-row'+(isEnglish(r.c)?'':' other')+'"><i class="gdd"></i><span class="nmm">'+esc(catBase(r.c))+'</span><b>'+fmtMin(r.m)+'</b></div>';
+  }).join('');
+  var more=rows.length>MINI_LIMIT? '<div class="tdm-more">+'+(rows.length-MINI_LIMIT)+'개 더</div>' : '';
+  return head+body+more;
+}
+function readMiniSections(){
+  if(viewRange==='day') return sectionsOf(selected);
+  var out={};
+  rangeDays().forEach(function(ds){
+    var secs=sectionsOf(ds);
+    Object.keys(secs).forEach(function(k){
+      var m=Math.max(0, Math.round(Number(secs[k]&&secs[k].m)||0));
+      if(!out[k]) out[k]={m:0};
+      out[k].m+=m;
+    });
+  });
+  return out;
+}
+function renderMiniSummary(){
+  var w=$('wtMini'); if(w) w.innerHTML=miniTodayHTML(current? current.sections : {});
+  var v=$('vtMini'); if(v) v.innerHTML=miniTodayHTML(readMiniSections());
+}
+function renderReadDateBar(){
+  var b=$('readDate'), w=$('readWeekday');
+  if(b) b.textContent=fmtMD(selected);
+  if(w) w.textContent='('+DOW[parseYmd(selected).getDay()]+')';
 }
 function updateWeekAnalysis(){
   var sub=$('weekSub'), tbl=$('weekTable');
@@ -3627,7 +3829,7 @@ function renderTextWithPhotos(text, rawIds, used){
     var b='<button class="txt-photo'+(r.kind==='youtube'?' yt':'')+'" type="button" data-act="viewphoto" data-pids="'+esc(pids.join(','))+'" data-idx="'+(li<0?0:li)+'" aria-label="'+esc(photoAlt(pid,n))+' 크게 보기">'+photoImgHTML(pid, photoAlt(pid,n))+'</button>';
     /* #41 옛 기록: 본문에 제목이 없어도 사진 정보에 제목이 있으면 썸네일 밑에 보여 준다 */
     var t=String(r.title||'').trim();
-    if(t && (r.kind==='poster' || r.kind==='youtube') && src.indexOf(t)<0){
+    if(t && (r.kind==='poster' || r.kind==='youtube' || r.kind==='cover' || r.kind==='book') && src.indexOf(t)<0){
       return '<span class="tfig">'+b+'<span class="tcap">'+esc(t)+'</span></span>';
     }
     return b;
@@ -3872,12 +4074,6 @@ function renderDay(){
   } else {
     html+=items.map(function(it){ return readSectionHTML(it.c, it.s); }).join('');
   }
-  if(items.length){
-    html+='<section class="card analysis"><h3>Today 결과분석</h3>'
-      +'<div class="sub">'+fmtShort(date)+' · 저장된 기록 기준</div>'
-      +analysisTableHTML(secs)
-      +'<div class="stats">'+statsHTML(tot)+'</div></section>';
-  }
   var ws=weekStartOf(date), we=addDays(ws,6);
   var weekTotal=0;
   for(var di=0;di<7;di++){ weekTotal+=calcTotals(sectionsOf(addDays(ws,di))).all; }
@@ -4077,6 +4273,8 @@ function renderRead(){
   if(activeTab!=='read') return;
   if(!catFilterValid()) viewCat='';
   renderCumStats();
+  renderMiniSummary();
+  renderReadDateBar();
   var q=searchQuery.trim();
   if(q){ runSearch(); return; }
   $('searchResults').hidden=true;
@@ -5491,6 +5689,20 @@ function mergeBackupIntoState(src, plan){
     if(addedG){ state.settings.growthRecords=normGrowthRecords(curG); growthTouch(); rep.growth=addedG; }
     if(Number(ss.growthSeed)) state.settings.growthSeed=Math.max(Number(state.settings.growthSeed)||0, Number(ss.growthSeed)||0);
   }
+  /* 6-6) 🧭 체험 찜·다녀옴 — 더 최근에 바꾼 쪽을 따르고, 표지 참조는 합친다 */
+  var eb=Number(ss.expAt)||0, el=Number(state.settings.expAt)||0;
+  if(eb && (eb>el || !el)){
+    state.settings.expStar=normExpIds((ss.expStar||[]).concat(state.settings.expStar||[]));
+    var vb=normExpVisit(ss.expVisit), vl=normExpVisit(state.settings.expVisit);
+    Object.keys(vb).forEach(function(k){ if(!vl[k]) vl[k]=vb[k]; });
+    state.settings.expVisit=vl;
+    state.settings.expAt=Math.max(eb, el);
+  }
+  var epB=normExpPhotos(ss.expPhotos);
+  if(Object.keys(epB).length){
+    if(!state.settings.expPhotos) state.settings.expPhotos={};
+    Object.keys(epB).forEach(function(id){ if(!state.settings.expPhotos[id]) state.settings.expPhotos[id]=epB[id]; });
+  }
   return rep;
 }
 async function pushImportedDates(dates){
@@ -5608,7 +5820,7 @@ var recordLast='write';
 function recordTabLabel(mode){ return (mode==='read')? '📖 보기' : '📝 기록'; }
 function switchTab(name){
   if(name==='memo'){ showKidPage('memo'); return; }
-  if(name!=='write' && name!=='read' && name!=='shelf' && name!=='food') name='write';
+  if(name!=='write' && name!=='read' && name!=='shelf' && name!=='food' && name!=='exp') name='write';
   var changed=(name!==activeTab);
   activeTab=name;
   if(name==='write' || name==='read') recordLast=name;
@@ -5624,10 +5836,12 @@ function switchTab(name){
   if($('tabShelf')){ $('tabShelf').classList.toggle('active', name==='shelf'); $('tabShelf').setAttribute('aria-selected', name==='shelf'?'true':'false'); }
   if($('tabMemo')){ $('tabMemo').classList.toggle('active', name==='memo'); $('tabMemo').setAttribute('aria-selected', name==='memo'?'true':'false'); }
   if($('tabFood')){ $('tabFood').classList.toggle('active', name==='food'); $('tabFood').setAttribute('aria-selected', name==='food'?'true':'false'); }
+  if($('tabExp')){ $('tabExp').classList.toggle('active', name==='exp'); $('tabExp').setAttribute('aria-selected', name==='exp'?'true':'false'); }
   if($('view-write')) $('view-write').hidden = name!=='write';
   if($('view-read')) $('view-read').hidden = name!=='read';
   if($('view-shelf')) $('view-shelf').hidden = name!=='shelf';
   if($('view-food')) $('view-food').hidden = name!=='food';
+  if($('view-exp')) $('view-exp').hidden = name!=='exp';
   /* 달력은 쓰기·보기 상단의 초소형 달력 하나로 통일했다 */
   if($('calCard')) $('calCard').style.display='none';
   if(name==='write'){ renderWrite();
@@ -5638,6 +5852,8 @@ function switchTab(name){
     renderMemo();
   } else if(name==='food'){
     renderFood();
+  } else if(name==='exp'){
+    renderExp();
   } else {
     renderShelf();
   }
@@ -5657,6 +5873,7 @@ function renderAll(){
   renderShelf();
   renderMemo();
   renderFood();
+  renderExp();
   renderCumStats();
   applyTip();
 }
@@ -6569,7 +6786,7 @@ async function addThumbToArea(cid, item, btnEl, opts){
   if(!s2.p) s2.p=[];
   s2.p.push(id);
   var caretPos=pos? insertPhotoMark(cid, s2.p.length, pos) : null;
-  var withTitle=!!(title && (thumbKind==='poster' || thumbKind==='youtube'));
+  var withTitle=!!(title && (thumbKind==='poster' || thumbKind==='youtube' || thumbKind==='cover'));
   if(caretPos!=null && withTitle) caretPos=insertVideoCaption(cid, s2.p.length, title, caretPos);
   markEdited();
   closeSheetUI();
@@ -9167,7 +9384,7 @@ function recipeDetailHTML(r){
   return '<div class="grab"></div>'
     +'<div class="sheet-head"><h2>🍳 '+esc(r.title)+'</h2><button class="x" data-close aria-label="닫기">✕</button></div>'
     +'<div class="sheet-block">'
-      +(th.src? '<div class="rc-cv" style="border-radius:10px;margin-bottom:8px'+(th.own? ';aspect-ratio:16/9':'')+'">'+'<img src="'+esc(th.src)+'" alt="'+esc(r.title)+'" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">'+'</div>' : '')
+      +(th.src? '<div class="rc-cv rc-fit" style="border-radius:10px;margin-bottom:8px">'+'<img src="'+esc(th.src)+'" alt="'+esc(r.title)+'" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">'+'</div>' : '')
       +'<div class="rc-head">'
         +'<span class="rc-chip">'+esc(r.folder||'폴더 없음')+'</span>'
         +(recipeHost(r.url)? '<span class="rc-fd" style="font-size:10px">🔗 '+esc(recipeHost(r.url))+'</span>':'')
@@ -9362,6 +9579,343 @@ function saveRecipeDraft(root, id){
   closeSheet(true); renderFood();
   toast(id? '레시피를 고쳤어요' : '🍳 레시피를 저장했어요');
 }
+/* ══════════════════════════ 🧭 체험 (#48) ══════════════════════════
+   잠수네 체험 PDF 62개를 카드로 정리한 목록. 데이터는 exp-data.json 을 탭을 처음 열 때 읽는다. */
+var EXP={items:null, loading:false, fail:false, seeded:false};
+var EXP_CATS=['견학','체험','여행','캠프','봉사'];
+var EXP_REGIONS=['서울','경기','인천','강원','충북','충남','세종','대전','전북','전남','경북','경남','부산','대구','광주','울산','제주'];
+var EXP_C={};   /* 표지 서명 URL 캐시 */
+var EXPCAT_SORT={cat:1,name:1,region:1,star:1};
+
+function normExpIds(v, max){
+  var out=[], seen={};
+  (Array.isArray(v)? v:[]).forEach(function(x){
+    var s=String(x||'').slice(0,20);
+    if(!s || seen[s]) return;
+    seen[s]=1; out.push(s);
+  });
+  return out.slice(0, max||800);
+}
+function normExpVisit(v){
+  var out={};
+  if(v && typeof v==='object' && !Array.isArray(v)){
+    Object.keys(v).forEach(function(k){
+      var d=String(v[k]||'');
+      if(/^\d{4}-\d{2}-\d{2}$/.test(d)) out[String(k).slice(0,20)]=d;
+    });
+  }
+  return out;
+}
+function normExpPhotos(v){
+  var out={};
+  if(v && typeof v==='object' && !Array.isArray(v)){
+    Object.keys(v).forEach(function(k){
+      var r=v[k];
+      if(r && typeof r==='object' && typeof r.path==='string' && r.path) out[String(k).slice(0,20)]={path:r.path.slice(0,200)};
+    });
+  }
+  return out;
+}
+function expStarList(){ return normExpIds(state.settings.expStar); }
+function expVisitMap(){ return normExpVisit(state.settings.expVisit); }
+function expPhotos(){ return normExpPhotos(state.settings.expPhotos); }
+function expIsStar(id){ return expStarList().indexOf(id)>=0; }
+function expIsVisit(id){ return !!expVisitMap()[id]; }
+function expTouch(){ if(state.settings) state.settings.expAt=Date.now(); }
+
+function expLoad(cb){
+  if(EXP.items){ if(cb) cb(); return; }
+  if(EXP.loading) return;
+  EXP.loading=true; EXP.fail=false;
+  var done=function(list){
+    EXP.loading=false;
+    if(Array.isArray(list) && list.length){ EXP.items=list; EXP.fail=false; }
+    else EXP.fail=true;
+    if(cb) cb();
+  };
+  try{
+    fetch('exp-data.json', {cache:'force-cache'}).then(function(r){
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      return r.json();
+    }).then(function(json){
+      var list=(json && (json.items || json)) || null;
+      done(list);
+    }).catch(function(){ done(null); });
+  }catch(e){ done(null); }
+}
+function expById(id){
+  var l=EXP.items||[];
+  for(var i=0;i<l.length;i++){ if(l[i].id===id) return l[i]; }
+  return null;
+}
+function expCoverURL(it){
+  if(!it) return '';
+  var c=EXP_C[it.id];
+  if(c && c.url && Date.now()<c.exp-300000) return c.url;
+  return it.cover || '';
+}
+function expSignCover(id){
+  var ref=expPhotos()[id];
+  if(!ref || !ref.path || !CLOUD.session || EXP_C[id]) return;
+  var c=EXP_C[id]={url:'', exp:Date.now()+120000};
+  var enc=String(ref.path).split('/').map(encodeURIComponent).join('/');
+  sbApi('/storage/v1/object/sign/diary-photos/'+enc,{method:'POST',body:{expiresIn:3600}}).then(function(r){
+    if(r.ok && r.data && r.data.signedURL){
+      EXP_C[id]={url:SB_URL+'/storage/v1'+r.data.signedURL, exp:Date.now()+3300*1000};
+      var im=document.querySelector('[data-eid="'+id+'"] img');
+      if(im) im.src=EXP_C[id].url;
+    } else delete EXP_C[id];
+  }).catch(function(){ delete EXP_C[id]; });
+}
+/* 로그인 상태면 표지 사진을 diary-photos/{uid}/exp/ 에 한 번 올려 둔다 */
+async function expSeedPhotos(){
+  if(!CLOUD.session || !EXP.items || EXP.loading) return;
+  var ph=expPhotos(), todo=[];
+  EXP.items.forEach(function(it){ if(it.cover && !ph[it.id]) todo.push(it); });
+  if(!todo.length) return;
+  var done=0;
+  for(var i=0;i<todo.length;i++){
+    var it=todo[i];
+    try{
+      var r=await fetch(it.cover,{cache:'force-cache'});
+      if(!r.ok) continue;
+      var blob=await r.blob();
+      if(!/^image\//.test(blob.type||'')) continue;
+      var small=await compressImage(new File([blob], it.id+'.jpg', {type:'image/jpeg'}), 480, 0.82);
+      var path=CLOUD.uid+'/exp/'+it.id+'.jpg';
+      var put=await sbPutPhotoBlob(path, small);
+      if(put){
+        if(!state.settings.expPhotos) state.settings.expPhotos={};
+        state.settings.expPhotos[it.id]={path:path};
+        done++;
+      }
+    }catch(e){}
+  }
+  if(done){ expTouch(); scheduleSave(); Cloud.pushProfile(); }
+}
+function expFeeShort(f){
+  var s=String(f||'').replace(/\s+/g,' ').trim();
+  if(!s) return '';
+  if(/무료/.test(s) && s.length<=12) return s;
+  var m=s.match(/(\d[\d,]*)\s*원/);
+  if(m) return (s.indexOf('무료')>=0 && !/\d/.test(s.replace(m[0],'')))? '무료' : m[1]+'원'+(/[｜|]/.test(s)? '~':'');
+  if(s.indexOf('무료')>=0) return '무료';
+  if(s.length<=14) return s;
+  return s.slice(0,13)+'…';
+}
+function expSortList(list, mode){
+  mode=EXPCAT_SORT[mode]? mode : 'cat';
+  var arr=list.slice();
+  if(mode==='name'){
+    arr.sort(function(a,b){ return String(a.t).localeCompare(String(b.t),'ko'); });
+  } else if(mode==='region'){
+    arr.sort(function(a,b){
+      var ia=EXP_REGIONS.indexOf(a.region), ib=EXP_REGIONS.indexOf(b.region);
+      if(ia<0) ia=99; if(ib<0) ib=99;
+      if(ia!==ib) return ia-ib;
+      return String(a.t).localeCompare(String(b.t),'ko');
+    });
+  } else if(mode==='star'){
+    arr.sort(function(a,b){
+      var sa=expIsStar(a.id)? 0:1, sb=expIsStar(b.id)? 0:1;
+      if(sa!==sb) return sa-sb;
+      return String(a.t).localeCompare(String(b.t),'ko');
+    });
+  }
+  return arr;
+}
+function expCardHTML(it){
+  var star=expIsStar(it.id), vis=expIsVisit(it.id);
+  var src=expCoverURL(it);
+  return '<div class="xcard" data-eid="'+esc(it.id)+'">'
+    +'<button class="xcv" type="button" data-eopen="'+esc(it.id)+'" aria-label="'+esc(it.t+' 자세히 보기')+'">'
+      +(src? '<img src="'+esc(src)+'" alt="'+esc(it.t)+'" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;expCoverFail(\''+esc(it.id)+'\',this)">' : '<span class="ph" aria-hidden="true">🧭</span>')
+      +'<span class="k2">'+esc(it.cat)+' · '+esc(it.region)+'</span>'
+    +'</button>'
+    +'<div class="xbadges">'
+      +'<button class="xb'+(star?' on':'')+'" type="button" data-estar="'+esc(it.id)+'" aria-pressed="'+(star?'true':'false')+'" aria-label="'+esc(it.t)+' 찜" title="찜">'+(star?'★':'☆')+'</button>'
+      +'<button class="xb done'+(vis?' on':'')+'" type="button" data-evisit="'+esc(it.id)+'" aria-pressed="'+(vis?'true':'false')+'" aria-label="'+esc(it.t)+' 다녀옴" title="다녀옴">✓</button>'
+    +'</div>'
+    +'<div class="xrow">'
+      +'<button class="xt" type="button" data-eopen="'+esc(it.id)+'">'+esc(it.t)+'</button>'
+      +'<span class="xm">'+(vis? '<i>다녀옴</i> · ':'')+(it.fee? esc(expFeeShort(it.fee)) : esc(it.region))+'</span>'
+    +'</div>'
+  +'</div>';
+}
+function expCoverFail(id, img){
+  var ref=expPhotos()[id];
+  if(ref && ref.path && !img.__signed){ img.__signed=true; expSignCover(id); }
+  else img.remove();
+}
+function renderExp(){
+  var body=$('expBody'); if(!body) return;
+  if(!EXP.items){
+    if(EXP.fail){
+      body.innerHTML='<div class="card x-empty"><b>체험 목록을 불러오지 못했어요</b>인터넷에 연결한 뒤 <button class="mini-btn" id="expRetry" type="button">다시 불러오기</button>를 눌러 주세요.</div>';
+      var rb=$('expRetry');
+      if(rb) rb.addEventListener('click', function(){ EXP.fail=false; renderExp(); });
+      return;
+    }
+    if(!EXP.loading && activeTab==='exp'){
+      body.innerHTML='<div class="card x-empty"><b>체험 목록을 불러오는 중…</b></div>';
+      expLoad(function(){ renderExp(); if(EXP.items) expSeedPhotos(); });
+    }
+    return;
+  }
+  var all=EXP.items;
+  var cat=state.settings.expCat||'', reg=state.settings.expRegion||'', only=!!state.settings.expStarOnly;
+  var sort=state.settings.expSort||'cat';
+  var counts={}, rcounts={}, starN=0;
+  all.forEach(function(it){
+    counts[it.cat]=(counts[it.cat]||0)+1;
+    rcounts[it.region]=(rcounts[it.region]||0)+1;
+    if(expIsStar(it.id)) starN++;
+  });
+  if(cat && !counts[cat]) cat='';
+  if(reg && !rcounts[reg]) reg='';
+  var sum=$('expSum');
+  if(sum) sum.innerHTML='<b>🧭 '+all.length+'곳</b><span>'+(starN? '찜 '+starN+' · ':'')+'잠수네 체험 PDF '+all.reduce(function(n,it){ return n+(it.pdfs? it.pdfs.length:0); },0)+'개를 정리했어요</span>';
+  var stb=$('expStarOnly');
+  if(stb){ stb.classList.toggle('on', only); stb.setAttribute('aria-pressed', only?'true':'false'); }
+  var cEl=$('expCat');
+  if(cEl){
+    var ch='<button class="lchip'+(cat?'':' on')+'" type="button" data-ecat="" aria-pressed="'+(cat?'false':'true')+'">전체 <b>'+all.length+'</b></button>';
+    EXP_CATS.forEach(function(c){
+      if(!counts[c]) return;
+      ch+='<button class="lchip'+(cat===c?' on':'')+'" type="button" data-ecat="'+esc(c)+'" aria-pressed="'+(cat===c?'true':'false')+'">'+esc(c)+' <b>'+counts[c]+'</b></button>';
+    });
+    cEl.innerHTML=ch;
+  }
+  var rEl=$('expRegion');
+  if(rEl){
+    var rh='<button class="lchip'+(reg?'':' on')+'" type="button" data-eregion="" aria-pressed="'+(reg?'false':'true')+'">지역 전체</button>';
+    EXP_REGIONS.forEach(function(r){
+      if(!rcounts[r]) return;
+      rh+='<button class="lchip'+(reg===r?' on':'')+'" type="button" data-eregion="'+esc(r)+'" aria-pressed="'+(reg===r?'true':'false')+'">'+esc(r)+' <b>'+rcounts[r]+'</b></button>';
+    });
+    rEl.innerHTML=rh;
+  }
+  var sel=$('expSort'); if(sel) sel.value=sort;
+  var shown=all.filter(function(it){
+    if(cat && it.cat!==cat) return false;
+    if(reg && it.region!==reg) return false;
+    if(only && !expIsStar(it.id)) return false;
+    return true;
+  });
+  shown=expSortList(shown, sort);
+  if(!shown.length){
+    body.innerHTML='<div class="card x-empty"><b>'+(only? '찜한 체험이 아직 없어요' : '조건에 맞는 체험이 없어요')+'</b>'+(only? '카드 오른쪽 위 ☆를 눌러 찜해 두면 여기에 모여요.' : '다른 종류·지역을 골라 보세요.')+'</div>';
+    return;
+  }
+  body.innerHTML='<div class="xg">'+shown.map(expCardHTML).join('')+'</div>';
+}
+function expToggleStar(id){
+  var list=expStarList(), at=list.indexOf(id);
+  if(at>=0) list.splice(at,1); else list.push(id);
+  state.settings.expStar=list;
+  expTouch(); scheduleSave(); Cloud.pushProfile(); renderExp();
+  return at<0;
+}
+function expToggleVisit(id){
+  var map=expVisitMap(), on=!map[id];
+  if(on) map[id]=todayStr(); else delete map[id];
+  state.settings.expVisit=map;
+  expTouch(); scheduleSave(); Cloud.pushProfile(); renderExp();
+  return on;
+}
+function expSyncBtn(id){
+  Array.prototype.forEach.call(document.querySelectorAll('[data-estar="'+id+'"]'), function(b){
+    var on=expIsStar(id);
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-pressed', on?'true':'false');
+    b.textContent=on? '★':'☆';
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-evisit="'+id+'"]'), function(b){
+    var on=expIsVisit(id);
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-pressed', on?'true':'false');
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-exstar="'+id+'"]'), function(b){
+    var on=expIsStar(id);
+    b.classList.toggle('on', on);
+    b.textContent=on? '★ 찜함':'☆ 찜';
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-exvisit="'+id+'"]'), function(b){
+    var on=expIsVisit(id);
+    b.classList.toggle('on', on);
+    b.textContent=on? '✅ 다녀옴':'✓ 다녀옴';
+  });
+}
+function expSheetHTML(it){
+  var star=expIsStar(it.id), vis=expIsVisit(it.id);
+  var src=expCoverURL(it);
+  var tags='<span class="xd-tag">'+esc(it.cat)+'</span><span class="xd-tag gray">'+esc(it.region)+'</span>';
+  if(it.fee) tags+='<span class="xd-tag gray">'+esc(expFeeShort(it.fee))+'</span>';
+  var pdfs=(it.pdfs||[]);
+  return '<div class="grab"></div>'
+    +'<div class="sheet-head"><h2>🧭 '+esc(it.t)+'</h2><button class="x" data-close aria-label="닫기">✕</button></div>'
+    +'<div class="sheet-block">'
+      +(src? '<div class="xd-cv"><img src="'+esc(src)+'" alt="'+esc(it.t)+'" referrerpolicy="no-referrer" onerror="this.onerror=null;expCoverFail(\''+esc(it.id)+'\',this)"></div>' : '')
+      +'<div class="xd-tags">'+tags+'</div>'
+      +'<div class="xd-act">'
+        +(it.site? '<a class="site" href="'+esc(it.site)+'" target="_blank" rel="noopener noreferrer">▶️ 링크 열기</a>' : '')
+        +(pdfs.length? '<a class="pdf" href="https://drive.google.com/file/d/'+esc(pdfs[0].id)+'/view" target="_blank" rel="noopener noreferrer">📄 원본 PDF</a>' : '')
+      +'</div>'
+      +'<div class="xd-act">'
+        +'<button type="button" class="'+(star?'on':'')+'" data-exstar="'+esc(it.id)+'">'+(star?'★ 찜함':'☆ 찜')+'</button>'
+        +'<button type="button" class="done '+(vis?'on':'')+'" data-exvisit="'+esc(it.id)+'">'+(vis?'✅ 다녀옴':'✓ 다녀옴')+'</button>'
+      +'</div>'
+      +((pdfs.length>1)? '<div class="xd-pdfs">원본 PDF '+pdfs.length+'개: '+pdfs.map(function(p,i){
+          return '<a href="https://drive.google.com/file/d/'+esc(p.id)+'/view" target="_blank" rel="noopener noreferrer">'+(i+1)+'부</a>';
+        }).join(' · ')+'</div>' : '')
+      +'<div class="xd-body">'+memoBodyHTML(it.body||'', {id:'exp-'+it.id, photos:[]})+'</div>'
+    +'</div>';
+}
+function openExpSheet(id){
+  var it=expById(id);
+  if(!it){ toast('체험을 찾지 못했어요'); return; }
+  openSheet(expSheetHTML(it), function(root){
+    root.addEventListener('click', function(e){
+      var st=e.target.closest('[data-exstar]');
+      if(st){ e.preventDefault(); expToggleStar(st.getAttribute('data-exstar')); expSyncBtn(st.getAttribute('data-exstar')); return; }
+      var vs=e.target.closest('[data-exvisit]');
+      if(vs){ e.preventDefault(); expToggleVisit(vs.getAttribute('data-exvisit')); expSyncBtn(vs.getAttribute('data-exvisit')); return; }
+    });
+  }, 'exp-view');
+}
+function bindExp(){
+  var cat=$('expCat');
+  if(cat) cat.addEventListener('click', function(e){
+    var b=e.target.closest('[data-ecat]'); if(!b) return;
+    state.settings.expCat=b.getAttribute('data-ecat')||'';
+    scheduleSave(); renderExp();
+  });
+  var reg=$('expRegion');
+  if(reg) reg.addEventListener('click', function(e){
+    var b=e.target.closest('[data-eregion]'); if(!b) return;
+    state.settings.expRegion=b.getAttribute('data-eregion')||'';
+    scheduleSave(); renderExp();
+  });
+  var only=$('expStarOnly');
+  if(only) only.addEventListener('click', function(){
+    state.settings.expStarOnly=!state.settings.expStarOnly;
+    scheduleSave(); renderExp();
+  });
+  var sel=$('expSort');
+  if(sel) sel.addEventListener('change', function(){
+    state.settings.expSort=sel.value; scheduleSave(); renderExp();
+  });
+  var body=$('expBody');
+  if(body) body.addEventListener('click', function(e){
+    var st=e.target.closest('[data-estar]');
+    if(st){ e.preventDefault(); expToggleStar(st.getAttribute('data-estar')); return; }
+    var vs=e.target.closest('[data-evisit]');
+    if(vs){ e.preventDefault(); expToggleVisit(vs.getAttribute('data-evisit')); return; }
+    var op=e.target.closest('[data-eopen]');
+    if(op){ e.preventDefault(); openExpSheet(op.getAttribute('data-eopen')); return; }
+  });
+}
+
 function bindShelf(){
   var form=$('shelfForm');
   if(form) form.addEventListener('submit', function(e){ e.preventDefault(); });
@@ -9666,6 +10220,8 @@ function bindEvents(){
   if($('tabShelf')) $('tabShelf').addEventListener('click', function(){ switchTab('shelf'); });
   if($('tabMemo')) $('tabMemo').addEventListener('click', function(){ switchTab('memo'); });
   if($('tabFood')) $('tabFood').addEventListener('click', function(){ switchTab('food'); });
+  if($('tabExp')) $('tabExp').addEventListener('click', function(){ switchTab('exp'); });
+  bindExp();
   bindShelf();
 
   /* 🧒 래니😚 — 성장·메모장 페이지 */
@@ -9732,14 +10288,10 @@ function bindEvents(){
   /* 날짜 이동 */
   $('prevDay').addEventListener('click', function(){ selectDate(addDays(selected,-1)); });
   $('nextDay').addEventListener('click', function(){ selectDate(addDays(selected,1)); });
-
-  /* 영역 바로가기 */
-  $('jumpBar').addEventListener('click', function(e){
-    var b=e.target.closest('[data-jump]');
-    if(!b) return;
-    var art=document.querySelector('#sections .sec[data-cat="'+b.getAttribute('data-jump')+'"]');
-    if(art && art.scrollIntoView) art.scrollIntoView({behavior:'smooth', block:'center'});
-  });
+  var vtPrev=$('vtPrevDay'), vtNext=$('vtNextDay'), todayR=$('btnTodayR');
+  if(vtPrev) vtPrev.addEventListener('click', function(){ selectDate(addDays(selected,-1)); });
+  if(vtNext) vtNext.addEventListener('click', function(){ selectDate(addDays(selected,1)); });
+  if(todayR) todayR.addEventListener('click', function(){ selectDate(todayStr()); toast('오늘로 이동했어요'); });
 
   /* 섹션 입력 */
   $('sections').addEventListener('input', function(e){
@@ -9808,6 +10360,29 @@ function bindEvents(){
 
   /* 섹션 클릭 */
   $('sections').addEventListener('click', function(e){
+    /* #42 본문 안 사진 칩의 조작 버튼 (회전·삭제·제목) */
+    var ph=e.target.closest? e.target.closest('[data-phact]') : null;
+    if(ph){
+      e.preventDefault(); e.stopPropagation();
+      var artP=ph.closest('[data-cat]'), cidP=artP? artP.getAttribute('data-cat') : null;
+      var nP=parseInt(ph.getAttribute('data-n'),10)||0;
+      var secP=(current && cidP && current.sections[cidP]) || null;
+      var pidP=(secP && nP)? (secP.p||[])[nP-1] : '';
+      var aP=ph.getAttribute('data-phact');
+      if(!cidP || !pidP) return;
+      if(aP==='rot'){
+        if(ph.disabled) return;
+        ph.disabled=true;
+        rotatePhoto(pidP, {folder:'entry'}).then(function(ok){
+          if(ok){ refreshAfterRotate(pidP); toast('사진을 90도 돌렸어요 ↻'); }
+          else if(ph) ph.disabled=false;
+        });
+        return;
+      }
+      if(aP==='del'){ removePhoto(cidP, pidP); return; }
+      if(aP==='title'){ editVideoTitle(cidP, pidP); return; }
+      return;
+    }
     var act=e.target.closest('[data-act]');
     if(!act) return;
     var art=act.closest('[data-cat]');
@@ -10416,7 +10991,9 @@ async function pushProfileNow(){
     recipeSort:st.recipeSort||'new', recipePhotos:recipePhotoRefs(),
     growthRecords:(st.growthRecords||[]).map(function(g){
       return {id:g.id, date:g.date, h:(g.h==null? null:g.h), w:(g.w==null? null:g.w), bone:g.bone||'', memo:g.memo||'', at:Number(g.at)||0};
-    }), growthAt:Number(st.growthAt)||0, growthSeed:Number(st.growthSeed)||0, growthBirth:gBirthDate()
+    }), growthAt:Number(st.growthAt)||0, growthSeed:Number(st.growthSeed)||0, growthBirth:gBirthDate(),
+    expStar:normExpIds(st.expStar), expVisit:normExpVisit(st.expVisit), expPhotos:normExpPhotos(st.expPhotos),
+    expAt:Number(st.expAt)||0, expCat:st.expCat||'', expRegion:st.expRegion||'', expStarOnly:!!st.expStarOnly, expSort:st.expSort||'cat'
   }, updated_at:new Date().toISOString()};
   var r=await sbApi('/rest/v1/diary_profiles?on_conflict=user_id',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},body:body});
   if(!r.ok) throw new Error(sbErrText(r));
@@ -10532,6 +11109,17 @@ async function mergeCloud(profRow, rows){
     var cRP=normRefMap(cs.recipePhotos);
     Object.keys(cRP).forEach(function(id){ if(!state.photoRefs[id]) state.photoRefs[id]=cRP[id]; });
     /* 📏 성장 기록 — 마지막으로 바꾼 쪽을 따른다 */
+    var cE=Number(cs.expAt)||0, lE=Number(state.settings.expAt)||0;
+    var cStar=normExpIds(cs.expStar), lStar=normExpIds(state.settings.expStar);
+    var cVisit=normExpVisit(cs.expVisit), lVisit=normExpVisit(state.settings.expVisit);
+    if(cE>lE){
+      state.settings.expStar=cStar; state.settings.expVisit=cVisit; state.settings.expAt=cE;
+    } else if(cE<lE || JSON.stringify(lStar)!==JSON.stringify(cStar) || JSON.stringify(lVisit)!==JSON.stringify(cVisit)) needProfilePush=true;
+    var cEP=normExpPhotos(cs.expPhotos);
+    Object.keys(cEP).forEach(function(id){
+      if(!state.settings.expPhotos) state.settings.expPhotos={};
+      if(!state.settings.expPhotos[id]) state.settings.expPhotos[id]=cEP[id];
+    });
     var cg=Number(cs.growthAt)||0, lg=Number(state.settings.growthAt)||0;
     var cgList=normGrowthRecords(cs.growthRecords), lgList=normGrowthRecords(state.settings.growthRecords);
     if(cg>lg || (cg>0 && Number(cs.growthSeed) && growthIsSeedOnly())){
@@ -10770,7 +11358,7 @@ function lockAppForGate(){
     var ct=$('childTitle'); if(ct) ct.innerHTML='나의 학습노트';
     var m=$('mascot'); if(m) m.textContent='✏️';
     document.title='학습 · 성장 다이어리';
-    ['sections','readContent','shelfBody','shelfSum','wishBody','wishFolds','memoBody','memoDetail','memoFolds','memoSum','cumStats','todayTable','todayStats','weekTable','calGrid','jumpBar','viewCatChips','rangeInfo','shSubTabs','vtCal','wtCal','recipeBody','recipeFolds','recipeSum','growthTop','growthCards','growthChart','growthBone','growthList','kidName','kidSub'].forEach(function(id){
+    ['sections','readContent','shelfBody','shelfSum','wishBody','wishFolds','memoBody','memoDetail','memoFolds','memoSum','cumStats','todayTable','todayStats','weekTable','calGrid','jumpBar','viewCatChips','rangeInfo','shSubTabs','vtCal','wtCal','recipeBody','recipeFolds','recipeSum','expBody','expCat','expRegion','expSum','wtMini','vtMini','growthTop','growthCards','growthChart','growthBone','growthList','kidName','kidSub'].forEach(function(id){
       var el=$(id); if(el) el.innerHTML='';
     });
     memoOpenId='';
