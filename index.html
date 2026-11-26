@@ -1847,6 +1847,20 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
 .rich .re-ph .ph-rsz::after{content:'';position:absolute;left:4px;top:4px;width:8px;height:8px;border-right:2px solid #fff;border-bottom:2px solid #fff;border-radius:0 0 1px 0}
 .ph-wbadge{position:fixed;z-index:9999;display:none;padding:3px 7px;border-radius:8px;background:rgba(13,122,112,.94);color:#fff;font-size:11px;font-weight:900;line-height:1.2;pointer-events:none;white-space:nowrap}
 @media (max-width:360px){ .rich .re-ph .ph-rsz{width:18px;height:18px} }
+/* ══ 2026-11-26 (#67) 본문 사진 자르기 ══ */
+.crop-stage{position:relative;display:flex;align-items:center;justify-content:center;height:min(52vh,380px);margin:2px 0 8px;border-radius:14px;background:#1d2422;overflow:hidden;touch-action:none}
+.crop-stage img{max-width:100%;max-height:100%;display:block;user-select:none;-webkit-user-select:none;-webkit-user-drag:none;-webkit-touch-callout:none}
+.crop-box{position:absolute;left:0;top:0;display:none;border:2px solid #fff;box-shadow:0 0 0 9999px rgba(10,18,16,.58);touch-action:none;cursor:move}
+.crop-box.ready{display:block}
+.crop-h{position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid var(--teal);box-shadow:0 1px 4px rgba(0,0,0,.35);touch-action:none}
+.crop-h.nw{left:-10px;top:-10px;cursor:nwse-resize}
+.crop-h.ne{right:-10px;top:-10px;cursor:nesw-resize}
+.crop-h.sw{left:-10px;bottom:-10px;cursor:nesw-resize}
+.crop-h.se{right:-10px;bottom:-10px;cursor:nwse-resize}
+@media (pointer:coarse){ .crop-h{width:24px;height:24px} .crop-h.nw{left:-13px;top:-13px} .crop-h.ne{right:-13px;top:-13px} .crop-h.sw{left:-13px;bottom:-13px} .crop-h.se{right:-13px;bottom:-13px} }
+.crop-actions{display:flex;gap:7px;margin-top:10px}
+.crop-actions .btn-line{flex:0 0 auto;width:auto;padding:0 14px}
+.crop-actions .crop-go{flex:1;width:auto}
 </style>
 </head>
 <body>
@@ -2695,8 +2709,14 @@ function caretPosOf(ed, cid){
   off=Math.max(0, Math.min(String(t).length, off));
   return {start:off, end:off};
 }
+var lastFreeze={};   /* #68 한 번 누름에 pointerdown·touchstart·mousedown 이 겹쳐 들어온다 */
 function freezeCaretFor(cid, art){
   if(!cid) return null;
+  var nowT=Date.now();
+  /* 같은 누름에서 두 번째부터는 포커스가 버튼으로 옮겨 간 뒤라 커서가 맨 앞(0)으로 접힌 값이
+     잡혀, 방금 얼려 둔 자리를 덮어쓴다 — 첫 번째 값만 쓴다 */
+  if(lastFreeze[cid] && nowT-lastFreeze[cid]<700) return posSnap[cid]||null;
+  lastFreeze[cid]=nowT;
   var ed=art? art.querySelector('.sec-text') : null;
   try{ if(ed) noteCaretFrom(ed); }catch(e){}
   var p=caretPosOf(ed, cid);
@@ -2709,6 +2729,7 @@ function markPositionFor(cid, sec){
   var snap=posSnap[cid];
   if(snap && (Date.now()-(Number(snap.at)||0))<10*60*1000){
     delete posSnap[cid];   /* 한 번만 쓴다 */
+    delete lastFreeze[cid];
     var ss=Math.max(0, Math.min(t.length, snap.start));
     var ee=Math.max(ss, Math.min(t.length, snap.end));
     return {start:ss, end:ee};
@@ -2933,6 +2954,7 @@ function richHTML(text, pids){
         var big=!isThumbPhoto(pid);   /* #63 큰 사진만 모서리 크기 조절 */
         var chipBar='<span class="reph-bar" contenteditable="false">'
           +'<button class="reph-b" type="button" data-phact="rot" data-n="'+op.n+'" aria-label="사진 '+op.n+' 90도 회전" title="90도 회전">↻</button>'
+          +(big? '<button class="reph-b" type="button" data-phact="crop" data-n="'+op.n+'" aria-label="사진 '+op.n+' 자르기" title="자르기">✂</button>' : '')
           +'<button class="reph-b rm" type="button" data-phact="del" data-n="'+op.n+'" aria-label="사진 '+op.n+' 삭제" title="사진 삭제">✕</button>'
           +(canTitle? '<button class="reph-b" type="button" data-phact="title" data-n="'+op.n+'" aria-label="제목 고치기" title="제목 고치기">🏷</button>' : '')
           +'</span>';
@@ -2986,7 +3008,10 @@ function richEmitPh(el, st){
     for(var i=0;i<p.childNodes.length;i++){ if(p.childNodes[i]===el){ idx=i; break; } }
     st.hit={node:p, off:idx+1};
   }
-  if(st.c && (st.c.node===el || st.c.node===el.parentNode) && st.caretAt==null) st.caretAt=start+tok.length;
+  /* #68 부모(요소 경계)에서 온 커서를 여기서 맞추면, 사진 아래 빈 줄·요소 경계에 둔 커서까지
+     이 사진 뒤로 끌려간다. 부모 경계 위치는 richWalk가 정확한 off 로 처리하므로 여기서는
+     커서가 이 사진 칩 자체에 있을 때만 잡는다. */
+  if(st.c && st.c.node===el && st.caretAt==null) st.caretAt=start+tok.length;
   st.out+=tok;
 }
 function richWalk(node, fmt, st){
@@ -3015,7 +3040,13 @@ function richWalk(node, fmt, st){
     try{
       var cs=window.getComputedStyle(n);
       if(cs){
-        if((parseInt(cs.fontWeight,10)||0)>=600) f2.b=true;
+        /* 굵기는 상속되는 값이라 계산된 값을 그대로 쓴다 (#65 font-weight:400 으로 벗긴 구간도)
+           굵은 글씨 바로 안의 400 짜리 상자는 보통 글씨로 읽힌다 */
+        var fwTxt=String(cs.fontWeight||'');
+        var fwNum=parseInt(fwTxt,10)||0;
+        if(fwTxt==='bold'||fwTxt==='bolder') f2.b=true;
+        else if(fwTxt==='normal'||fwTxt==='lighter') f2.b=false;
+        else if(fwNum) f2.b=(fwNum>=600);
         if(String(cs.textDecorationLine||cs.textDecoration||'').indexOf('underline')>=0) f2.u=true;
         var col=rgbToHex6(cs.color);
         if(col && col!==st.base) f2.c=col;
@@ -3111,6 +3142,100 @@ function richInsertText(el, txt){
   try{ r.insertNode(frag); }catch(e){ return false; }
   var nr=document.createRange();
   if(last.nodeType===3) nr.setStart(last, last.data.length); else nr.setStartAfter(last);
+  nr.collapse(true);
+  sel.removeAllRanges(); sel.addRange(nr);
+  return true;
+}
+/* ══════════════════ #66 붙여넣기 서식 유지 ══════════════════
+   클립보드의 HTML에서 우리가 쓰는 서식(굵게·밑줄·글자색)만 골라 편집창에 그대로 넣는다.
+   배경색·글꼴·크기·링크 같은 잡동사니는 버리고, 줄·문단 경계는 <br> 하나로 맞춘다. */
+function diaryPasteFrag(html, baseColor){
+  var doc;
+  try{ doc=new DOMParser().parseFromString(String(html||''),'text/html'); }catch(e){ return null; }
+  if(!doc || !doc.body) return null;
+  var frag=document.createDocumentFragment();
+  var wrote=false, lastBr=false;
+  function put(node){
+    frag.appendChild(node);
+    wrote=true;
+    lastBr=(node.nodeType===1 && node.tagName==='BR');
+  }
+  function brk(){ if(!wrote || lastBr) return; put(document.createElement('br')); }
+  function wrapText(text, f){
+    var node=document.createTextNode(text);
+    if(f.c){ var sp=document.createElement('span'); sp.style.color=f.c; sp.appendChild(node); node=sp; }
+    if(f.u){ var uu=document.createElement('u'); uu.appendChild(node); node=uu; }
+    if(f.b){ var bb=document.createElement('b'); bb.appendChild(node); node=bb; }
+    return node;
+  }
+  var PASTE_BLOCK=/^(DIV|P|LI|UL|OL|DL|DT|DD|H[1-6]|TR|TABLE|TBODY|THEAD|TFOOT|BLOCKQUOTE|PRE|SECTION|ARTICLE|HEADER|FOOTER|FIGURE|FIGCAPTION)$/;
+  var PASTE_SKIP=/^(SCRIPT|STYLE|IMG|PICTURE|SOURCE|VIDEO|AUDIO|IFRAME|SVG|CANVAS|OBJECT|EMBED|INPUT|BUTTON|TEXTAREA|SELECT|META|LINK|NOSCRIPT|TEMPLATE)$/;
+  function walk(node, fmt){
+    var kids=node.childNodes||[];
+    for(var i=0;i<kids.length;i++){
+      var n=kids[i];
+      if(n.nodeType===3){
+        var t=String(n.data||'').replace(/\u00a0/g,' ').replace(/\r\n?/g,'\n');
+        if(!t) continue;
+        var f={b:fmt.b, u:fmt.u, c:fmt.c};
+        var segs=t.split('\n');
+        for(var k=0;k<segs.length;k++){
+          if(k>0) brk();
+          if(segs[k]) put(wrapText(segs[k], f));
+        }
+        continue;
+      }
+      if(n.nodeType!==1) continue;
+      var tag=String(n.tagName||'').toUpperCase();
+      var cls=' '+String(n.className||'')+' ';
+      if(tag==='BR'){ brk(); continue; }
+      if(PASTE_SKIP.test(tag)) continue;
+      if(cls.indexOf(' re-ph ')>=0) continue;   /* 사진 칩은 글자만 가져오지 않는다 */
+      if(cls.indexOf(' cb-g ')>=0){ put(wrapText(n.getAttribute('data-v')==='1'? CB_ON : CB_OFF, fmt)); continue; }
+      var f2={b:fmt.b, u:fmt.u, c:fmt.c};
+      if(tag==='B'||tag==='STRONG') f2.b=true;
+      if(tag==='U'||tag==='INS') f2.u=true;
+      var sty=n.style||{};   /* 바깥 문서라 계산된 스타일은 못 읽는다 — tag·인라인 style 만 본다 */
+      var fw=String(sty.fontWeight||'').toLowerCase();
+      if(fw){
+        var fwn=parseInt(fw,10);
+        if(fw==='bold'||fw==='bolder'||(fwn||0)>=600) f2.b=true;
+        else if(fw==='normal'||fw==='lighter'||(fwn||0)>0) f2.b=false;
+      }
+      var deco=String(sty.textDecorationLine||sty.textDecoration||'').toLowerCase();
+      if(deco.indexOf('underline')>=0) f2.u=true;
+      var col=rgbToHex6(sty.color||'') || (tag==='FONT'? rgbToHex6(n.getAttribute('color')||'') : '');
+      /* 기본 글자색·검정은 서식으로 남기지 않는다(외부 페이지 잡동사니 제거) */
+      if(col && col!==baseColor && col!=='#000000') f2.c=col;
+      var isBlock=PASTE_BLOCK.test(tag);
+      if(isBlock) brk();
+      walk(n, f2);
+      if(isBlock) brk();
+    }
+  }
+  walk(doc.body, {b:false, u:false, c:''});
+  /* 끝에 남은 빈 줄은 버린다(붙여넣은 글 뒤에 빈 줄이 생기지 않게) */
+  while(frag.lastChild && frag.lastChild.nodeType===1 && frag.lastChild.tagName==='BR') frag.removeChild(frag.lastChild);
+  return {frag:frag, empty:!wrote};
+}
+/* 커서 자리에 DOM 조각을 넣고 커서를 그 끝에 둔다 */
+function richInsertFrag(ed, frag){
+  if(!ed || !frag) return false;
+  var sel=window.getSelection();
+  if(!sel) return false;
+  if(!sel.rangeCount || !ed.contains(sel.getRangeAt(0).commonAncestorContainer)) richPlaceCaretEnd(ed);
+  if(!sel.rangeCount) return false;
+  var r=sel.getRangeAt(0);
+  try{ r.deleteContents(); }catch(e){}
+  var last=frag.lastChild;
+  try{ r.insertNode(frag); }catch(e){ return false; }
+  if(!last) return true;
+  var nr=document.createRange();
+  try{
+    if(last.nodeType===3) nr.setStart(last, last.data.length);
+    else if(last.parentNode) nr.setStartAfter(last);
+    else return true;
+  }catch(e){ return true; }
   nr.collapse(true);
   sel.removeAllRanges(); sel.addRange(nr);
   return true;
@@ -3586,19 +3711,107 @@ function richUnwrapColor(ed, r){
   return hit>0;
 }
 /* 글씨 서식 적용 — 굵게·밑줄·색 (선택이 있으면 감싸고, 없으면 이어 쓸 글자에 적용) */
+/* #65 굵은지 — 요소 하나만 보고 판단한다(계산된 굵기는 상속되므로 그대로 믿어도 된다) */
+function richIsBoldEl(el, ed){
+  if(!el || el.nodeType!==1 || el===ed) return false;
+  if(el.tagName==='B'||el.tagName==='STRONG') return true;
+  var fw=String((el.style && el.style.fontWeight)||'').toLowerCase();
+  if(fw){
+    var fwn=parseInt(fw,10);
+    if(fw==='bold'||fw==='bolder'||(fwn||0)>=600) return true;
+    if(fw==='normal'||fw==='lighter'||(fwn||0)>0) return false;
+  }
+  try{ return (parseInt(window.getComputedStyle(el).fontWeight,10)||0)>=600; }catch(e){ return false; }
+}
+/* 선택 구간에 굵은 글씨·보통 글씨가 각각 들어 있는지 (사진 칩·체크 상자의 버튼 글씨는 빼고 본다) */
+function richSkipInFmt(n, ed){
+  var el=(n && n.nodeType===3)? n.parentNode : n;
+  while(el && el!==ed){
+    if(el.nodeType===1){
+      if(el.classList && (el.classList.contains('re-ph')||el.classList.contains('cb-g')||el.classList.contains('reph-bar'))) return true;
+      if(el.getAttribute && el.getAttribute('contenteditable')==='false') return true;
+      if(el.tagName==='BUTTON') return true;
+    }
+    el=el.parentNode;
+  }
+  return false;
+}
+function richSelBoldInfo(ed, r){
+  var info={bold:false, plain:false};
+  if(!ed || !r) return info;
+  var tw=document.createTreeWalker(ed, NodeFilter.SHOW_TEXT, null), n;
+  while((n=tw.nextNode())){
+    var t=n.data||'';
+    if(!t) continue;
+    if(richSkipInFmt(n, ed)) continue;
+    try{ if(r.intersectsNode && !r.intersectsNode(n)) continue; }catch(e){ continue; }
+    var s=(n===r.startContainer)? r.startOffset : 0;
+    var e=(n===r.endContainer)? r.endOffset : t.length;
+    if(e<=s) continue;
+    if(!t.slice(s,e).trim()) continue;
+    if(richIsBoldEl(n.parentNode, ed)) info.bold=true; else info.plain=true;
+    if(info.bold && info.plain) return info;
+  }
+  return info;
+}
+/* 선택 구간의 굵기를 통째로 뺀다 — 상속을 끊는 font-weight:400 상자로 감싼다 */
+function richForceUnbold(ed, r){
+  var sel=window.getSelection();
+  if(!sel || !r) return false;
+  var node;
+  try{
+    node=document.createElement('span');
+    node.setAttribute('data-nob','1');
+    node.style.fontWeight='400';
+    node.appendChild(r.extractContents());
+    r.insertNode(node);
+  }catch(e){ return false; }
+  /* 새로 감싼 안쪽에 남은 굵은 표시는 모두 벗긴다 */
+  Array.prototype.forEach.call(node.querySelectorAll('b,strong,[style*=font-weight],[style*=FONT-WEIGHT]'), function(n){
+    if(n.style && n.style.fontWeight) n.style.fontWeight='';
+    if(n.tagName==='B'||n.tagName==='STRONG'){
+      var p=n.parentNode;
+      if(!p) return;
+      while(n.firstChild) p.insertBefore(n.firstChild, n);
+      p.removeChild(n);
+    }
+  });
+  var nr=document.createRange();
+  nr.selectNodeContents(node);
+  sel.removeAllRanges(); sel.addRange(nr);
+  return true;
+}
+/* 벗겨 둔 표시(span[data-nob])를 선택 구간에서 걷어낸다 — 다시 B 를 눌러 굵게 할 수 있게.
+   상자 자체는 남겨 둔다(노드를 지우면 그 안을 가리키던 선택 범위가 풀린다) */
+function richClearNob(ed, r){
+  if(!ed) return;
+  Array.prototype.forEach.call(ed.querySelectorAll('span[data-nob]'), function(el){
+    try{ if(r && r.intersectsNode && !r.intersectsNode(el)) return; }catch(e){}
+    el.style.fontWeight='';
+    if(el.getAttribute('style')==='') el.removeAttribute('style');
+    el.removeAttribute('data-nob');
+  });
+}
 function richApplyFmt(ed, kind, color){
   if(!ed) return false;
   var r=richFocusRange(ed);
   var collapsed=!(r && !r.collapsed);
   if(kind==='b' || kind==='u'){
     var tag=kind==='b'? 'b':'u';
-    if(collapsed){
-      var ok=false;
-      try{ document.execCommand('styleWithCSS', false, false); ok=document.execCommand(kind==='b'? 'bold':'underline', false); }catch(e){}
-      if(!ok) richInsertText(ed, '');
-    } else {
-      richWrapSel(ed, tag);
+    var cmd=kind==='b'? 'bold':'underline';
+    var psel=window.getSelection();
+    var pRange=(psel && psel.rangeCount && !psel.getRangeAt(0).collapsed)? psel.getRangeAt(0) : null;
+    /* #65 복사해 온 <b>/<strong>/font-weight 굵은 글씨가 섞인 구간에서는 B 가 굵기를 '뺀다'.
+       브라우저 기본 명령은 섞인 구간을 도리어 전체 굵게 만들기 때문에 직접 벗긴다. */
+    if(kind==='b' && pRange){
+      var bi=richSelBoldInfo(ed, pRange);
+      if(bi.bold && bi.plain && richForceUnbold(ed, pRange)) return true;
     }
+    if(pRange) richClearNob(ed, pRange);
+    /* 전부 굵으면 벗기고, 아니면 굵게 — 커서만 있을 때도 같은 '켜기/끄기' */
+    var ok=false;
+    try{ document.execCommand('styleWithCSS', false, false); ok=document.execCommand(cmd, false); }catch(e){ ok=false; }
+    if(!ok){ if(collapsed) richInsertText(ed, ''); else richWrapSel(ed, tag); }
     return true;
   }
   if(kind==='c'){
@@ -4026,6 +4239,7 @@ function photosEditHTML(sec){
         +(thumb? rotBtn : '')
         +(used? '<span class="pused">글 속 '+n+(thumb? '':'번 자리에 있음')+'<button class="punmark" type="button" data-act="unmarkphoto" data-n="'+n+'" aria-label="사진 '+n+'을 글에서 빼기" title="글에서 빼기">✕</button></span>' : '')
         +'<button class="pmark" type="button" data-act="markphoto" data-n="'+n+'" aria-label="사진 '+n+'을 글 커서 위치에 넣기">📍 '+(thumb? '넣기':'글 커서 위치에 넣기')+'</button>'
+        +(thumb? '' : '<button class="pmark" type="button" data-act="cropphoto" data-pid="'+id+'" aria-label="사진 '+n+' 자르기" title="필요한 부분만 네모로 잘라내기">✂ 자르기</button>')
         +(titleBtn||'')
       +'</div>'
     +'</div>';
@@ -6758,8 +6972,7 @@ async function rotatePhoto(id, opts){
   return true;
 }
 /* 회전 뒤 그 사진이 보이는 화면만 다시 그린다 */
-function refreshAfterRotate(id){
-  if(activeTab==='write') renderSections();
+function refreshAfterRotate(id){  if(activeTab==='write') renderSections();
   else if(activeTab==='read') renderRead();
   else if(activeTab==='food') renderFood();
   else if(activeTab==='shelf') renderShelf();
@@ -6767,6 +6980,189 @@ function refreshAfterRotate(id){
   if($('lightbox') && !$('lightbox').hidden) renderLightbox();
   if(recipeEditPhoto && recipeEditPhoto===id && sheetEl) drawRecipePhoto();
   if(memoDraft && sheetEl && sheetEl.querySelector('#memoBodyIn')) drawMemoPhotoStrip();
+}
+/* ── #67 본문 사진 자르기(크롭) ──────────────────────────────────
+   큰 사진 칩의 ✂ 버튼(또는 사진 카드의 `✂ 자르기`)을 누르면 네모 영역을 터치·마우스로
+   조절해 잘라 저장한다. 자른 결과는 실제 이미지 바이트로 바뀌고 IndexedDB·클라우드
+   버킷의 같은 경로에 함께 덮어 올라간다(다른 기기·미리보기·보기 화면까지 반영). */
+var cropUI=null;
+function cropImgBlob(blob, sx, sy, sw, sh){
+  return new Promise(function(resolve, reject){
+    if(!blob || !/^image\//.test(blob.type||'')){ reject(new Error('사진이 아니에요')); return; }
+    var url=URL.createObjectURL(blob), img=new Image();
+    img.onload=function(){
+      try{
+        var maxDim=1600, sc=Math.min(1, maxDim/Math.max(sw,sh));
+        var cw=Math.max(1, Math.round(sw*sc)), ch=Math.max(1, Math.round(sh*sc));
+        var cv=document.createElement('canvas'); cv.width=cw; cv.height=ch;
+        var ctx=cv.getContext('2d');
+        ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,cw,ch);
+        try{ ctx.imageSmoothingQuality='high'; }catch(e){}
+        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, cw, ch);
+        var done=function(out){
+          URL.revokeObjectURL(url);
+          if(out) resolve(out);
+          else { try{ resolve(dataURLToBlob(cv.toDataURL('image/jpeg',0.9))); }catch(e){ reject(new Error('자르지 못했어요')); } }
+        };
+        if(cv.toBlob) cv.toBlob(done,'image/jpeg',0.9);
+        else done(null);
+      }catch(err){ URL.revokeObjectURL(url); reject(err); }
+    };
+    img.onerror=function(){ URL.revokeObjectURL(url); reject(new Error('사진을 읽을 수 없어요')); };
+    img.src=url;
+  });
+}
+/* 바뀐 사진 바이트를 이 기기(IndexedDB)와 클라우드 버킷 같은 경로에 함께 저장한다 */
+async function storePhotoBlob(id, blob, folder){
+  try{ await PhotoStore.put(id, blob); }
+  catch(e){ toast('사진을 저장하지 못했어요 — 저장 공간을 확인해 주세요', 3200); return false; }
+  var ref=state.photoRefs[id]||{};
+  if(CLOUD.session){
+    try{
+      var path=ref.path || (CLOUD.uid+'/'+(folder||'edit')+'/'+id+'.jpg');
+      await sbPutPhotoBlob(path, blob);
+      state.photoRefs[id]=Object.assign({}, refThumbFields(ref), {path:path, storage:'supabase'});
+    }catch(e){ console.warn('photo upload failed', e); }
+  }
+  scheduleSave();
+  return true;
+}
+async function openCropSheet(cid, pid){
+  if(!pid) return;
+  var rec=PhotoCache.get(pid), blob=rec && rec.blob;
+  if(!blob){
+    var u=photoUrl(pid);
+    if(!u){ toast('사진을 찾지 못했어요'); return; }
+    try{
+      var rs=await fetch(u, {mode:'cors', cache:'no-store'});
+      if(!rs.ok) throw new Error('status '+rs.status);
+      var fetched=await rs.blob();
+      if(!/^image\//.test(fetched.type||'')) throw new Error('not-image');
+      blob=fetched;
+    }catch(e){ toast('사진을 불러오지 못했어요', 3000); return; }
+  }
+  var src=URL.createObjectURL(blob);
+  var html='<div class="grab"></div>'
+    +'<div class="sheet-head"><h2>✂ 사진 자르기</h2><button class="x" data-close aria-label="닫기">✕</button></div>'
+    +'<div class="crop-stage" id="cropStage"><img id="cropImg" alt="자를 사진" src="'+esc(src)+'" draggable="false">'
+      +'<div class="crop-box" id="cropBox">'
+        +'<i class="crop-h nw" data-h="nw"></i><i class="crop-h ne" data-h="ne"></i><i class="crop-h sw" data-h="sw"></i><i class="crop-h se" data-h="se"></i>'
+      +'</div>'
+    +'</div>'
+    +'<p class="hint">네모 안쪽을 끌면 자를 자리가, 네 모서리 동그라미를 끌면 크기가 바뀌어요.</p>'
+    +'<div class="crop-actions">'
+      +'<button class="btn-line" type="button" data-cropall>전체</button>'
+      +'<button class="btn-line" type="button" data-close>취소</button>'
+      +'<button class="btn-line teal crop-go" type="button" data-cropsave>이만큼 자르기</button>'
+    +'</div>';
+  openSheet(html, function(root){
+    var stage=root.querySelector('#cropStage'), img=root.querySelector('#cropImg'), box=root.querySelector('#cropBox');
+    if(!stage || !img || !box){ try{ URL.revokeObjectURL(src); }catch(e){} return; }
+    var st={pid:pid, cid:cid, blob:blob, url:src, drag:null, busy:false,
+            cx:0.06, cy:0.06, cw:0.88, ch:0.88, natW:0, natH:0};
+    cropUI=st;
+    function imgRect(){
+      var ir=img.getBoundingClientRect(), sr=stage.getBoundingClientRect();
+      return {ox:ir.left-sr.left, oy:ir.top-sr.top, iw:ir.width, ih:ir.height};
+    }
+    function draw(){
+      var r=imgRect();
+      if(!r.iw || !r.ih) return;
+      box.style.left=Math.round(r.ox+st.cx*r.iw)+'px';
+      box.style.top=Math.round(r.oy+st.cy*r.ih)+'px';
+      box.style.width=Math.max(10, Math.round(st.cw*r.iw))+'px';
+      box.style.height=Math.max(10, Math.round(st.ch*r.ih))+'px';
+    }
+    function ready(){
+      st.natW=img.naturalWidth||0; st.natH=img.naturalHeight||0;
+      box.classList.add('ready');
+      draw();
+    }
+    if(img.complete && img.naturalWidth) ready();
+    else {
+      img.addEventListener('load', ready);
+      img.addEventListener('error', function(){ toast('사진을 보여 주지 못했어요', 3000); });
+    }
+    function onResize(){ if(!document.body.contains(box)){ window.removeEventListener('resize', onResize); return; } draw(); }
+    window.addEventListener('resize', onResize);
+    function ptNorm(e){
+      var r=imgRect();
+      return {x:(e.clientX-r.ox)/Math.max(1,r.iw), y:(e.clientY-r.oy)/Math.max(1,r.ih), r:r};
+    }
+    stage.addEventListener('pointerdown', function(e){
+      if(st.busy || !st.natW) return;
+      var h=e.target.closest? e.target.closest('[data-h]') : null;
+      var inBox=!!(e.target===box || (box.contains && box.contains(e.target)));
+      if(!h && !inBox) return;
+      e.preventDefault();
+      st.drag={mode:h? h.getAttribute('data-h') : 'move', x:e.clientX, y:e.clientY,
+               cx:st.cx, cy:st.cy, cw:st.cw, ch:st.ch};
+      try{ stage.setPointerCapture(e.pointerId); }catch(_){}
+    });
+    stage.addEventListener('pointermove', function(e){
+      var d=st.drag; if(!d) return;
+      e.preventDefault();
+      var p=ptNorm(e), r=p.r;
+      var dx=(e.clientX-d.x)/Math.max(1,r.iw), dy=(e.clientY-d.y)/Math.max(1,r.ih);
+      var MIN=0.08;
+      if(d.mode==='move'){
+        st.cx=Math.max(0, Math.min(1-d.cw, d.cx+dx));
+        st.cy=Math.max(0, Math.min(1-d.ch, d.cy+dy));
+      }else{
+        var l=d.cx, t=d.cy, rt=d.cx+d.cw, bb=d.cy+d.ch;
+        if(d.mode.indexOf('w')>=0) l=Math.max(0, Math.min(rt-MIN, d.cx+dx));
+        if(d.mode.indexOf('e')>=0) rt=Math.min(1, Math.max(l+MIN, d.cx+d.cw+dx));
+        if(d.mode.indexOf('n')>=0) t=Math.max(0, Math.min(bb-MIN, d.cy+dy));
+        if(d.mode.indexOf('s')>=0) bb=Math.min(1, Math.max(t+MIN, d.cy+d.ch+dy));
+        st.cx=l; st.cy=t; st.cw=rt-l; st.ch=bb-t;
+      }
+      draw();
+    });
+    function endDrag(e){
+      if(!st.drag) return;
+      st.drag=null;
+      try{ stage.releasePointerCapture(e.pointerId); }catch(_){}
+    }
+    stage.addEventListener('pointerup', endDrag);
+    stage.addEventListener('pointercancel', function(){ st.drag=null; });
+    root.addEventListener('click', function(e){
+      if(e.target.closest('[data-cropall]')){ st.cx=0; st.cy=0; st.cw=1; st.ch=1; draw(); return; }
+      var sv=e.target.closest('[data-cropsave]');
+      if(!sv) return;
+      e.preventDefault();
+      doCrop(sv);
+    });
+    async function doCrop(btn){
+      if(st.busy) return;
+      st.busy=true;
+      var old=btn.textContent;
+      btn.textContent='자르는 중…';
+      btn.disabled=true;
+      try{
+        var nw=st.natW||img.naturalWidth, nh=st.natH||img.naturalHeight;
+        if(!nw || !nh) throw new Error('사진을 아직 읽지 못했어요');
+        var sx=Math.round(st.cx*nw), sy=Math.round(st.cy*nh);
+        var sw=Math.max(1, Math.round(st.cw*nw)), sh=Math.max(1, Math.round(st.ch*nh));
+        sx=Math.max(0, Math.min(nw-sw, sx));
+        sy=Math.max(0, Math.min(nh-sh, sy));
+        sw=Math.min(sw, nw-sx); sh=Math.min(sh, nh-sy);
+        if(sw<16 || sh<16) throw new Error('자를 자리가 너무 작아요 — 네모를 조금 넓혀 주세요');
+        var out=await cropImgBlob(st.blob, sx, sy, sw, sh);
+        if(!await storePhotoBlob(st.pid, out, 'crop')) throw new Error('사진을 저장하지 못했어요');
+        var pidDone=st.pid;
+        try{ URL.revokeObjectURL(st.url); }catch(e){}
+        cropUI=null;
+        closeSheetUI();
+        refreshAfterRotate(pidDone);
+        toast('사진을 잘랐어요 ✂');
+      }catch(err){
+        st.busy=false;
+        btn.textContent=old;
+        btn.disabled=false;
+        toast(err && err.message? err.message : '사진을 자르지 못했어요', 3200);
+      }
+    }
+  }, 'crop');
 }
 async function removePhoto(cid, pid){
   var sec=ensureSec(cid); if(!sec) return;
@@ -9766,6 +10162,13 @@ function openMemoEditor(id, opts){
         e.preventDefault();
         if(imgs.length){ noteSel(); handleMemoPhotoFiles(imgs); return; }
         var txt=cd? String(cd.getData('text/plain')||'') : '';
+        var html=cd? String(cd.getData('text/html')||'') : '';
+        if(html && /<(b|strong|u|ins|span|font|p|div|li|h[1-6]|br)\b/i.test(html)){
+          var mbase='';
+          try{ mbase=rgbToHex6(window.getComputedStyle(bodyEd).color)||''; }catch(_){}
+          var mmade=diaryPasteFrag(html, mbase);
+          if(mmade && !mmade.empty && richInsertFrag(bodyEd, mmade.frag)){ memoAfterEdit(bodyEd); return; }
+        }
         if(txt) richInsertText(bodyEd, txt);
         memoAfterEdit(bodyEd);
       });
@@ -11110,7 +11513,15 @@ function bindEvents(){
     var imgs=clipboardImages(cd);
     if(imgs.length){ e.preventDefault(); pastePhotosToSection(ed, imgs); return; }
     var txt=cd? String(cd.getData('text/plain')||'') : '';
+    var html=cd? String(cd.getData('text/html')||'') : '';
     e.preventDefault();
+    /* #66 HTML 클립보드면 굵게·밑줄·글자색만 골라 그대로 넣는다(배경·글꼴은 버림) */
+    if(html && /<(b|strong|u|ins|span|font|p|div|li|h[1-6]|br)\b/i.test(html)){
+      var base='';
+      try{ base=rgbToHex6(window.getComputedStyle(ed).color)||''; }catch(_){}
+      var made=diaryPasteFrag(html, base);
+      if(made && !made.empty && richInsertFrag(ed, made.frag)){ syncSectionText(ed); return; }
+    }
     if(txt) richInsertText(ed, txt);
     syncSectionText(ed);
   });
@@ -11169,6 +11580,7 @@ function bindEvents(){
         return;
       }
       if(aP==='del'){ removePhoto(cidP, pidP); return; }
+      if(aP==='crop'){ openCropSheet(cidP, pidP); return; }
       if(aP==='title'){ editVideoTitle(cidP, pidP); return; }
       return;
     }
@@ -11184,6 +11596,7 @@ function bindEvents(){
       $('photoInput').click();
       return;
     }
+    if(a==='cropphoto'){ e.preventDefault(); openCropSheet(cid, act.getAttribute('data-pid')); return; }
     if(a==='book'){
       e.preventDefault();
       openCoverSearch(cid, {});
