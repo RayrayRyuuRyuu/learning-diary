@@ -410,8 +410,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-nume
 .stat:nth-child(3) .v{color:#7a5613}
 
 /* ── Action bar ─────────────────────────── */
-.actionbar{
-  position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(520px,100%);
+.actionbar{  position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(520px,100%);
   display:flex;gap:8px;padding:9px 13px calc(9px + var(--safe-b));z-index:26;
   background:linear-gradient(180deg,rgba(251,248,243,.82),rgba(251,248,243,.98) 45%);
   backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
@@ -430,6 +429,8 @@ table.tbl{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-nume
 .btn.soft{flex:1;color:var(--teal);background:var(--teal-soft);border:1px solid var(--teal-soft-2)}
 .btn.ghost{flex:.85;color:var(--ink-2);background:#fff;border:1px solid var(--line)}
 .btn.sm{height:38px;font-size:13px;border-radius:11px}
+/* #51 저장 확인은 알림 팝업 대신 버튼 색으로 살짝 */
+.btn.primary.saved{background:linear-gradient(160deg,#3fb9a9,#1d8b81);box-shadow:0 8px 18px -10px rgba(11,106,99,.6)}
 
 /* ── Read view ──────────────────────────── */
 .read-head{padding:9px 10px;display:flex;flex-direction:column;gap:6px}
@@ -1075,6 +1076,9 @@ body.kb-open .actionbar{bottom:var(--kb,0px)}
   .photo-thumbs{display:flex !important;flex-wrap:wrap !important;gap:2mm !important;margin-top:2mm !important}
   .photo-thumbs button{width:16mm !important;border-radius:1mm !important}
   .photo-thumbs button img{width:100% !important;max-height:none !important;margin:0 !important}
+  /* #50 인쇄에서도 체크박스 모양 그대로 */
+  .cb-g{border-color:#5b6b67 !important;background:#fff !important}
+  .cb-g[data-v="1"]{background:#0d7a70 !important;border-color:#0d7a70 !important}
 
   /* 분석 표 */
   .analysis{
@@ -1637,6 +1641,13 @@ body.memo-order #memoBody{padding-bottom:64px}
   .rich .re-ph.th{width:58px}
   .rich .re-ph.th.yt{width:150px}
 }
+/* #50 체크리스트 — 저장 글자의 ☐/☑ 를 편집창·보기·인쇄 모두 같은 네모 상자로 그린다 */
+.cb-g{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;width:16px;height:16px;min-width:16px;margin:0 4px 0 0;vertical-align:-3px;border:1.6px solid #96ada7;border-radius:4.5px;background:#fff;color:#fff;font-size:11px;font-weight:900;line-height:1;user-select:none;-webkit-user-select:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.cb-g::after{content:''}
+.cb-g[data-v="1"]{background:var(--teal);border-color:var(--teal)}
+.cb-g[data-v="1"]::after{content:'✓'}
+.cbx{vertical-align:-3px}
+@media (max-width:360px){ .cb-g{width:15px;height:15px;min-width:15px;font-size:10px} }
 
 /* #46 음식 상세 사진은 비율 그대로(잘림·여백 없이), 3열 썸네일은 정사각형 */
 .rc-cv{aspect-ratio:1/1}
@@ -2120,6 +2131,26 @@ var rangeFrom = '', rangeTo = '';
 /* ────────────────────────────── storage ────────────────────────────── */
 var DB_NAME='raeni-diary', DB_VER=1;
 var LS_STATE='raeniDiaryStateV1', LS_PHOTOS='raeniDiaryPhotosV1';
+/* #54 새로고침해도 보던 탭·쓰기/보기·날짜를 그대로 되살린다 */
+var LS_UI='ldyUiStateV1';
+function uiPersistRead(){
+  try{ var o=JSON.parse(localStorage.getItem(LS_UI)||'null'); return (o && typeof o==='object')? o : null; }catch(e){ return null; }
+}
+function uiPersistNow(){
+  if(!appRendered) return;    /* 로그인 게이트 화면에서는 저장하지 않는다 */
+  try{
+    localStorage.setItem(LS_UI, JSON.stringify({ tab:activeTab, date:selected, mode:recordLast, at:Date.now() }));
+  }catch(e){}
+}
+/* 12시간 안에 보던 화면만 되살린다 (그 뒤에는 오늘·기록부터) */
+function uiRestore(){
+  var o=uiPersistRead();
+  if(!o) return null;
+  if(Date.now()-(Number(o.at)||0) > 12*60*60*1000) return null;
+  if(!/^(write|read|shelf|food|exp)$/.test(String(o.tab||''))) return null;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(String(o.date||''))) return null;
+  return o;
+}
 var PhotoCache = new Map();     /* id -> {url, blob} */
 var idb = null;
 
@@ -2478,12 +2509,19 @@ function markEdited(){
 
 /* ────────────────────────────── 사진 위치 마커 ────────────────────────────── */
 var caretMem={};
+var posSnap={};   /* 사진·표지 버튼을 누른 순간의 커서를 잡아 둔다 (#53) */
+var caretTrackTimer=0;
+var delFocus={};   /* #52 삭제 버튼을 누르기 직전에 편집창에 커서가 있었는지 */
 function caretKey(cid){ return (current? current.date : '')+'|'+cid; }
 function noteCaretFrom(el){
   if(!el || !current) return;
   var art=el.closest? el.closest('[data-cat]') : null;
   if(!art) return;
   if(!(el.isContentEditable || (el.classList && el.classList.contains('sec-text')))) return;
+  if(el.__composing) return;
+  /* 편집창이 초점을 잃으면 브라우저가 선택을 앞으로 접는 경우가 있어, 그 값은 저장하지 않는다 */
+  var ae=document.activeElement;
+  if(!(ae && (ae===el || (el.contains && el.contains(ae))))) return;
   var off=richCaretOffset(el);
   if(off==null) return;
   caretMem[caretKey(art.getAttribute('data-cat'))]={start:off, end:off, at:Date.now()};
@@ -2492,9 +2530,27 @@ function caretFor(cid){
   var c=caretMem[caretKey(cid)];
   return (c && typeof c.start==='number')? c : null;
 }
+/* 사진·표지·포스터·유튜브 버튼을 누르는 순간의 커서를 얼려 둔다 — 모달·파일 선택기 동안에도 그대로 남는다 */
+function freezeCaretFor(cid, art){
+  if(!cid) return null;
+  try{
+    var ed=art? art.querySelector('.sec-text') : null;
+    if(ed) noteCaretFrom(ed);
+  }catch(e){}
+  var c=caretFor(cid);
+  if(c) posSnap[cid]={start:c.start, end:c.end, at:Date.now()};
+  return posSnap[cid]||null;
+}
 /* 사진을 넣을 자리: 마지막 글 커서 → 없으면 글 맨 끝 → 글도 없으면 null(글 아래에 그대로) */
 function markPositionFor(cid, sec){
   var t=String((sec && sec.t)||'');
+  var snap=posSnap[cid];
+  if(snap && (Date.now()-(Number(snap.at)||0))<10*60*1000){
+    delete posSnap[cid];   /* 한 번만 쓴다 */
+    var ss=Math.max(0, Math.min(t.length, snap.start));
+    var ee=Math.max(ss, Math.min(t.length, snap.end));
+    return {start:ss, end:ee};
+  }
   var c=caretFor(cid);
   if(c){
     var s=Math.max(0, Math.min(t.length, c.start));
@@ -2591,6 +2647,11 @@ function focusEditorCaret(cid, pos, photoN){
   if(photoN!=null){
     var chip=ed.querySelector('.re-ph[data-n="'+photoN+'"]');
     if(chip && chip.parentNode){
+      /* 칩이 글 맨 끝이면 커서 자리용 <br> 을 붙인다 — 없으면 이어 쓴 글이 사진 앞으로 들어간다 */
+      var nxs=chip.nextSibling;
+      if(!nxs || (nxs.nodeType===3 && !nxs.data) || (nxs.nodeType===1 && nxs.classList && nxs.classList.contains('re-ph'))){
+        try{ chip.parentNode.insertBefore(document.createElement('br'), chip.nextSibling); }catch(e){}
+      }
       var sel=window.getSelection(), nr=document.createRange();
       nr.setStartAfter(chip); nr.collapse(true);
       sel.removeAllRanges(); sel.addRange(nr);
@@ -2717,7 +2778,7 @@ function richHTML(text, pids){
     if(op.u) h='<u>'+h+'</u>';
     if(op.b) h='<b>'+h+'</b>';
     if(op.c) h='<span style="color:'+op.c+'">'+h+'</span>';
-    out+=h;
+    out+=cbFmtHTML(h);
   }
   /* 글 끝이 줄바꿈이면 커서가 설 filler <br>을 하나 더 둔다 */
   if(lastKind==='br' || /\n$/.test(String(text==null? '' : text))) out+='<br>';
@@ -2782,6 +2843,7 @@ function richWalk(node, fmt, st){
     var tag=n.tagName;
     if(tag==='BR'){ richBreak(st); continue; }
     if(n.classList && n.classList.contains('re-ph')){ richEmitPh(n, st); continue; }
+    if(n.classList && n.classList.contains('cb-g')){ richEmitCb(n, st); continue; }
     var f2={b:fmt.b, u:fmt.u, c:fmt.c};
     try{
       var cs=window.getComputedStyle(n);
@@ -2886,7 +2948,104 @@ function richInsertText(el, txt){
   sel.removeAllRanges(); sel.addRange(nr);
   return true;
 }
-/* 사진 코드가 실수로 지워지지 않게 — 앞뒤에서 지우기 누르면 사진을 건너뛰어 커서만 옮긴다 */
+/* ══════════════════ #50 체크리스트 (☐ / ☑) ══════════════════
+   저장 글자에는 ☐(U+2610)·☑(U+2611) 글자 하나가 그대로 들어간다(기존 기록·백업과 그대로 호환).
+   편집창에서는 네모 상자(.cb-g)로 보이고, 누르면 체크가 바뀐다. 보기·인쇄도 같은 모양으로 그린다. */
+var CB_OFF='\u2610', CB_ON='\u2611';
+var CB_LINE_RE=/^(\s*)(?:[-*•·]\s*)?\[\s*([xX✓✔]?)\s*\]\s$/;
+function cbChipHTML(v){
+  return '<span class="cb-g" contenteditable="false" data-v="'+(v?1:0)+'" role="checkbox" aria-checked="'+(v?'true':'false')+'" aria-label="체크박스'+(v?' (체크됨)':'')+'"></span>';
+}
+function cbReadHTML(v){
+  return '<span class="cb-g cbx" data-v="'+(v?1:0)+'" role="checkbox" aria-checked="'+(v?'true':'false')+'"></span>';
+}
+function cbFmtHTML(html){
+  if(html.indexOf(CB_OFF)<0 && html.indexOf(CB_ON)<0) return html;
+  return html.split(CB_OFF).join(cbChipHTML(0)).split(CB_ON).join(cbChipHTML(1));
+}
+function cbRenderHTML(html){
+  if(html.indexOf(CB_OFF)<0 && html.indexOf(CB_ON)<0) return html;
+  return html.split(CB_OFF).join(cbReadHTML(0)).split(CB_ON).join(cbReadHTML(1));
+}
+/* 보기 화면의 체크 상자에 날짜·영역·번호를 붙여 누를 수 있게 만든다 */
+function cbIndexHTML(html, ds, cid){
+  if(!html || html.indexOf('cb-g')<0) return html;
+  var k=0;
+  return html.replace(/<span class="cb-g cbx" data-v="([01])"[^>]*><\/span>/g, function(all, v){
+    k++;
+    return '<span class="cb-g cbx" data-v="'+v+'" role="checkbox" tabindex="0" aria-checked="'+(v==='1'?'true':'false')+'"'
+      +' data-act="togcb" aria-label="체크박스" data-cbdate="'+ds+'" data-cbcid="'+esc(cid)+'" data-cbn="'+k+'"></span>';
+  });
+}
+/* 보기 화면에서 체크 상자를 눌렀을 때 — 그 날 기록의 같은 번호 체크를 바꾸고 바로 저장한다 */
+function toggleEntryCheckbox(ds, cid, n, el){
+  var ent=state.entries[ds];
+  var sec=ent && ent.sections? ent.sections[cid] : null;
+  if(!sec || !n || !sec.t) return;
+  var t=String(sec.t), out='', cnt=0, hit=false;
+  for(var i=0;i<t.length;i++){
+    var ch=t.charAt(i);
+    if(ch===CB_OFF || ch===CB_ON){
+      cnt++;
+      if(cnt===n){ out+=(ch===CB_OFF? CB_ON : CB_OFF); hit=true; continue; }
+    }
+    out+=ch;
+  }
+  if(!hit) return;
+  sec.t=out;
+  ent.savedAt=Date.now();
+  if(el && el.setAttribute){
+    var on=(el.getAttribute('data-v')==='1');
+    el.setAttribute('data-v', on? '0':'1');
+    el.setAttribute('aria-checked', on? 'false':'true');
+  }
+  /* 쓰기 화면의 편집본·임시저장본도 같은 글자로 맞춰 둔다 */
+  if(current && current.date===ds && current.sections[cid]) current.sections[cid].t=out;
+  if(state.drafts[ds] && state.drafts[ds].sections && state.drafts[ds].sections[cid]) state.drafts[ds].sections[cid].t=out;
+  saveNow();
+  Cloud.pushEntry(ds);
+}
+/* 편집창의 체크 상자 → 저장 글자(☐/☑). 사진 칩처럼 커서 위치도 살린다 */
+function richEmitCb(el, st){
+  var ch=(el.getAttribute('data-v')==='1')? CB_ON : CB_OFF;
+  st.out+=richFmtDelta(st, RICH_CLOSED);
+  var start=st.out.length, len=ch.length;
+  var p=el.parentNode, idx=0;
+  for(var i=0;i<p.childNodes.length;i++){ if(p.childNodes[i]===el){ idx=i; break; } }
+  if(st.target!=null && st.hit==null){
+    if(st.target<=start) st.hit={node:p, off:idx};
+    else if(st.target===start+len) st.hit={node:p, off:idx+1};
+  }
+  if(st.c && st.c.node===el && st.caretAt==null) st.caretAt=start+len;
+  st.out+=ch;
+}
+/* '-[]' 또는 '- []' 쓰고 스페이스를 누르면 ☐ 로 바꿔 준다 */
+function checklistConvert(ed, pids){
+  if(!ed || !ed.isConnected || ed.__composing) return false;
+  var off=richCaretOffset(ed);
+  if(off==null) return false;
+  var t=richEditorText(ed);
+  var ls=t.lastIndexOf('\n', off-1)+1;
+  var m=t.slice(ls, off).match(CB_LINE_RE);
+  if(!m) return false;
+  var head=m[1]+(m[2]? CB_ON : CB_OFF)+' ';
+  ed.innerHTML=richHTML(t.slice(0, ls)+head+t.slice(off), pids||[]);
+  ed.classList.remove('is-empty');
+  try{ ed.focus({preventScroll:true}); }catch(e){}
+  richSetCaretByOffset(ed, Math.min(ls+head.length, richEditorText(ed).length));
+  autoGrow(ed);
+  return true;
+}
+/* 체크 상자를 눌러 체크/해제 */
+function checklistToggleChip(chip, ed, onChange){
+  if(!chip) return false;
+  var on=(chip.getAttribute('data-v')==='1');
+  chip.setAttribute('data-v', on? '0':'1');
+  chip.setAttribute('aria-checked', on? 'false':'true');
+  if(onChange) onChange(ed);
+  return true;
+}
+/* 편집창 안의 체크 상자·사진 코드가 실수로 지워지지 않게 — 앞뒤에서 지우기 누르면 커서만 옮긴다 */
 function richChipGuard(e, el){
   if(e.key!=='Backspace' && e.key!=='Delete') return false;
   var sel=window.getSelection();
@@ -2904,6 +3063,19 @@ function richChipGuard(e, el){
   } else if(node.nodeType===3){
     if(e.key==='Backspace' && off===0){ cand=prevNode(node); before=true; }
     else if(e.key==='Delete' && off===node.data.length){ cand=nextNode(node); before=false; }
+  }
+  if(cand && cand.nodeType===1 && cand.classList && cand.classList.contains('cb-g')){
+    /* 체크 상자 지우기 — 상자와 뒤따르는 한 칸만 사라지고 커서는 그 자리에 머문다 */
+    e.preventDefault();
+    var pc=cand.parentNode, nx=cand.nextSibling;
+    if(nx && nx.nodeType===3 && nx.data && /^[ \u00A0]/.test(nx.data)) nx.data=nx.data.slice(1);
+    var back=cand.previousSibling;
+    pc.removeChild(cand);
+    var nr2=document.createRange();
+    if(back) nr2.setStartAfter(back); else nr2.setStart(pc, 0);
+    nr2.collapse(true);
+    sel.removeAllRanges(); sel.addRange(nr2);
+    return true;
   }
   if(!isChip(cand)) return false;
   e.preventDefault();
@@ -3022,7 +3194,10 @@ function richEditorKey(e, ed, mode){
     if(mode==='memo') memoAfterEdit(ed); else syncSectionText(ed);
     return;
   }
-  if(richChipGuard(e, ed)) return;
+  if(richChipGuard(e, ed)){
+    if(mode==='memo'){ try{ memoAfterEdit(ed); }catch(_){} } else syncSectionText(ed);
+    return;
+  }
 }
 /* 사진 표시를 본문에서 뺀다 (사진 카드의 사진 자체는 그대로) */
 function removePhotoMarkText(cid, n){
@@ -3031,6 +3206,13 @@ function removePhotoMarkText(cid, n){
   var tok=photoMark(n), t=String(sec.t||'');
   var i=t.indexOf(tok);
   if(i<0){ toast('글 속에 사진 '+n+' 표시가 없어요'); return; }
+  var artR=null;
+  Array.prototype.forEach.call(document.querySelectorAll('#sections .sec'), function(a){
+    if(!artR && a.getAttribute('data-cat')===cid) artR=a;
+  });
+  var edR=artR? artR.querySelector('.sec-text') : null;
+  var hadFocus=!!(edR && (delFocus[cid] || document.activeElement===edR));
+  delete delFocus[cid];
   var cut=i+tok.length;
   var pid=(sec.p||[])[n-1], ref=pid? (state.photoRefs[pid]||{}) : {};
   var ttl=String(ref.title||'').trim();
@@ -3041,6 +3223,10 @@ function removePhotoMarkText(cid, n){
   sec.t=(t.slice(0,i)+t.slice(cut)).replace(/\n{3,}/g,'\n\n');
   markEdited();
   renderSections();
+  if(hadFocus){
+    var lim=String(sec.t||'').length;
+    focusEditorCaret(cid, Math.min(i, lim));
+  }
   toast('사진 '+n+' 표시를 글에서 뺐어요 · 사진은 아래 카드에 그대로 있어요', 2600);
 }
 /* 영상 포스터·유튜브의 제목 저장·수정 (#41) */
@@ -3823,6 +4009,14 @@ function renderTextWithPhotos(text, rawIds, used){
     if(!m[0].length) re.lastIndex++;
   }
   if(last<src.length) tokens.push({x:'t', v:src.slice(last)});
+  /* #49 사진은 자기 줄(블록)로 그려지므로 표시 앞뒤의 줄바꿈 한 개는 그리지 않는다 — 빈 줄이 생기는 문제 */
+  for(var ti=0; ti<tokens.length; ti++){
+    if(tokens[ti].x!=='p') continue;
+    var pv=tokens[ti-1];
+    if(pv && pv.x==='t' && pv.v.slice(-1)==='\n') pv.v=pv.v.slice(0,-1);
+    var nv=tokens[ti+1];
+    if(nv && nv.x==='t' && nv.v.charAt(0)==='\n') nv.v=nv.v.slice(1);
+  }
   function btn(pid,n){
     var li=pids.indexOf(pid);
     var r=state.photoRefs[pid]||{};
@@ -3843,7 +4037,7 @@ function renderTextWithPhotos(text, rawIds, used){
   tokens.forEach(function(tk){
     if(tk.x==='t'){
       if(!tk.v.trim()){ if(!group) out+=' '; return; }
-      flush(); out+=linkify(jTagBreak(tk.v));
+      flush(); out+=cbRenderHTML(linkify(jTagBreak(tk.v)));
       return;
     }
     if(isThumbPhoto(tk.id)){
@@ -3856,7 +4050,7 @@ function renderTextWithPhotos(text, rawIds, used){
   flush();
   return out;
 }
-function readSectionHTML(c, s){
+function readSectionHTML(c, s, ds){
   var m=Math.max(0, Math.round(Number(s.m)||0));
   var raw=(s.p||[]).slice();
   var pids=raw.filter(function(id){ return PhotoCache.has(id); });
@@ -3887,13 +4081,13 @@ function readSectionHTML(c, s){
   var tm = c.timer
     ? '<span class="tm'+(m?'':' none')+'">'+(m? fmtMin(m) : '시간 없음')+'</span>'
     : '<span class="tm none">메모</span>';
+  if(ds) body=cbIndexHTML(body, ds, c.id);
   return '<section class="read-sec'+(pids.length?' has-photos':'')+'"><div class="rh">'
     +'<div class="nm">'+secNameHTML(c)+(isPrivate(c)?'<span class="private-tag">비공개</span>':'')+'</div>'
     +tm
     +'</div><div class="body">'+body+'</div></section>';
 }
-function dayHeadHTML(ds, sub){
-  return '<button class="rv-day-head" data-act="openday" data-date="'+ds+'" aria-label="'+fmtFull(ds)+' 하루 보기">'
+function dayHeadHTML(ds, sub){  return '<button class="rv-day-head" data-act="openday" data-date="'+ds+'" aria-label="'+fmtFull(ds)+' 하루 보기">'
     +'<span class="rv-day-date">'+fmtFull(ds)+'</span>'
     +'<span class="rv-day-sub">'+(sub.all? '소계: '+fmtMin(sub.all) : '메모')+'</span>'
     +'<span class="rv-day-chev" aria-hidden="true">›</span>'
@@ -4072,7 +4266,7 @@ function renderDay(){
   if(!items.length){
     html+='<div class="card empty"><span class="em">🌱</span><b>이 날은 기록이 아직 없어요</b>배우고 느낀 걸 영역별로 남겨 보세요.<button class="btn soft sm" data-act="gowrite" style="flex:none;padding:0 16px">✏️ 이 날 기록 쓰기</button></div>';
   } else {
-    html+=items.map(function(it){ return readSectionHTML(it.c, it.s); }).join('');
+    html+=items.map(function(it){ return readSectionHTML(it.c, it.s, date); }).join('');
   }
   var ws=weekStartOf(date), we=addDays(ws,6);
   var weekTotal=0;
@@ -4106,7 +4300,7 @@ function renderRangeView(){
       var secs=sectionsOf(d.ds);
       var sub=daySubtotal(d.ds, d.cats);
       return '<section class="rv-day">'+dayHeadHTML(d.ds, sub)
-        +d.cats.map(function(c){ return readSectionHTML(c, secs[c.id]); }).join('')
+        +d.cats.map(function(c){ return readSectionHTML(c, secs[c.id], d.ds); }).join('')
       +'</section>';
     }).join('');
     html+='<section class="card analysis"><h3>기간 결과분석</h3>'
@@ -5807,6 +6001,7 @@ function selectDate(ds){
   updateDraftBadge();
   if(activeTab==='read') renderRead();
   if(changed) histPushNav();
+  uiPersistNow();
 }
 function shiftMonth(n){
   var m=viewM+n, y=viewY;
@@ -5818,13 +6013,7 @@ function shiftMonth(n){
 /* #30 기록 탭 하나로 쓰기·보기 스위칭 (탭을 한 번 더 누르면 서로 바뀐다) */
 var recordLast='write';
 function recordTabLabel(mode){ return (mode==='read')? '📖 보기' : '📝 기록'; }
-function switchTab(name){
-  if(name==='memo'){ showKidPage('memo'); return; }
-  if(name!=='write' && name!=='read' && name!=='shelf' && name!=='food' && name!=='exp') name='write';
-  var changed=(name!==activeTab);
-  activeTab=name;
-  if(name==='write' || name==='read') recordLast=name;
-  if(changed) memoOpenId='';   /* 탭을 옮기면 메모장은 목록부터 */
+function syncTabUI(name){
   var rt=$('tabRecord');
   if(rt){
     var isRec=(name==='write'||name==='read');
@@ -5844,6 +6033,15 @@ function switchTab(name){
   if($('view-exp')) $('view-exp').hidden = name!=='exp';
   /* 달력은 쓰기·보기 상단의 초소형 달력 하나로 통일했다 */
   if($('calCard')) $('calCard').style.display='none';
+}
+function switchTab(name){
+  if(name==='memo'){ showKidPage('memo'); return; }
+  if(name!=='write' && name!=='read' && name!=='shelf' && name!=='food' && name!=='exp') name='write';
+  var changed=(name!==activeTab);
+  activeTab=name;
+  if(name==='write' || name==='read') recordLast=name;
+  if(changed) memoOpenId='';   /* 탭을 옮기면 메모장은 목록부터 */
+  syncTabUI(name);
   if(name==='write'){ renderWrite();
     var bar=document.querySelector('.actionbar'); if(bar) bar.style.display='flex';
   } else if(name==='read'){
@@ -5859,9 +6057,11 @@ function switchTab(name){
   }
   window.scrollTo(0,0);
   if(changed) histPushNav();
+  uiPersistNow();
 }
 function renderAll(){
   renderHeader();
+  syncTabUI(activeTab);
   renderCalendar();
   loadEditor(selected);
   renderWrite();
@@ -5904,7 +6104,20 @@ async function doSave(){
   await saveNow();
   renderAll();
   Cloud.pushEntry(saveDate);
-  toast('저장 완료 · '+n+'개 영역'+(tot.all? ' · '+fmtMin(tot.all):''));
+  flashSaved();   /* #51 검은 알림 팝업 대신 버튼에 짧게 표시 */
+}
+/* #51 저장은 알림 팝업 없이 버튼에만 잠깐 표시한다 */
+function flashSaved(){
+  var b=$('btnSave');
+  if(!b) return;
+  if(b.__ft) clearTimeout(b.__ft);
+  if(!b.__label) b.__label=b.innerHTML;
+  b.innerHTML='✓ 저장됨';
+  b.classList.add('saved');
+  b.__ft=setTimeout(function(){
+    b.innerHTML=b.__label;
+    b.classList.remove('saved');
+  }, 1400);
 }
 async function doDraft(){
   if(!current) return;
@@ -6058,7 +6271,19 @@ function refreshAfterRotate(id){
 }
 async function removePhoto(cid, pid){
   var sec=ensureSec(cid); if(!sec) return;
+  /* #52 지운 자리에 커서를 그대로 둔다 (맨 앞으로 튀지 않게) */
+  var artR=null, edR=null, hadFocus=false, keepOff=null;
+  Array.prototype.forEach.call(document.querySelectorAll('#sections .sec'), function(a){
+    if(!artR && a.getAttribute('data-cat')===cid) artR=a;
+  });
+  edR=artR? artR.querySelector('.sec-text') : null;
+  hadFocus=!!(edR && (delFocus[cid] || document.activeElement===edR));
+  delete delFocus[cid];
   var i=sec.p.indexOf(pid);
+  if(hadFocus && sec.t && i>=0){
+    var atMark=String(sec.t).indexOf(photoMark(i+1));
+    if(atMark>=0) keepOff=atMark;
+  }
   if(i>=0){
     sec.p.splice(i,1);
     /* 지운 사진의 표시를 본문에서 빼고, 뒤 번호는 하나씩 당긴다 */
@@ -6081,6 +6306,11 @@ async function removePhoto(cid, pid){
   }
   markEdited();
   renderSections();
+  if(hadFocus){
+    var secNow=(current && current.sections)? current.sections[cid] : null;
+    var lim=secNow? String(secNow.t||'').length : 0;
+    focusEditorCaret(cid, keepOff==null? lim : Math.min(keepOff, lim));
+  }
   try{ await PhotoStore.del(pid); }catch(e){}
   Cloud.deletePhoto(pid);
   toast('사진을 지웠어요');
@@ -6093,7 +6323,6 @@ async function handlePhotoFiles(files){
   var sec=ensureSec(cid); if(!sec) return;
   var pos=markPositionFor(cid, sec);
   var added=0, failed=0, caretPos=null, lastPhotoN=null;
-  toast('사진 '+files.length+'장을 가볍게 압축하는 중…', 6000);
   for(var i=0;i<files.length;i++){
     try{
       var blob=await compressImage(files[i]);
@@ -6113,7 +6342,7 @@ async function handlePhotoFiles(files){
     markEdited();
     renderSections();
     if(caretPos!=null) focusEditorCaret(cid, caretPos, lastPhotoN);
-    toast(added+'장 추가했어요'+(failed? ' · '+failed+'장 실패':'')+(caretPos!=null? ' · 글 커서 자리에 넣었어요':''));
+    if(failed) toast('사진 '+failed+'장은 넣지 못했어요. 다른 사진으로 해보세요');
   } else {
     toast('사진을 넣지 못했어요. 다른 사진으로 해보세요');
   }
@@ -6756,7 +6985,6 @@ async function addThumbToArea(cid, item, btnEl, opts){
   var cover=item.cover || '', base=item.base || '';
   if(!cover){ toast('이 항목은 그림이 없어요. 다른 걸 골라 주세요'); return; }
   if(btnEl){ btnEl.classList.add('busy'); btnEl.disabled=true; }
-  toast('그림을 가져오는 중…', 5000);
   var pos=markPositionFor(cid, sec);
   var id='b'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
   /* 표지·포스터·유튜브는 작은 썸네일로 보이도록 표시를 남긴다 (직접 올린 사진은 크게) */
@@ -6797,7 +7025,6 @@ async function addThumbToArea(cid, item, btnEl, opts){
     var saved=shelfBump(item, date);
     if(saved){ scheduleSave(); Cloud.pushProfile(); }
   }
-  toast('‘'+title+'’ '+(item.yt? '유튜브 썸네일' : (item.type==='movie'?'포스터':'표지'))+'를 붙였어요');
 }
 function addBookCover(cid, item, btnEl, opts){ return addThumbToArea(cid, item, btnEl, opts); }
 
@@ -8328,7 +8555,6 @@ function wishCvToggle(root, btn){
       var box=root.querySelector('#wCoverPrevBox');
       var img=root.querySelector('#wCoverPrev');
       if(img){ img.src=pick.cover; if(box) box.hidden=false; }
-      toast('표지를 넣었어요 · 저장을 눌러 주세요');
     }, ty==='video'? 'movie':'book');
   }
 }
@@ -8624,7 +8850,8 @@ function memoToggleBlocks(src){
 }
 function memoPlainHTML(s){
   /* #40 메모 본문도 색·굵게·밑줄 표시를 실제 서식으로 보여 준다 */
-  return s? '<div class="memo-p">'+linkify(s)+'</div>' : '';
+  /* #50 체크리스트도 같은 네모 상자로 */
+  return s? '<div class="memo-p">'+cbRenderHTML(linkify(s))+'</div>' : '';
 }
 /* ── 메모 본문 문법 (2026-11-24 개편) ──
    ① `> 제목` 한 줄이 접었다 펴는 토글의 제목, 그 아래 앞을 2칸 들인 줄들이 토글 내용
@@ -8995,6 +9222,11 @@ function openMemoEditor(id, opts){
       });
       bodyEd.addEventListener('focus', noteSel);
       bodyEd.addEventListener('keydown', function(e){ richEditorKey(e, bodyEd, 'memo'); });
+      /* #50 '-[]' 쓰고 스페이스 → 체크 상자 */
+      bodyEd.addEventListener('input', function(){
+        if(bodyEd.__composing) return;
+        if(checklistConvert(bodyEd, (memoDraft&&memoDraft.photos)||[])) noteSel();
+      });
       bodyEd.addEventListener('paste', function(e){
         var cd=e.clipboardData||window.clipboardData;
         var txt=cd? String(cd.getData('text/plain')||'') : '';
@@ -9013,6 +9245,13 @@ function openMemoEditor(id, opts){
       ti.addEventListener('input', function(){ if(memoDraft) memoDraft.title=ti.value; });
     }
     root.addEventListener('click', function(e){
+      /* #50 메모 체크 상자 누르기 */
+      var mcb=e.target.closest('.me-body .cb-g');
+      if(mcb){
+        e.preventDefault();
+        if(bodyEd) checklistToggleChip(mcb, bodyEd, function(){ noteSel(); });
+        return;
+      }
       if(e.target.closest('#memoFoldBtn')){
         e.preventDefault();
         var row=root.querySelector('#meFoldRow');
@@ -9133,11 +9372,9 @@ function saveMemoDraft(root){
   memoTouch(); memoDraft=null;
   scheduleSave(); Cloud.pushProfile();
   closeSheet(true); renderMemo();
-  toast('메모를 저장했어요');
 }
 async function handleMemoPhotoFiles(files){
   if(!memoDraft || !files || !files.length) return;
-  toast('사진 '+files.length+'장을 가볍게 압축하는 중…', 5000);
   var added=0, failed=0, marks=[];
   for(var i=0;i<files.length;i++){
     try{
@@ -9154,7 +9391,7 @@ async function handleMemoPhotoFiles(files){
     memoInsertText('\n'+marks.map(function(n){ return '[[사진'+n+']]'; }).join('\n')+'\n');
   }
   drawMemoPhotoStrip();
-  toast(added? added+'장 붙였어요 · 저장을 눌러 주세요' : '사진을 넣지 못했어요', 2600);
+  if(!added) toast('사진을 넣지 못했어요. 다른 사진으로 해보세요', 2600);
 }
 async function syncMemoPhotos(){
   if(!CLOUD.session) return;
@@ -9438,7 +9675,6 @@ async function handleRecipePhoto(files){
   recipePhotoPick=false;
   if(!sheetEl || !files || !files.length) return;
   try{
-    toast('사진을 가볍게 압축하는 중…', 4000);
     var blob=await compressImage(files[0], 1400, 0.84);
     var id='rph'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
     await PhotoStore.put(id, blob);
@@ -9446,7 +9682,6 @@ async function handleRecipePhoto(files){
     recipeEditPhoto=id;
     drawRecipePhoto();
     if(old && old!==id && !recipePhotoUsedElsewhere(old)){ try{ await PhotoStore.del(old); }catch(e){} }
-    toast('대표 사진을 넣었어요 · 저장을 눌러 주세요', 2600);
   }catch(err){
     console.warn('recipe photo fail', err);
     toast('사진을 넣지 못했어요. 다른 사진으로 해보세요');
@@ -10300,6 +10535,8 @@ function bindEvents(){
     if(!art || !current) return;
     var cid=art.getAttribute('data-cat');
     if(t.classList && t.classList.contains('sec-text')){
+      var secCb=ensureSec(cid);
+      if(secCb) checklistConvert(t, secCb.p);
       syncSectionText(t);
       return;
     }
@@ -10360,6 +10597,14 @@ function bindEvents(){
 
   /* 섹션 클릭 */
   $('sections').addEventListener('click', function(e){
+    /* #50 체크 상자를 눌러 체크/해제 */
+    var cbx=e.target.closest? e.target.closest('.sec-text .cb-g') : null;
+    if(cbx){
+      e.preventDefault(); e.stopPropagation();
+      var edCb=cbx.closest('.sec-text');
+      if(edCb) checklistToggleChip(cbx, edCb, function(ed){ syncSectionText(ed); });
+      return;
+    }
     /* #42 본문 안 사진 칩의 조작 버튼 (회전·삭제·제목) */
     var ph=e.target.closest? e.target.closest('[data-phact]') : null;
     if(ph){
@@ -10468,7 +10713,6 @@ function bindEvents(){
       markEdited();
       renderSections();
       if(pafter!=null) focusEditorCaret(cid, pafter, pn);
-      toast(ppos? '사진 '+pn+'을 글 커서 자리에 넣었어요' : '사진 '+pn+'을 글 맨 끝에 넣었어요');
       return;
     }
     if(a==='unmarkphoto'){
@@ -10500,6 +10744,37 @@ function bindEvents(){
   /* 글 커서 위치 기억 — 사진·표지를 커서 자리에 넣기 위해 */
   ['keyup','mouseup','select','focusin','click','input'].forEach(function(ev){
     $('sections').addEventListener(ev, function(e){ noteCaretFrom(e.target); }, true);
+  });
+  /* #53 사진·표지·포스터·유튜브 버튼을 누르는 순간의 커서를 얼려 둔다 */
+  ['pointerdown','mousedown','touchstart'].forEach(function(ev){
+    $('sections').addEventListener(ev, function(e){
+      var t0=e.target;
+      if(!t0 || !t0.closest) return;
+      /* #52 삭제 버튼을 누르기 전에 편집창에 커서가 있었는지 기억 */
+      var d0=t0.closest('[data-phact="del"],[data-act="delphoto"],[data-act="unmarkphoto"]');
+      if(d0){
+        var artD=d0.closest('[data-cat]');
+        if(artD){
+          var edD=artD.querySelector('.sec-text');
+          delFocus[artD.getAttribute('data-cat')]=!!(edD && document.activeElement===edD);
+        }
+        return;
+      }
+      var b=t0.closest('[data-act="photo"],[data-act="book"],[data-act="poster"],[data-act="youtube"],[data-act="markphoto"]');
+      if(!b) return;
+      var art=b.closest('[data-cat]');
+      if(art) freezeCaretFor(art.getAttribute('data-cat'), art);
+    }, true);
+  });
+  /* 커서가 움직이는 동안에도 마지막 자리를 계속 기억한다 (모달·파일 선택기 뒤에도 남도록) */
+  document.addEventListener('selectionchange', function(){
+    clearTimeout(caretTrackTimer);
+    caretTrackTimer=setTimeout(function(){
+      var ae=document.activeElement;
+      if(!ae || !ae.classList || !ae.classList.contains('sec-text')) return;
+      if(!$('appRoot') || $('appRoot').hidden) return;
+      noteCaretFrom(ae);
+    }, 140);
   });
 
   /* 하단 버튼 */
@@ -10597,6 +10872,10 @@ function bindEvents(){
       return;
     }
     if(a==='gowrite'){ switchTab('write'); return; }
+    if(a==='togcb'){
+      toggleEntryCheckbox(act.getAttribute('data-cbdate'), act.getAttribute('data-cbcid'), parseInt(act.getAttribute('data-cbn'),10)||0, act);
+      return;
+    }
     if(a==='viewphoto'){
       var pids=String(act.getAttribute('data-pids')||'').split(',').filter(Boolean);
       openLightbox(pids, parseInt(act.getAttribute('data-idx'),10)||0);
@@ -10657,10 +10936,12 @@ function bindEvents(){
 
   /* 페이지 이탈 시 저장 */
   window.addEventListener('beforeunload', function(){
+    uiPersistNow();
     try{ localStorage.setItem(LS_STATE, JSON.stringify(state)); }catch(e){}
   });
+  window.addEventListener('pagehide', function(){ uiPersistNow(); });
   document.addEventListener('visibilitychange', function(){
-    if(document.visibilityState==='hidden'){ saveNow(); }
+    if(document.visibilityState==='hidden'){ uiPersistNow(); saveNow(); }
   });
 }
 
@@ -11560,18 +11841,38 @@ var Cloud={
 };
 
 /* ────────────────────────────── boot ────────────────────────────── */
+/* 지금 탭의 화면을 실제로 그린다 (부트·복귀 공통) */
+function restoreActiveView(){
+  try{
+    if(activeTab==='read') renderRead();
+    else if(activeTab==='shelf') renderShelf();
+    else if(activeTab==='food') renderFood();
+    else if(activeTab==='exp') renderExp();
+    else {
+      var bar=document.querySelector('.actionbar'); if(bar) bar.style.display='flex';
+      renderWrite();
+    }
+  }catch(e){}
+}
 async function boot(){
   await loadState();
   ensureGrowthSeed();
   shelfTab=(state.settings && state.settings.shelfTab==='video')? 'video' : 'book';
-  var td=parseYmd(todayStr());
+  /* #54 새로고침해도 보던 탭· 쓰기/보기·날짜 그대로 */
+  var ui=uiRestore();
+  if(ui){
+    selected=ui.date;
+    activeTab=ui.tab;
+    recordLast=(ui.tab==='read')? 'read' : ((ui.tab==='write')? 'write' : (ui.mode==='read'? 'read':'write'));
+  }
+  var td=parseYmd(selected);
   viewY=td.getFullYear(); viewM=td.getMonth();
-  selected=todayStr();
   loadView();
   loadEditor(selected);
   bindEvents();
   bindCloudEvents();
   renderHeader();
+  syncTabUI(activeTab);
   renderCalendar();
   renderSections();
   updateTodayAnalysis();
@@ -11580,6 +11881,7 @@ async function boot(){
   syncRangeUI();
   applyTip();
   renderCumStats();
+  restoreActiveView();
   if(!storageUsable()){
     var tb=$('tipBanner');
     tb.hidden=false;
