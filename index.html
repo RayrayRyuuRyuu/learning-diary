@@ -1892,6 +1892,16 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
 @media (max-width:360px){
   .vt-fold-btn{font-size:10px;padding:0 7px;gap:4px}
 }
+/* #81 쓰기 화면 검색·필터 — 날짜 바 오른쪽 버튼 + 펼치는 영역 칩·검색 (모바일) */
+.wt-tools{display:none;flex-direction:column;gap:6px;margin-top:6px}
+.wt-tools .search-box{height:34px;border-radius:10px;padding:0 9px}
+.wt-tools .search-box input{font-size:12.5px}
+.wt-tools .search-box .ic{font-size:12.5px}
+.wt-tools-note{font-size:9.5px;font-weight:800;color:var(--muted);letter-spacing:-.02em;line-height:1.4}
+@media (max-width:959px){
+  .wt-tools{display:flex}
+  .wt-tools[hidden]{display:none}
+}
 @media (min-width:960px){
   /* #75 사이드바 순서: 달력 → 날짜 이동 바(카드 폭에 꽉 차게) → 이 날 요약 → 보기 도구 */
   #pcSide .pcs-datebar{display:flex;align-items:center;gap:6px;padding:8px 9px;margin-left:auto;margin-right:auto;width:100%;box-sizing:border-box}
@@ -2101,6 +2111,17 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
             <span class="badge" id="draftBadge" hidden>임시저장본</span>
           </div>
           <button class="dnav" id="nextDay" aria-label="다음날">›</button>
+          <!-- #81 쓰기 화면에도 검색·필터 -->
+          <button class="vt-fold-btn" id="wtFoldBtn" type="button" aria-expanded="false" aria-controls="wtTools">🔍 검색·필터</button>
+        </div>
+        <div class="wt-tools" id="wtTools" hidden>
+          <div class="search-box">
+            <span class="ic" aria-hidden="true">🔍</span>
+            <input id="wSearchInput" type="search" placeholder="검색 — 지난 기록에서 찾기" autocomplete="off" enterkeyhint="search" aria-label="기록 검색">
+            <button class="clr" id="wSearchClear" hidden aria-label="검색어 지우기">✕</button>
+          </div>
+          <div class="cat-chips" id="writeCatChips" role="group" aria-label="쓰기 영역 거르기"></div>
+          <div class="wt-tools-note" id="wtToolsNote"></div>
         </div>
       </div>
 
@@ -2909,7 +2930,12 @@ function focusEditorCaret(cid, pos, photoN){
       /* 칩이 글 맨 끝이면 커서 자리용 <br> 을 붙인다 — 없으면 이어 쓴 글이 사진 앞으로 들어간다 */
       var nxs=chip.nextSibling;
       if(!nxs || (nxs.nodeType===3 && !nxs.data) || (nxs.nodeType===1 && nxs.classList && nxs.classList.contains('re-ph'))){
-        try{ chip.parentNode.insertBefore(document.createElement('br'), chip.nextSibling); }catch(e){}
+        try{
+          /* #79 data-filler — 커서 자리용 표시. 저장 글자로 바꿀 때 진짜 줄바꿈으로 세지 않는다 */
+          var fbr=document.createElement('br');
+          fbr.setAttribute('data-filler','1');
+          chip.parentNode.insertBefore(fbr, chip.nextSibling);
+        }catch(e){}
       }
       var sel=window.getSelection(), nr=document.createRange();
       nr.setStartAfter(chip); nr.collapse(true);
@@ -3042,8 +3068,8 @@ function richHTML(text, pids){
     if(op.c) h='<span style="color:'+op.c+'">'+h+'</span>';
     out+=cbFmtHTML(h);
   }
-  /* 글 끝이 줄바꿈이면 커서가 설 filler <br>을 하나 더 둔다 */
-  if(lastKind==='br' || /\n$/.test(String(text==null? '' : text))) out+='<br>';
+  /* 글 끝이 줄바꿈이면 커서가 설 filler <br>을 하나 더 둔다 (#79 — 저장 글자로 되돌릴 때 줄바꿈으로 세지 않게 표시) */
+  if(lastKind==='br' || /\n$/.test(String(text==null? '' : text))) out+='<br data-filler="1">';
   return out;
 }
 function richFmtDelta(st, fmt){
@@ -3059,8 +3085,21 @@ function richFmtDelta(st, fmt){
 }
 function richBreak(st, soft){
   st.out+=richFmtDelta(st, RICH_CLOSED);
-  if(soft && st.out && st.out.slice(-1)==='\n') return;
+  /* soft: 문단(DIV·P·LI) 경계 — 글이 아직 없거나 앞이 이미 줄바꿈이면 겹쳐 세지 않는다 (#79) */
+  if(soft && (!st.out || st.out.slice(-1)==='\n')) return;
   st.out+='\n';
+}
+/* #79 브라우저가 만든 빈 문단(<div><br></div>·<p><br></p>) — 문단 경계와 안쪽 <br>이 겹쳐 두 줄이 되지 않게 */
+function richBlankBlock(n){
+  var kids=(n && n.childNodes) || [];
+  for(var i=0;i<kids.length;i++){
+    var c=kids[i];
+    if(c.nodeType===3){ if(String(c.data||'').replace(/[\s\u00a0\u200b]/g,'')) return false; continue; }
+    if(c.nodeType!==1) return false;
+    if(c.tagName==='BR') continue;
+    return false;
+  }
+  return true;
 }
 function richEmit(text, fmt, st, node, off){
   var ws=!/\S/.test(text);
@@ -3106,7 +3145,18 @@ function richWalk(node, fmt, st){
     }
     if(n.nodeType!==1) continue;
     var tag=n.tagName;
-    if(tag==='BR'){ richBreak(st); continue; }
+    if(tag==='BR'){
+      /* #79 커서 자리용 filler <br> — 바로 뒤에 진짜 <br>이 이어지면 겹친 것이라 건너뛴다 */
+      if(n.getAttribute && n.getAttribute('data-filler')==='1'){
+        var nx=n.nextSibling;
+        while(nx && nx.nodeType===3 && !(nx.data||'')) nx=nx.nextSibling;
+        if(nx && nx.nodeType===1 && nx.tagName==='BR') continue;
+        richBreak(st);
+        continue;
+      }
+      richBreak(st);
+      continue;
+    }
     if(n.classList && n.classList.contains('re-ph')){ richEmitPh(n, st); continue; }
     if(n.classList && n.classList.contains('cb-g')){ richEmitCb(n, st); continue; }
     var f2={b:fmt.b, u:fmt.u, c:fmt.c};
@@ -3125,7 +3175,16 @@ function richWalk(node, fmt, st){
         if(col && col!==st.base) f2.c=col;
       }
     }catch(e){}
-    if(tag==='DIV'||tag==='P'||tag==='LI'){ richBreak(st, true); richWalk(n, f2, st); continue; }
+    if(tag==='DIV'||tag==='P'||tag==='LI'){
+      /* #79 문단 경계 — 문단 하나가 한 줄. 맨 앞 빈 줄은 버리고, 빈 문단(<div><br></div>)의
+         안쪽 <br>은 세지 않아 두 줄이 되지 않게 한다 */
+      if(st.out) richBreak(st);
+      if(richBlankBlock(n)){
+        if(st.c && st.caretAt==null && (st.c.node===n || (n.contains && n.contains(st.c.node)))) st.caretAt=st.out.length;
+        continue;
+      }
+      richWalk(n, f2, st); continue;
+    }
     richWalk(n, f2, st);
   }
   if(st.c && st.c.node===node && st.c.off>=kids.length && st.caretAt==null) st.caretAt=st.out.length;
@@ -3140,9 +3199,9 @@ function richTextFromEl(el, opt){
     richWalk(el, {b:false,u:false,c:''}, st);
     st.out+=richFmtDelta(st, RICH_CLOSED);
   }
-  /* 줄 끝의 마지막 <br>은 커서 자리용 filler라 한 개만 지운다 */
+  /* #79 글 끝의 빈 줄(커서 자리·브라우저가 붙인 <br>)은 내용이 아니라 모두 지운다 */
   var txt=st.out;
-  if(txt.slice(-1)==='\n') txt=txt.slice(0,-1);
+  while(txt.slice(-1)==='\n') txt=txt.slice(0,-1);
   if(st.caretAt!=null) st.caretAt=Math.max(0, Math.min(txt.length, st.caretAt));
   return {text:txt, caretAt:st.caretAt, hit:st.hit};
 }
@@ -3393,7 +3452,8 @@ function checklistConvert(ed, pids){
   var ls=t.lastIndexOf('\n', off-1)+1;
   var m=t.slice(ls, off).match(CB_LINE_RE);
   if(!m) return false;
-  var head=m[1]+(m[2]? CB_ON : CB_OFF)+' ';
+  /* #80 상자 칩(.cb-g)이 이미 오른쪽 여백 4px 을 갖고 있어 뒤 공백은 넣지 않는다 */
+  var head=m[1]+(m[2]? CB_ON : CB_OFF);
   ed.innerHTML=richHTML(t.slice(0, ls)+head+t.slice(off), pids||[]);
   ed.classList.remove('is-empty');
   try{ ed.focus({preventScroll:true}); }catch(e){}
@@ -4499,7 +4559,7 @@ function syncJumpBar(){
 }
 function renderSections(){
   var wrap=$('sections');
-  var cats=visibleCats();
+  var cats=writeCats();   /* #81 영역 필터 — 골랐으면 그 카드만 그린다 */
   if(!cats.length){
     wrap.innerHTML='<div class="card empty"><span class="em">🗂</span><b>영역이 모두 숨겨져 있어요</b>아래 ‘영역 추가 / 편집’에서 영역을 되살려 주세요.</div>';
     if($('jumpBar')) $('jumpBar').hidden=true;
@@ -4528,6 +4588,8 @@ function renderWrite(){
   $('writeDate').textContent=fmtMD(selected);
   $('writeWeekday').textContent='('+DOW[parseYmd(selected).getDay()]+')';
   if(activeTab!=='write') return;
+  renderWriteCatChips();
+  syncWtFold();
   renderSections();
   updateTodayAnalysis();
   updateDraftBadge();
@@ -5277,8 +5339,70 @@ function syncVtFold(){
     btn.title=act? '검색·기간·영역 필터가 켜져 있어요' : '';
   }
 }
+/* #81 📝 기록(쓰기) 화면 `🔍 검색·필터` — 영역만 골라 쓰고, 검색어는 📖 보기 검색으로 넘긴다 */
+var writeCat='';
+var wtFoldOpen=false;
+function writeCatValid(){
+  if(!writeCat) return true;
+  return visibleCats().some(function(c){ return c.id===writeCat; });
+}
+function writeCats(){
+  var cats=visibleCats();
+  if(!writeCatValid()) writeCat='';
+  if(!writeCat) return cats;
+  return cats.filter(function(c){ return c.id===writeCat; });
+}
+function renderWriteCatChips(){
+  var el=$('writeCatChips');
+  if(!writeCatValid()) writeCat='';
+  var note=$('wtToolsNote');
+  if(el){
+    var html='<button class="cchip'+(writeCat===''?' on':'')+'" data-wcat="" aria-pressed="'+(writeCat===''?'true':'false')+'">전체</button>';
+    visibleCats().forEach(function(c){
+      var on=(writeCat===c.id);
+      html+='<button class="cchip'+(on?' on':'')+'" data-wcat="'+c.id+'" aria-pressed="'+(on?'true':'false')+'">'+esc(catBase(c))+'</button>';
+    });
+    el.innerHTML=html;
+  }
+  if(note){
+    if(writeCat){
+      var c=catById(writeCat);
+      note.textContent='‘'+catBase(c)+'’ 영역만 보는 중 — 다른 영역은 ‘전체’로 돌아오면 그대로 있어요';
+    } else {
+      note.textContent='영역을 고르면 그 카드만 보여요 · 검색하면 그 날짜 기록으로 넘어가요';
+    }
+  }
+}
+function setWriteCat(id){
+  writeCat=id||'';
+  renderWriteCatChips();
+  renderSections();
+  syncWtFold();
+}
+function syncWtFold(){
+  var box=$('wtTools'), btn=$('wtFoldBtn');
+  if(box) box.hidden=!wtFoldOpen;
+  if(btn){
+    btn.classList.toggle('on', wtFoldOpen);
+    btn.setAttribute('aria-expanded', wtFoldOpen?'true':'false');
+    btn.innerHTML='🔍 검색·필터'+(writeCat? '<i class="ffdot" aria-hidden="true"></i>' : '');
+    btn.title=writeCat? '영역 필터가 켜져 있어요' : '';
+  }
+}
+function writeSearchGo(){
+  var inp=$('wSearchInput');
+  var q=inp? String(inp.value||'').trim() : '';
+  if(!q){ if(inp) inp.focus(); toast('찾을 단어를 넣어 주세요', 1800); return; }
+  searchQuery=q;
+  if($('searchInput')) $('searchInput').value=q;
+  if($('searchClear')) $('searchClear').hidden=false;
+  /* 보기에 걸어 둔 기간·영역 거르기가 검색 결과를 가리지 않게 풀어 둔다 */
+  viewRange='day'; viewCat=''; saveView(); syncRangeUI();
+  switchTab('read');          /* 📖 보기 검색과 같은 결과 — 그 날짜 결과를 누르면 그 날로 이동 */
+}
 function renderRead(){
   if(activeTab!=='read') return;
+  if(!catFilterValid()) viewCat='';
   if(!catFilterValid()) viewCat='';
   renderCumStats();
   renderMiniSummary();
@@ -11985,6 +12109,101 @@ function bindEvents(){
     vtFoldOpen=!vtFoldOpen;
     syncVtFold();
   });
+
+  /* #81 쓰기 화면 `🔍 검색·필터` — 펼치기 · 영역 필터 · 검색은 보기 검색으로 */
+  var wFold=$('wtFoldBtn');
+  if(wFold) wFold.addEventListener('click', function(e){
+    e.preventDefault();
+    wtFoldOpen=!wtFoldOpen;
+    syncWtFold();
+    if(wtFoldOpen) renderWriteCatChips();
+  });
+  var wChips=$('writeCatChips');
+  if(wChips) wChips.addEventListener('click', function(e){
+    var b=e.target.closest('[data-wcat]');
+    if(!b) return;
+    e.preventDefault();
+    setWriteCat(b.getAttribute('data-wcat'));
+  });
+  var wInp=$('wSearchInput');
+  if(wInp){
+    wInp.addEventListener('input', function(){
+      if($('wSearchClear')) $('wSearchClear').hidden=!String(wInp.value||'').length;
+    });
+    wInp.addEventListener('search', function(){
+      if(!String(wInp.value||'').trim()){ if($('wSearchClear')) $('wSearchClear').hidden=true; return; }
+      writeSearchGo();
+    });
+    wInp.addEventListener('keydown', function(e){
+      if(e.key!=='Enter') return;
+      e.preventDefault();
+      writeSearchGo();
+    });
+  }
+  var wClr=$('wSearchClear');
+  if(wClr) wClr.addEventListener('click', function(){
+    if($('wSearchInput')){ $('wSearchInput').value=''; $('wSearchInput').focus(); }
+    wClr.hidden=true;
+  });
+
+  /* #82 쓰기·보기 좌우 스와이프 — 오른쪽→왼쪽은 다음날, 왼쪽→오른쪽은 전날
+     입력 칸·글자 선택·가로 스크롤 영역에서는 절대 움직이지 않는다 */
+  (function(){
+    var sw=null;
+    function swBlocked(t){
+      if(!t || !t.closest) return true;
+      if(t.closest('input,textarea,select,[contenteditable],.sec-text,.cb-g,.re-ph,.sheet,.lightbox,.lb,.modal,.kidpage,#kidPage,.cal-grid,.wt-tools .search-box')) return true;
+      if(t.closest('button,a,label,summary,[role="checkbox"],[data-act],.rchip,.cchip,.cat-chips,.range-chips,.tabs,.cv-tabs,.sh-subtabs')) return true;
+      if(t.closest('[data-noswipe]')) return true;
+      var el=t;
+      while(el && el.nodeType===1 && el!==document.documentElement){
+        var ox='';
+        try{ ox=String(window.getComputedStyle(el).overflowX||''); }catch(e){}
+        if((ox==='auto'||ox==='scroll') && el.scrollWidth>el.clientWidth+4) return true;   /* 가로 스크롤 영역 */
+        el=el.parentElement;
+      }
+      return false;
+    }
+    function swGo(dx){
+      var ds=addDays(selected, dx<0 ? 1 : -1);
+      var ae=document.activeElement;
+      if(ae && ae.classList && ae.classList.contains('sec-text')){ try{ syncSectionText(ae); }catch(e){} }
+      selectDate(ds);
+      var d=parseYmd(ds);
+      toast((dx<0? '다음날 · ' : '전날 · ')+fmtMD(ds)+' ('+DOW[d.getDay()]+')', 1200);
+    }
+    document.addEventListener('touchstart', function(e){
+      sw=null;
+      if(activeTab!=='write' && activeTab!=='read') return;
+      if(kidOpen) return;
+      if(sheetEl) return;
+      if($('lightbox') && !$('lightbox').hidden) return;
+      if(!e.touches || e.touches.length!==1) return;
+      if(swBlocked(e.target)) return;
+      var sel=window.getSelection();
+      if(sel && !sel.isCollapsed) return;
+      var p=e.touches[0];
+      sw={x:p.clientX, y:p.clientY, done:false};
+    }, {passive:true});
+    document.addEventListener('touchmove', function(e){
+      if(!sw || sw.done) return;
+      if(!e.touches || !e.touches.length){ sw=null; return; }
+      if(e.touches.length>1){ sw=null; return; }
+      var p=e.touches[0], dx=p.clientX-sw.x, dy=p.clientY-sw.y;
+      if(Math.abs(dy)>26 && Math.abs(dy)>Math.abs(dx)){ sw=null; return; }   /* 세로 스크롤 */
+      if(Math.abs(dx)<12) return;
+      var sel=window.getSelection();
+      if(sel && !sel.isCollapsed){ sw=null; return; }                        /* 글자 선택 중 */
+      if(Math.abs(dx)>=70 && Math.abs(dx)>Math.abs(dy)*1.8){
+        sw.done=true;
+        if(e.cancelable) e.preventDefault();
+        swGo(dx);
+      }
+    }, {passive:false});
+    ['touchend','touchcancel'].forEach(function(ev){
+      document.addEventListener(ev, function(){ sw=null; }, {passive:true});
+    });
+  })();
 
   /* 기간 · 영역 칩 */
   $('rangeChips').addEventListener('click', function(e){
