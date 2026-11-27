@@ -1736,17 +1736,9 @@ body.memo-order #memoBody{padding-bottom:64px}
 /* #58 날짜 이동 바는 왼쪽에 컴팩트하게 + `오늘로` 바로 옆 */
 .wt-datebar{justify-content:flex-start}
 .wt-datebar .datebar-mid{flex:0 1 auto;justify-content:flex-start;overflow:visible}
-/* #59 `초기화` — 미니 달력 카드 구석의 작은 보조 버튼 */
-.mc-reset{
-  flex:0 0 auto;height:18px;padding:0 5px;border-radius:6px;font-size:8.5px;font-weight:900;letter-spacing:-.02em;
-  color:#8a5f10;background:#fff7ec;border:1px solid #efdcb2;line-height:1;white-space:nowrap;
-}
-.mc-reset:active{background:#f7ecd2}
-/* #60 보기 화면 왼쪽 아래 고정 `📝 기록` (쓰기 화면의 `📖 보기` 와 짝) */
+/* #59 `초기화` — #86에서 버튼을 없앴다(미니 달력은 연도 이동만 남는다) */
+/* #60·#83 보기 화면 하단 고정 바 — 쓰기 화면과 같은 `.actionbar` 모양으로 통일했다 */
 #view-read{padding-bottom:92px}
-.read-bar{position:fixed;left:12px;bottom:calc(10px + var(--safe-b));z-index:26;display:flex;gap:8px}
-.read-bar .btn{height:40px;padding:0 16px;border-radius:13px;font-size:13.5px;background:#fff;border:1px solid var(--line);color:var(--teal-3);box-shadow:0 8px 20px -12px rgba(34,50,47,.55)}
-.read-bar .btn:active{background:var(--teal-soft)}
 
 /* #61 PC(넓은 화면) 전용 레이아웃 — 모바일 화면은 위 규칙 그대로 */
 #pcSide{display:none}
@@ -1804,8 +1796,6 @@ body.memo-order #memoBody{padding-bottom:64px}
     left:auto;right:max(20px, calc(50% - 520px));transform:none;width:360px;bottom:18px;
     border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:8px 10px calc(8px + var(--safe-b));
   }
-  .read-bar{left:max(12px, calc(50% - 200px));bottom:18px}
-  .read-bar .btn{height:44px;padding:0 20px;font-size:14px}
   /* #61 PC에서 검색·기간·버튼 줄이 화면 폭만큼 늘어나지 않게 */
   .vt-right .vt-acts{justify-content:flex-start}
   .vt-acts .act-btn{flex:0 0 auto;padding:6px 14px;font-size:11px;border-radius:8px}
@@ -1862,6 +1852,21 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
 .crop-actions{display:flex;gap:7px;margin-top:10px}
 .crop-actions .btn-line{flex:0 0 auto;width:auto;padding:0 14px}
 .crop-actions .crop-go{flex:1;width:auto}
+/* ══ 2026-11-27 저녁 (#83~#88) ══ */
+/* #83 하단 고정 바 — 쓰기(`오늘로` | `📖 보기`)와 보기(`오늘로` | `📝 기록`)를 같은 모양으로 */
+.actionbar .btn.ghost{flex:0 0 auto;width:104px;padding:0 10px;font-size:14px}
+.actionbar .btn.primary{flex:1 1 auto;min-width:0}
+@media (max-width:360px){
+  .actionbar .btn.ghost{width:88px;font-size:13px}
+  .actionbar .btn.primary{font-size:14px}
+}
+/* #85 미니달력 연도 이동 `«` `»` — 월 이동 ‹ › 바깥쪽, 조금 작게 */
+.mc-nav.mc-year{font-size:9px;color:#8fa8a2}
+#pcSide .pcs-cal .mc-nav.mc-year{font-size:11px}
+/* #86 `↺ 초기화` 버튼은 없앴다 */
+/* #87 자동 저장 상태 — 상단 동기화 알약이 잠깐 `저장 중` / `저장됨` 을 보여 준다 */
+.cloud-pill.saved{background:rgba(255,255,255,.3)}
+
 /* ══ 2026-11-27 (#69~#76) ══ */
 /* #70 `오늘로`를 날짜 이동 바 맨 앞으로 — `오늘로 ‹ 11/27 (금) ›` */
 .wt-datebar{gap:4px}
@@ -2102,15 +2107,13 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
           <div class="vt-cal" id="wtCal" aria-label="미니 달력"></div>
           <div class="td-mini" id="wtMini" aria-live="polite"></div>
         </div>
+        <!-- #84 좌우 스와이프·미니달력으로 날짜를 옮기므로 ‹ › 는 없앴다. #83 `오늘로` 는 맨 아래 고정 바로 -->
         <div class="wt-datebar">
-          <button class="wt-today" id="btnTodayW" type="button">오늘로</button>
-          <button class="dnav" id="prevDay" aria-label="전날">‹</button>
           <div class="datebar-mid">
             <b id="writeDate">11/22</b>
             <span class="wd" id="writeWeekday">(일)</span>
             <span class="badge" id="draftBadge" hidden>임시저장본</span>
           </div>
-          <button class="dnav" id="nextDay" aria-label="다음날">›</button>
           <!-- #81 쓰기 화면에도 검색·필터 -->
           <button class="vt-fold-btn" id="wtFoldBtn" type="button" aria-expanded="false" aria-controls="wtTools">🔍 검색·필터</button>
         </div>
@@ -2135,9 +2138,10 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
         <div id="weekTable"></div>
       </section>
 
-      <div class="actionbar">
-        <button class="btn ghost" id="btnToRead">📖 보기</button>
-        <button class="btn primary" id="btnSave">저장</button>
+      <!-- #83·#87 하단 고정 바 — `오늘로` | `📖 보기` (저장 버튼 없음, 자동 저장) -->
+      <div class="actionbar" id="actionbarW">
+        <button class="btn ghost" id="btnTodayW" type="button">오늘로</button>
+        <button class="btn primary" id="btnToRead" type="button">📖 보기</button>
       </div>
     </section>
 
@@ -2149,7 +2153,6 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
           <div class="td-mini" id="vtMini" aria-live="polite"></div>
         </div>
         <div class="wt-datebar">
-          <button class="wt-today" id="btnTodayR" type="button">오늘로</button>
           <button class="dnav" id="vtPrevDay" aria-label="전날">‹</button>
           <div class="datebar-mid">
             <b id="readDate">11/22</b>
@@ -2194,9 +2197,10 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
 
       <section class="card cum-card" id="cumStats"></section>
 
-      <!-- #60 보기 화면 왼쪽 아래 고정 — 이 날짜 쓰기 화면으로 -->
-      <div class="read-bar" id="readBar">
-        <button class="btn" id="btnToWrite" type="button">📝 기록</button>
+      <!-- #83 보기 화면도 같은 하단 고정 바 — `오늘로` | `📝 기록` (쓰기 화면과 대칭) -->
+      <div class="actionbar" id="readBar">
+        <button class="btn ghost" id="btnTodayR" type="button">오늘로</button>
+        <button class="btn primary" id="btnToWrite" type="button">📝 기록</button>
       </div>
     </section>
 
@@ -2752,8 +2756,8 @@ function markEdited(){
   if(!current) return;
   current.isDraft=true;
   state.drafts[current.date]={sections: current.sections, at: Date.now()};
-  $('draftBadge').hidden=false;
-  scheduleSave();
+  scheduleSave();        /* 450ms 뒤 로컬(IndexedDB·localStorage) 저장 */
+  scheduleAutoSave();    /* #87 900ms 뒤 그 날 기록 확정 + 클라우드 자동 저장 */
   updateTodayAnalysis();
   syncJumpBar();
 }
@@ -4193,7 +4197,7 @@ function renderCalendar(){
   renderMiniCal();
 }
 /* 상단 초소형 달력(칸 22px) — 쓰기·보기 모두 같은 달(viewY·viewM)을 본다 */
-function miniCalHTML(withReset){
+function miniCalHTML(){
   var t=parseYmd(selected);
   if(!viewY){ viewY=t.getFullYear(); viewM=t.getMonth(); }
   var first=new Date(viewY, viewM, 1);
@@ -4204,11 +4208,12 @@ function miniCalHTML(withReset){
   var cells=[];
   var dows=['일','월','화','수','목','금','토'];
   var head='<div class="mc-head">'
+    /* #85 연도 이동 — 월 이동 ‹ › 바깥쪽에 « » */
+    +'<button class="mc-nav mc-year" type="button" data-mc="-12" aria-label="1년 전">«</button>'
     +'<button class="mc-nav" type="button" data-mc="-1" aria-label="지난달">‹</button>'
     +'<b>'+(viewY+'.')+pad2(viewM+1)+'</b>'
     +'<button class="mc-nav" type="button" data-mc="1" aria-label="다음달">›</button>'
-    /* #59 초기화 — 하단 바에서 미니 달력 카드 구석으로 */
-    +(withReset? '<button class="mc-reset" type="button" data-mcreset title="이 날짜에 입력한 내용을 모두 지우기">↺ 초기화</button>' : '')
+    +'<button class="mc-nav mc-year" type="button" data-mc="12" aria-label="1년 후">»</button>'
   +'</div><div class="mc-dow" aria-hidden="true">'+dows.map(function(x){ return '<span>'+x+'</span>'; }).join('')+'</div>';
   for(var i=0;i<Math.ceil((startDow+daysInMonth)/7)*7;i++){
     var offset=i-startDow, d, inMonth=true;
@@ -4227,8 +4232,8 @@ function miniCalHTML(withReset){
   return head+'<div class="mc-grid">'+cells.join('')+'</div>';
 }
 function renderMiniCal(){
-  var v=$('vtCal'); if(v) v.innerHTML=miniCalHTML(false);
-  var w=$('wtCal'); if(w) w.innerHTML=miniCalHTML(true);
+  var v=$('vtCal'); if(v) v.innerHTML=miniCalHTML();
+  var w=$('wtCal'); if(w) w.innerHTML=miniCalHTML();
   renderPcSide();
 }
 /* #61 PC 사이드바 — 미니 달력 · Today 요약 · 날짜 이동 · 단축키 안내 */
@@ -4267,7 +4272,7 @@ function renderPcSide(){
   if(!$('pcSide')) return;
   var isWrite=(activeTab==='write');
   var secs=isWrite? (current? current.sections : {}) : readMiniSections();
-  setHTMLIfChanged($('pcsCal'), miniCalHTML(isWrite));
+  setHTMLIfChanged($('pcsCal'), miniCalHTML());
   setHTMLIfChanged($('pcsDatebar'), pcSideDatebarHTML());
   setHTMLIfChanged($('pcsMini'), miniTodayHTML(secs));
   syncReadToolsPlacement();
@@ -7048,6 +7053,7 @@ function importBackupFile(file){
 function selectDate(ds){
   if(!/^\d{4}-\d{2}-\d{2}$/.test(ds)) return;
   var changed=(ds!==selected);
+  if(changed) flushAutoSave();   /* #87 날짜를 옮기기 전에 그 날 변경분을 먼저 저장 */
   selected=ds;
   var d=parseYmd(ds);
   viewY=d.getFullYear(); viewM=d.getMonth();
@@ -7095,6 +7101,7 @@ function switchTab(name){
   if(name==='exp'){ showKidPage('exp'); return; }   /* #71 체험은 래니😚 페이지 안에서 */
   if(name!=='write' && name!=='read' && name!=='shelf' && name!=='food') name='write';
   var changed=(name!==activeTab);
+  if(activeTab==='write' && name!=='write') flushAutoSave();   /* #87 탭을 옮길 때도 먼저 저장 */
   activeTab=name;
   if(name==='write' || name==='read') recordLast=name;
   if(changed) memoOpenId='';   /* 탭을 옮기면 메모장은 목록부터 */
@@ -7138,42 +7145,96 @@ function applyTip(){
 }
 
 /* ────────────────────────────── editing actions ────────────────────────────── */
-async function doSave(){
-  if(!current) return;
-  var saveDate=current.date;
+/* #87 자동 저장 — 입력·체크·시간·사진 변경 후 잠시(900ms) 있으면 그 날 기록을 확정해
+   이 기기(IndexedDB·localStorage)와 클라우드에 저절로 저장한다. 화면은 다시 그리지 않아
+   커서·포커스가 그대로다. 저장 상태는 상단 동기화 알약이 `⏳ 저장 중` → `✓ 저장됨` 으로 보여 준다. */
+var autoSaveTimer=null, autoDirty=false;
+var autoPushTimer=null, autoPushDate='', autoPushAt=0;
+var savePillTimer=null;
+function savePill(kind){
+  var el=$('cloudPill'); if(!el) return;
+  if(kind==='saving'){ el.textContent='⏳ 저장 중'; el.className='cloud-pill syncing'; }
+  else { el.textContent='✓ 저장됨'; el.className='cloud-pill saved'; }
+  clearTimeout(savePillTimer);
+  savePillTimer=setTimeout(restoreSavePill, kind==='saving'? 6000 : 1700);
+}
+function restoreSavePill(){
+  clearTimeout(savePillTimer); savePillTimer=null;
+  if(!$('cloudPill')) return;
+  if(!CLOUD.session){ setPill('off'); return; }
+  if(CLOUD.err) setPill('error', CLOUD.err); else setPill('synced');
+}
+function scheduleAutoSave(){
+  autoDirty=true;
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer=setTimeout(function(){ autoSaveNow(); }, 900);
+}
+/* 화면을 다시 그리지 않고 그 날 기록만 확정 (커서·포커스 유지). 동기 실행이라 pagehide 에도 안전 */
+function commitCurrentQuiet(){
+  if(!current) return false;
+  var d=current.date;
   var secs=normalizeSections(current.sections, true);
   var n=Object.keys(secs).length;
   if(!n){
-    delete state.entries[current.date];
-    delete state.drafts[current.date];
-    current.sections={}; current.isDraft=false;
-    await saveNow();
-    renderAll();
-    Cloud.pushEntry(saveDate);
-    toast('저장할 내용이 없어 빈 날로 두었어요');
+    delete state.entries[d];
+    delete state.drafts[d];
+    current.isDraft=false;
+  } else {
+    state.entries[d]={sections:secs, savedAt:Date.now()};
+    delete state.drafts[d];
+    current.isDraft=false;
+  }
+  state.savedAt=Date.now();
+  try{ lsSet(LS_STATE, state); }catch(e){}
+  return true;
+}
+/* 클라우드 올리기는 너무 잦지 않게 묶는다 (기본 6초 간격, 날짜 이동·탭 전환·이탈 때는 바로) */
+function pushFromDate(date, now){
+  if(!CLOUD.session || !date) return;
+  if(now){
+    if(autoPushTimer){ clearTimeout(autoPushTimer); autoPushTimer=null; }
+    autoPushDate=''; autoPushAt=Date.now();
+    Cloud.pushEntry(date);
     return;
   }
-  var tot=calcTotals(secs);
-  state.entries[current.date]={sections:secs, savedAt:Date.now()};
-  delete state.drafts[current.date];
-  current.sections=secs; current.isDraft=false;
-  await saveNow();
-  renderAll();
-  Cloud.pushEntry(saveDate);
-  flashSaved();   /* #51 검은 알림 팝업 대신 버튼에 짧게 표시 */
+  autoPushDate=date;
+  if(autoPushTimer) return;
+  var wait=Math.max(0, 6000-(Date.now()-autoPushAt));
+  autoPushTimer=setTimeout(function(){
+    autoPushTimer=null;
+    var d=autoPushDate; autoPushDate='';
+    if(!d) return;
+    autoPushAt=Date.now();
+    Cloud.pushEntry(d);
+  }, wait);
 }
-/* #51 저장은 알림 팝업 없이 버튼에만 잠깐 표시한다 */
-function flashSaved(){
-  var b=$('btnSave');
-  if(!b) return;
-  if(b.__ft) clearTimeout(b.__ft);
-  if(!b.__label) b.__label=b.innerHTML;
-  b.innerHTML='✓ 저장됨';
-  b.classList.add('saved');
-  b.__ft=setTimeout(function(){
-    b.innerHTML=b.__label;
-    b.classList.remove('saved');
-  }, 1400);
+async function autoSaveNow(opts){
+  opts=opts||{};
+  clearTimeout(autoSaveTimer);
+  if(!current) return;
+  if(!autoDirty && !opts.force) return;
+  autoDirty=false;
+  var date=current.date;
+  var emptyNow=!Object.keys(normalizeSections(current.sections, true)).length;
+  commitCurrentQuiet();
+  updateDraftBadge();
+  if(opts.toastEmpty && emptyNow) toast('저장할 내용이 없어 빈 날로 두었어요');
+  savePill('saving');
+  await saveNow();
+  savePill('saved');
+  pushFromDate(date, opts.now);
+}
+/* 날짜 이동·탭 전환·페이지 이탈에서 남은 변경을 바로 확정한다 */
+function flushAutoSave(now){
+  if(!current) return;
+  clearTimeout(autoSaveTimer);
+  if(!autoDirty) return;
+  autoSaveNow({now: now!==false});
+}
+async function doSave(){
+  if(!current) return;
+  autoDirty=true;
+  await autoSaveNow({force:true, now:true, toastEmpty:true});
 }
 async function doDraft(){
   if(!current) return;
@@ -11755,7 +11816,7 @@ function bindEvents(){
     if(d){ selectDate(d.getAttribute('data-mcdate')); return; }
     var n=e.target.closest('[data-mc]');
     if(n){ shiftMonth(parseInt(n.getAttribute('data-mc'),10)||0); return; }
-    if(e.target.closest('[data-mcreset]')){ doReset(); return; }
+    if(e.target.closest('[data-mcreset]')){ return; }   /* #86 초기화 버튼 없어짐 */
     if(e.target.closest('[data-pcprev]')){ selectDate(addDays(selected,-1)); return; }
     if(e.target.closest('[data-pcnext]')){ selectDate(addDays(selected,1)); return; }
     if(e.target.closest('[data-pctoday]')){ selectDate(todayStr()); toast('오늘로 이동했어요'); return; }
@@ -11786,8 +11847,8 @@ function bindEvents(){
   }
 
   /* 날짜 이동 */
-  $('prevDay').addEventListener('click', function(){ selectDate(addDays(selected,-1)); });
-  $('nextDay').addEventListener('click', function(){ selectDate(addDays(selected,1)); });
+  if($('prevDay')) $('prevDay').addEventListener('click', function(){ selectDate(addDays(selected,-1)); });
+  if($('nextDay')) $('nextDay').addEventListener('click', function(){ selectDate(addDays(selected,1)); });
   var vtPrev=$('vtPrevDay'), vtNext=$('vtNextDay'), todayR=$('btnTodayR');
   if(vtPrev) vtPrev.addEventListener('click', function(){ selectDate(addDays(selected,-1)); });
   if(vtNext) vtNext.addEventListener('click', function(){ selectDate(addDays(selected,1)); });
@@ -12057,7 +12118,6 @@ function bindEvents(){
   });
 
   /* 하단 버튼 */
-  $('btnSave').addEventListener('click', doSave);
   $('btnAddCat').addEventListener('click', openCatManager);
   $('btnSettings').addEventListener('click', openSettings);
   /* #60 하단 바의 `📖 보기` ↔ 보기 화면의 `📝 기록` */
@@ -12146,13 +12206,26 @@ function bindEvents(){
     wClr.hidden=true;
   });
 
-  /* #82 쓰기·보기 좌우 스와이프 — 오른쪽→왼쪽은 다음날, 왼쪽→오른쪽은 전날
-     입력 칸·글자 선택·가로 스크롤 영역에서는 절대 움직이지 않는다 */
+  /* #82·#88 쓰기·보기 좌우 스와이프 — 오른쪽→왼쪽은 다음날, 왼쪽→오른쪽은 전날
+     입력 칸(`.sec-text`) 안에서도 빠르게 휙 밀면 날짜가 넘어간다.
+     단, 글자 선택(비어 있지 않은 selection)이나 느린 글자 드래그는 날짜를 건드리지 않는다 */
   (function(){
     var sw=null;
+    /* #88 기록 칸 안은 '빠른 플릭'만 인정 — 천천히 글자를 고르는 동작과 섞이지 않게 */
+    var SEC_MAX_MS=450, SEC_MIN_DX=75;
+    function selInfo(){
+      var s=null;
+      try{ s=window.getSelection(); }catch(e){}
+      if(!s || s.rangeCount===0 || s.isCollapsed) return {ne:false, key:''};
+      var k='';
+      try{ k=String(s.anchorOffset)+'/'+String(s.focusOffset); }catch(e){}
+      return {ne:true, key:k};
+    }
     function swBlocked(t){
       if(!t || !t.closest) return true;
-      if(t.closest('input,textarea,select,[contenteditable],.sec-text,.cb-g,.re-ph,.sheet,.lightbox,.lb,.modal,.kidpage,#kidPage,.cal-grid,.wt-tools .search-box')) return true;
+      /* #88 기록 칸(.sec-text)은 허용 — 그 안의 사진 칩·체크 상자·버튼은 제외 */
+      if(t.closest('.re-ph,.cb-g,.crop,.sheet,.lightbox,.lb,.modal,.kidpage,#kidPage,.cal-grid,.wt-tools .search-box')) return true;
+      if(t.closest('input,textarea,select,[contenteditable]:not(.sec-text)')) return true;
       if(t.closest('button,a,label,summary,[role="checkbox"],[data-act],.rchip,.cchip,.cat-chips,.range-chips,.tabs,.cv-tabs,.sh-subtabs')) return true;
       if(t.closest('[data-noswipe]')) return true;
       var el=t;
@@ -12179,11 +12252,12 @@ function bindEvents(){
       if(sheetEl) return;
       if($('lightbox') && !$('lightbox').hidden) return;
       if(!e.touches || e.touches.length!==1) return;
+      var sel=selInfo();
+      if(sel.ne) return;                                   /* 글자를 고르는 중이면 시작하지 않는다 */
       if(swBlocked(e.target)) return;
-      var sel=window.getSelection();
-      if(sel && !sel.isCollapsed) return;
       var p=e.touches[0];
-      sw={x:p.clientX, y:p.clientY, done:false};
+      var inSec=!!(e.target.closest && e.target.closest('.sec-text'));
+      sw={x:p.clientX, y:p.clientY, t0:Date.now(), done:false, sec:inSec, selKey:sel.key, ne:sel.ne};
     }, {passive:true});
     document.addEventListener('touchmove', function(e){
       if(!sw || sw.done) return;
@@ -12191,18 +12265,30 @@ function bindEvents(){
       if(e.touches.length>1){ sw=null; return; }
       var p=e.touches[0], dx=p.clientX-sw.x, dy=p.clientY-sw.y;
       if(Math.abs(dy)>26 && Math.abs(dy)>Math.abs(dx)){ sw=null; return; }   /* 세로 스크롤 */
+      if(sw.sec) return;                 /* #88 기록 칸 안은 손을 뗄 때 한 번에 판정(느린 드래그는 절대 넘어가지 않게) */
       if(Math.abs(dx)<12) return;
-      var sel=window.getSelection();
-      if(sel && !sel.isCollapsed){ sw=null; return; }                        /* 글자 선택 중 */
+      var sel=selInfo();
+      if(sel.ne){ sw=null; return; }                        /* 글자 선택 중 */
       if(Math.abs(dx)>=70 && Math.abs(dx)>Math.abs(dy)*1.8){
         sw.done=true;
         if(e.cancelable) e.preventDefault();
         swGo(dx);
       }
     }, {passive:false});
-    ['touchend','touchcancel'].forEach(function(ev){
-      document.addEventListener(ev, function(){ sw=null; }, {passive:true});
-    });
+    document.addEventListener('touchend', function(e){
+      if(sw && !sw.done && sw.sec){
+        var t=(e.changedTouches && e.changedTouches[0]) || null;
+        if(t){
+          var dx=t.clientX-sw.x, dy=t.clientY-sw.y, dt=Date.now()-sw.t0;
+          var now=selInfo();
+          var ok = !sw.ne && !now.ne && now.key===sw.selKey
+                && dt<=SEC_MAX_MS && Math.abs(dx)>=SEC_MIN_DX && Math.abs(dx)>Math.abs(dy)*1.8;
+          if(ok){ sw.done=true; swGo(dx); }
+        }
+      }
+      sw=null;
+    }, {passive:true});
+    document.addEventListener('touchcancel', function(){ sw=null; }, {passive:true});
   })();
 
   /* 기간 · 영역 칩 */
@@ -12350,12 +12436,13 @@ function bindEvents(){
 
   /* 페이지 이탈 시 저장 */
   window.addEventListener('beforeunload', function(){
+    flushAutoSave();   /* #87 마지막 입력까지 그 날 기록으로 확정 */
     uiPersistNow();
     try{ localStorage.setItem(LS_STATE, JSON.stringify(state)); }catch(e){}
   });
-  window.addEventListener('pagehide', function(){ uiPersistNow(); });
+  window.addEventListener('pagehide', function(){ flushAutoSave(); uiPersistNow(); });
   document.addEventListener('visibilitychange', function(){
-    if(document.visibilityState==='hidden'){ uiPersistNow(); saveNow(); }
+    if(document.visibilityState==='hidden'){ flushAutoSave(); uiPersistNow(); saveNow(); }
   });
 }
 
