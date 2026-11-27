@@ -409,13 +409,14 @@ table.tbl{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-nume
 .stat:nth-child(3) .k{color:#a07a2a}
 .stat:nth-child(3) .v{color:#7a5613}
 
-/* ── Action bar ─────────────────────────── */
-.actionbar{  position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(520px,100%);
-  display:flex;gap:8px;padding:9px 13px calc(9px + var(--safe-b));z-index:26;
-  background:linear-gradient(180deg,rgba(251,248,243,.82),rgba(251,248,243,.98) 45%);
-  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  border-top:1px solid rgba(236,229,217,.9);
+/* ── Action bar — #91 하단 전체를 덮는 막대 대신 양쪽 구석에 떠 있는 버튼 2개 ── */
+.actionbar{  position:fixed;left:0;right:0;bottom:0;transform:none;width:auto;
+  display:flex;align-items:flex-end;justify-content:space-between;gap:8px;
+  padding:0 14px calc(13px + var(--safe-b));z-index:26;
+  background:none;border:0;backdrop-filter:none;-webkit-backdrop-filter:none;
+  pointer-events:none;   /* 가운데 화면은 그대로 스크롤·터치되게 */
 }
+.actionbar .btn{pointer-events:auto}
 .btn{
   height:46px;border-radius:14px;font-weight:800;font-size:14.5px;letter-spacing:-.01em;
   display:inline-flex;align-items:center;justify-content:center;gap:5px;
@@ -1139,7 +1140,6 @@ body.kb-open .actionbar{bottom:var(--kb,0px)}
   body{padding-top:0}
   .topbar{border-radius:0 0 24px 24px}
   main{padding:14px 16px 10px}
-  .actionbar{border-radius:18px 18px 0 0}
 }
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.01ms !important;transition-duration:.01ms !important}
@@ -1791,10 +1791,10 @@ body.memo-order #memoBody{padding-bottom:64px}
   #view-read .read-sec .txt .txt-thumbs .txt-photo{width:110px}
   .photo-thumbs button{width:110px}
   .add-cat{height:52px}
-  /* 하단 버튼 줄은 오른쪽 아래 떠 있는 카드로 */
+  /* 하단 버튼은 본문 좌우 끝에 맞춰 둥둥 — `📝 기록`·`📖 보기` 왼쪽, `오늘로` 오른쪽 */
   .actionbar{
-    left:auto;right:max(20px, calc(50% - 520px));transform:none;width:360px;bottom:18px;
-    border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:8px 10px calc(8px + var(--safe-b));
+    left:max(18px, calc(50% - 520px));right:max(18px, calc(50% - 520px));
+    transform:none;width:auto;bottom:18px;padding:0;
   }
   /* #61 PC에서 검색·기간·버튼 줄이 화면 폭만큼 늘어나지 않게 */
   .vt-right .vt-acts{justify-content:flex-start}
@@ -1853,13 +1853,23 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
 .crop-actions .btn-line{flex:0 0 auto;width:auto;padding:0 14px}
 .crop-actions .crop-go{flex:1;width:auto}
 /* ══ 2026-11-27 저녁 (#83~#88) ══ */
-/* #83 하단 고정 바 — 쓰기(`오늘로` | `📖 보기`)와 보기(`오늘로` | `📝 기록`)를 같은 모양으로 */
-.actionbar .btn.ghost{flex:0 0 auto;width:104px;padding:0 10px;font-size:14px}
-.actionbar .btn.primary{flex:1 1 auto;min-width:0}
+/* #91 하단 고정 바 대신 구석에 떠 있는 버튼 — 왼쪽 `📖 보기`/`📝 기록` 알약, 오른쪽 `오늘로` 동그라미 */
+.actionbar .btn.primary{flex:0 0 auto;width:auto;min-width:108px;height:44px;padding:0 18px;border-radius:22px;font-size:14px;
+  box-shadow:0 10px 22px -10px rgba(11,106,99,.9)}
+.actionbar .btn.ghost{flex:0 0 auto;width:52px;height:52px;padding:0;border-radius:50%;font-size:11px;font-weight:900;
+  line-height:1.05;letter-spacing:-.04em;color:var(--teal-3);background:#fff;border:1px solid var(--line);
+  box-shadow:0 8px 20px -8px rgba(20,40,36,.42)}
+.actionbar .btn.ghost:active{background:var(--teal-soft)}
 @media (max-width:360px){
-  .actionbar .btn.ghost{width:88px;font-size:13px}
-  .actionbar .btn.primary{font-size:14px}
+  .actionbar{padding:0 11px calc(12px + var(--safe-b))}
+  .actionbar .btn.primary{min-width:96px;height:42px;font-size:13px;padding:0 14px}
+  .actionbar .btn.ghost{width:48px;height:48px;font-size:10.5px}
 }
+/* #90 `🔍 검색·필터` — 오른쪽 요약 카드(미니 Today) 아래 빈 공간에 */
+.td-mini-wrap{display:flex;flex-direction:column;gap:4px;min-width:0;min-height:156px;
+  border:1px solid var(--line);border-radius:10px;background:#fff;padding:5px 7px 6px}
+.td-mini-wrap .td-mini{border:0;background:transparent;padding:0;border-radius:0;min-height:0;flex:1 1 auto;gap:2px;overflow:visible}
+.td-mini-wrap .vt-fold-btn{margin:auto 0 0;width:100%;justify-content:center;height:26px;border-radius:8px}
 /* #85 미니달력 연도 이동 `«` `»` — 월 이동 ‹ › 바깥쪽, 조금 작게 */
 .mc-nav.mc-year{font-size:9px;color:#8fa8a2}
 #pcSide .pcs-cal .mc-nav.mc-year{font-size:11px}
@@ -2105,17 +2115,19 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
       <div class="card wt-top">
         <div class="vt-grid">
           <div class="vt-cal" id="wtCal" aria-label="미니 달력"></div>
-          <div class="td-mini" id="wtMini" aria-live="polite"></div>
+          <!-- #90 오른쪽 요약 카드 아래 빈 공간에 `🔍 검색·필터` (#81) -->
+          <div class="td-mini-wrap">
+            <div class="td-mini" id="wtMini" aria-live="polite"></div>
+            <button class="vt-fold-btn" id="wtFoldBtn" type="button" aria-expanded="false" aria-controls="wtTools">🔍 검색·필터</button>
+          </div>
         </div>
-        <!-- #84 좌우 스와이프·미니달력으로 날짜를 옮기므로 ‹ › 는 없앴다. #83 `오늘로` 는 맨 아래 고정 바로 -->
+        <!-- #84 좌우 스와이프·미니달력으로 날짜를 옮기므로 ‹ › 는 없앴다. #83 `오늘로` 는 맨 아래 떠 있는 버튼 -->
         <div class="wt-datebar">
           <div class="datebar-mid">
             <b id="writeDate">11/22</b>
             <span class="wd" id="writeWeekday">(일)</span>
             <span class="badge" id="draftBadge" hidden>임시저장본</span>
           </div>
-          <!-- #81 쓰기 화면에도 검색·필터 -->
-          <button class="vt-fold-btn" id="wtFoldBtn" type="button" aria-expanded="false" aria-controls="wtTools">🔍 검색·필터</button>
         </div>
         <div class="wt-tools" id="wtTools" hidden>
           <div class="search-box">
@@ -2138,10 +2150,10 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
         <div id="weekTable"></div>
       </section>
 
-      <!-- #83·#87 하단 고정 바 — `오늘로` | `📖 보기` (저장 버튼 없음, 자동 저장) -->
+      <!-- #87·#91 아래 두 구석에 떠 있는 버튼 — 왼쪽 `📖 보기`, 오른쪽 `오늘로` (가운데는 비워 둔다) -->
       <div class="actionbar" id="actionbarW">
-        <button class="btn ghost" id="btnTodayW" type="button">오늘로</button>
         <button class="btn primary" id="btnToRead" type="button">📖 보기</button>
+        <button class="btn ghost" id="btnTodayW" type="button">오늘로</button>
       </div>
     </section>
 
@@ -2150,16 +2162,12 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
       <div class="card view-tools">
         <div class="vt-grid">
           <div class="vt-cal" id="vtCal" aria-label="미니 달력"></div>
-          <div class="td-mini" id="vtMini" aria-live="polite"></div>
-        </div>
-        <div class="wt-datebar">
-          <button class="dnav" id="vtPrevDay" aria-label="전날">‹</button>
-          <div class="datebar-mid">
-            <b id="readDate">11/22</b>
-            <span class="wd" id="readWeekday">(일)</span>
+          <!-- #89 날짜 이동 줄(`‹ 11/25 (수) ›`)은 아래 `2026년 11월 25일 (수)` 제목과 겹쳐 없앴다.
+               #90 `🔍 검색·필터` 는 오른쪽 요약 카드 아래 빈 공간으로 -->
+          <div class="td-mini-wrap">
+            <div class="td-mini" id="vtMini" aria-live="polite"></div>
+            <button class="vt-fold-btn" id="vtFoldBtn" type="button" aria-expanded="false" aria-controls="vtTools">🔍 검색·필터</button>
           </div>
-          <button class="dnav" id="vtNextDay" aria-label="다음날">›</button>
-          <button class="vt-fold-btn" id="vtFoldBtn" type="button" aria-expanded="false" aria-controls="vtTools">🔍 검색·필터</button>
         </div>
         <div class="vt-right vt-body" id="vtTools">
             <div class="search-box">
@@ -2197,10 +2205,10 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
 
       <section class="card cum-card" id="cumStats"></section>
 
-      <!-- #83 보기 화면도 같은 하단 고정 바 — `오늘로` | `📝 기록` (쓰기 화면과 대칭) -->
+      <!-- #91 보기 화면도 같은 자리 — 왼쪽 `📝 기록`, 오른쪽 `오늘로` (쓰기 화면과 대칭) -->
       <div class="actionbar" id="readBar">
-        <button class="btn ghost" id="btnTodayR" type="button">오늘로</button>
         <button class="btn primary" id="btnToWrite" type="button">📝 기록</button>
+        <button class="btn ghost" id="btnTodayR" type="button">오늘로</button>
       </div>
     </section>
 
@@ -3093,15 +3101,18 @@ function richBreak(st, soft){
   if(soft && (!st.out || st.out.slice(-1)==='\n')) return;
   st.out+='\n';
 }
-/* #79 브라우저가 만든 빈 문단(<div><br></div>·<p><br></p>) — 문단 경계와 안쪽 <br>이 겹쳐 두 줄이 되지 않게 */
+/* #79·#92 브라우저가 만든 빈 문단(<div><br></div>·<p><br></p>·<div><span><br></span></div>) — 문단 경계와
+   안쪽 <br>이 겹쳐 두 줄이 되지 않게. 한 겹 더 감싼 빈 문단도 빈 줄 하나로 본다. */
 function richBlankBlock(n){
   var kids=(n && n.childNodes) || [];
+  if(!kids.length) return true;
   for(var i=0;i<kids.length;i++){
     var c=kids[i];
     if(c.nodeType===3){ if(String(c.data||'').replace(/[\s\u00a0\u200b]/g,'')) return false; continue; }
     if(c.nodeType!==1) return false;
     if(c.tagName==='BR') continue;
-    return false;
+    if(c.classList && (c.classList.contains('re-ph')||c.classList.contains('cb-g'))) return false;
+    if(!richBlankBlock(c)) return false;
   }
   return true;
 }
@@ -3150,14 +3161,10 @@ function richWalk(node, fmt, st){
     if(n.nodeType!==1) continue;
     var tag=n.tagName;
     if(tag==='BR'){
-      /* #79 커서 자리용 filler <br> — 바로 뒤에 진짜 <br>이 이어지면 겹친 것이라 건너뛴다 */
-      if(n.getAttribute && n.getAttribute('data-filler')==='1'){
-        var nx=n.nextSibling;
-        while(nx && nx.nodeType===3 && !(nx.data||'')) nx=nx.nextSibling;
-        if(nx && nx.nodeType===1 && nx.tagName==='BR') continue;
-        richBreak(st);
-        continue;
-      }
+      /* #92 커서 자리용 filler <br> 은 언제나 '가상' 자리라 줄바꿈으로 세지 않는다.
+         예전에는 바로 뒤에 <br> 이 이어질 때만 건너뛰어서, 표시 없는 <br> 이 하나 더 붙어 있으면
+         엔터 한 번이 두 줄(\n\n)로 저장됐다. */
+      if(n.getAttribute && n.getAttribute('data-filler')==='1') continue;
       richBreak(st);
       continue;
     }
@@ -3273,13 +3280,38 @@ function richInsertText(el, txt){
     if(i>0){ var br=document.createElement('br'); frag.appendChild(br); last=br; }
     if(parts[i]){ var tn=document.createTextNode(parts[i]); frag.appendChild(tn); last=tn; }
   }
-  if(last && last.nodeType===1){ frag.appendChild(document.createElement('br')); }  /* 새 줄 커서 자리 */
   if(!last){ var end=document.createTextNode(''); frag.appendChild(end); last=end; }
   try{ r.insertNode(frag); }catch(e){ return false; }
+  /* #92 새 줄 커서 자리용 <br> — (1) 넣은 자리 뒤에 아무 내용도 없을 때만, (2) `data-filler` 표시와 함께.
+     예전에는 표시 없는 <br> 을 늘 하나 더 붙여, 엔터 뒤에 이어 쓰면 <br><br>(두 줄)로 저장됐다. */
+  if(last.nodeType===1 && richEndNeedsFiller(el, last)){
+    try{
+      var fbr=document.createElement('br');
+      fbr.setAttribute('data-filler','1');
+      last.parentNode.insertBefore(fbr, last.nextSibling);
+    }catch(e){}
+  }
   var nr=document.createRange();
   if(last.nodeType===3) nr.setStart(last, last.data.length); else nr.setStartAfter(last);
   nr.collapse(true);
   sel.removeAllRanges(); sel.addRange(nr);
+  return true;
+}
+/* #92 넣은 자리 뒤에 진짜 내용이 없을 때만 true — 뒤에 <br>(진짜 줄바꿈)·글자·사진·체크 상자가 있으면
+   커서 자리용 <br> 이 필요 없다(넣으면 그 자체가 한 줄로 더 세어질 수 있다) */
+function richEndNeedsFiller(el, node){
+  var n=node;
+  while(n && n!==el){
+    var s=n.nextSibling;
+    while(s){
+      if(s.nodeType===3){ if((s.data||'').replace(/[\s\u00a0\u200b]/g,'')) return false; }
+      else if(s.nodeType===1){
+        if(!(s.tagName==='BR' && s.getAttribute && s.getAttribute('data-filler')==='1')) return false;
+      }
+      s=s.nextSibling;
+    }
+    n=n.parentNode;
+  }
   return true;
 }
 /* ══════════════════ #66 붙여넣기 서식 유지 ══════════════════
@@ -10536,6 +10568,15 @@ function openMemoEditor(id, opts){
       });
       bodyEd.addEventListener('focus', noteSel);
       bodyEd.addEventListener('keydown', function(e){ richEditorKey(e, bodyEd, 'memo'); });
+      /* #92 안드로이드 한글 키보드 — 조합 중 Enter 의 beforeinput 줄바꿈도 <br> 하나로 */
+      bodyEd.addEventListener('beforeinput', function(e){
+        var it=String(e.inputType||'');
+        if(it!=='insertLineBreak' && it!=='insertParagraph') return;
+        if(e.isComposing || bodyEd.__composing) return;
+        e.preventDefault();
+        richInsertText(bodyEd, '\n');
+        memoAfterEdit(bodyEd);
+      });
       /* #50 '-[]' 쓰고 스페이스 → 체크 상자 */
       bodyEd.addEventListener('input', function(){
         if(bodyEd.__composing) return;
@@ -11916,6 +11957,20 @@ function bindEvents(){
       if(ev==='compositionend') setTimeout(function(){ if(ed.isConnected) syncSectionText(ed); }, 0);
     }, true);
   });
+  /* #92 안드로이드 한글 키보드 — 조합 중 Enter 는 keydown 이 229 로 와서 우리가 잡지 못한다.
+     그래서 beforeinput 의 줄바꿈도 같은 richInsertText 로 보내 <br> 을 하나만 만든다.
+     (조합 중(e.isComposing)이면 브라우저에 맡기고, 조합이 끝난 뒤 세는 규칙이 filler <br> 을 건너뛴다) */
+  function richBeforeInput(e){
+    var ed=e.target.closest? e.target.closest('.sec-text') : null;
+    if(!ed) return;
+    var it=String(e.inputType||'');
+    if(it!=='insertLineBreak' && it!=='insertParagraph') return;
+    if(e.isComposing || ed.__composing) return;
+    e.preventDefault();
+    richInsertText(ed, '\n');
+    syncSectionText(ed);
+  }
+  $('sections').addEventListener('beforeinput', richBeforeInput);
   /* 서식 버튼을 눌러도 편집창 선택이 풀리지 않게 */
   $('sections').addEventListener('mousedown', function(e){
     if(e.target.closest && e.target.closest('.fmt-row')) e.preventDefault();
