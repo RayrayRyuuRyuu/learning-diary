@@ -677,7 +677,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-nume
 }
 .sel-bar button{height:44px;border-radius:13px;font-weight:900;font-size:13.5px;border:1px solid var(--line);background:#fff;color:var(--ink-2);flex:1;letter-spacing:-.02em}
 .sel-bar button.merge{background:var(--teal-soft);border-color:var(--teal-soft-2);color:var(--teal-3)}
-.sel-bar button.hide{background:#fdf2f2;border-color:#f0d6d6;color:#b24a4a}
+.sel-bar button.del{background:#fdf2f2;border-color:#f0d6d6;color:#b24a4a}
 .sel-bar button.x{flex:0 0 46px;font-size:15px}
 .sel-bar button:disabled{opacity:.45}
 body.shelf-sel #view-shelf{padding-bottom:78px}
@@ -1412,8 +1412,9 @@ body.kb-open .backdrop-fs .sheet{padding-bottom:calc(8px + var(--kb,0px))}
 .kid-tt{flex:1;min-width:0}
 .kid-tt b{display:block;font-size:16px;font-weight:900;letter-spacing:-.02em;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .kid-tt span{display:block;font-size:10.5px;font-weight:700;color:rgba(255,255,255,.8);margin-top:1px}
-.kid-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:7px;background:rgba(255,255,255,.16);border-radius:11px;padding:3px}
+.kid-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:7px;background:rgba(255,255,255,.16);border-radius:11px;padding:3px}
 .kid-tab{height:31px;border-radius:8px;font-size:12px;font-weight:800;color:rgba(255,255,255,.86);display:flex;align-items:center;justify-content:center;gap:4px}
+@media (max-width:380px){ .kid-tab{font-size:11px;gap:2px;letter-spacing:-.03em} }
 .kid-tab.on{background:#fff;color:var(--teal-3);box-shadow:0 3px 10px -4px rgba(0,0,0,.28)}
 .kid-body{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 11px calc(16px + var(--safe-b));display:flex;flex-direction:column;gap:9px}
 .kid-pane{display:flex;flex-direction:column;gap:9px}
@@ -1596,8 +1597,8 @@ body.memo-order #memoBody{padding-bottom:64px}
 #tabRecord .tl{letter-spacing:-.01em}
 
 /* ══ 2026-11-26 (#42~#48) ══ */
-/* 탭 4개(기록 · 책장 · 음식 · 체험) */
-.tabs{grid-template-columns:repeat(4,1fr)}
+/* 탭 3개(기록 · 책장 · 음식) — 🧭 체험은 래니😚 페이지 안으로 (#71) */
+.tabs{grid-template-columns:repeat(3,1fr)}
 
 /* #45 상단: 달력 옆 미니 Today 요약 + 날짜 이동 줄을 아래로 */
 .td-mini{border:1px solid var(--line);border-radius:10px;background:#fff;padding:5px 7px 6px;display:flex;flex-direction:column;gap:2px;overflow:hidden;min-height:156px}
@@ -1750,15 +1751,15 @@ body.memo-order #memoBody{padding-bottom:64px}
 /* #61 PC(넓은 화면) 전용 레이아웃 — 모바일 화면은 위 규칙 그대로 */
 #pcSide{display:none}
 @media (min-width:960px){
-  :root{--pc-side:300px;--pc-hdr:104px}
+  :root{--pc-side:300px;--pc-hdr:104px;--pc-wrap:1080px}
   .app{max-width:none}
   .topbar{border-radius:0;padding:calc(8px + env(safe-area-inset-top,0px)) 24px 10px}
-  .brand-wrap{max-width:1400px;margin:0 auto}
-  .topbar .tabs{max-width:760px;margin:9px auto 0}
+  .brand-wrap{max-width:var(--pc-wrap);margin:0 auto}
+  .topbar .tabs{max-width:600px;margin:9px auto 0}
   #tipBanner{display:none !important}
   main{
     display:grid;grid-template-columns:var(--pc-side) minmax(0,1fr);gap:20px;
-    align-items:start;max-width:1680px;margin:0 auto;padding:16px 24px 30px;
+    align-items:start;max-width:var(--pc-wrap);margin:0 auto;padding:16px 20px 30px;
   }
   main > .tip{grid-column:1/-1}
   #view-write,#view-read,#view-shelf,#view-food,#view-exp{grid-column:2;min-width:0}
@@ -1800,10 +1801,10 @@ body.memo-order #memoBody{padding-bottom:64px}
   .add-cat{height:52px}
   /* 하단 버튼 줄은 오른쪽 아래 떠 있는 카드로 */
   .actionbar{
-    left:auto;right:32px;transform:none;width:360px;bottom:18px;
+    left:auto;right:max(20px, calc(50% - 520px));transform:none;width:360px;bottom:18px;
     border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:8px 10px calc(8px + var(--safe-b));
   }
-  .read-bar{left:calc(var(--pc-side) + 48px);bottom:18px}
+  .read-bar{left:max(12px, calc(50% - 200px));bottom:18px}
   .read-bar .btn{height:44px;padding:0 20px;font-size:14px}
   /* #61 PC에서 검색·기간·버튼 줄이 화면 폭만큼 늘어나지 않게 */
   .vt-right .vt-acts{justify-content:flex-start}
@@ -1813,8 +1814,8 @@ body.memo-order #memoBody{padding-bottom:64px}
   .vt-right .search-box input{font-size:13px}
   .vt-right .rchip{font-size:11px;height:26px;border-radius:8px;line-height:24px;padding:0 9px}
   /* 아이 페이지(성장·메모장)는 가운데 정렬된 넓은 폭으로 */
-  .kid-head{max-width:1200px;width:100%;margin:0 auto;border-radius:0 0 14px 14px}
-  .kid-body{max-width:1200px;width:100%;margin:0 auto}
+  .kid-head{max-width:var(--pc-wrap);width:100%;margin:0 auto;border-radius:0 0 14px 14px}
+  .kid-body{max-width:var(--pc-wrap);width:100%;margin:0 auto}
   .rc-grid{grid-template-columns:repeat(5,1fr)}
   .xg{grid-template-columns:repeat(4,1fr)}
   .shelf-grid,.bk-grid,.vid-grid,.wish-grid,.th-recent-row{grid-template-columns:repeat(5,1fr)}
@@ -1861,6 +1862,67 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
 .crop-actions{display:flex;gap:7px;margin-top:10px}
 .crop-actions .btn-line{flex:0 0 auto;width:auto;padding:0 14px}
 .crop-actions .crop-go{flex:1;width:auto}
+/* ══ 2026-11-27 (#69~#76) ══ */
+/* #70 `오늘로`를 날짜 이동 바 맨 앞으로 — `오늘로 ‹ 11/27 (금) ›` */
+.wt-datebar{gap:4px}
+.wt-datebar .wt-today{flex:0 0 auto;width:52px;height:30px;border-radius:9px;font-size:11px;font-weight:900;letter-spacing:-.03em;line-height:1;color:var(--teal-3);background:#fff;border:1px solid var(--line)}
+.wt-datebar .wt-today:active{background:var(--teal-soft)}
+.wt-datebar .datebar-mid{flex:0 1 auto}
+/* #73 왼쪽 `이 날 N개 영역` 요약 즐 — 누르면 그 영역으로 이동 */
+.tdm-row{cursor:pointer;border-radius:6px}
+.tdm-row:active{background:var(--teal-soft)}
+.tdm-row:focus-visible{outline:2px solid var(--teal-2);outline-offset:1px}
+/* #74 보기 영역 카드를 두 번 두드리면 기록 화면으로 — 스크롤 여유와 잠깐 강조 */
+#sections .sec,#readContent .read-sec{scroll-margin-top:96px}
+@keyframes secflash{0%{box-shadow:0 0 0 3px rgba(13,122,112,.34)}100%{box-shadow:var(--shadow-sm)}}
+.sec-flash{animation:secflash 1.2s ease}
+#readContent .read-sec{cursor:default;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+/* #78 모바일 보기 — 날짜 이동 바 오른쪽 `🔍 검색·필터` 토글로 검색·기간·복사/PDF·필터 박스를 접고 편다 */
+.vt-fold-btn{display:none}
+@media (max-width:959px){
+  .vt-fold-btn{display:inline-flex;align-items:center;gap:5px;flex:0 0 auto;margin-left:auto;height:30px;padding:0 9px;border-radius:9px;
+    font-size:10.5px;font-weight:900;letter-spacing:-.03em;white-space:nowrap;line-height:1;
+    color:var(--teal-3);background:#fff;border:1px solid var(--line)}
+  .vt-fold-btn.on{background:var(--teal-soft);border-color:var(--teal-soft-2)}
+  .vt-fold-btn .ffdot{width:6px;height:6px;border-radius:50%;background:#e2725b;display:block}
+  #view-read .view-tools.vt-closed .vt-right,
+  #view-read .view-tools.vt-closed .vt-cats{display:none}
+  #view-read .view-tools.vt-closed{padding-bottom:9px}
+}
+@media (max-width:360px){
+  .vt-fold-btn{font-size:10px;padding:0 7px;gap:4px}
+}
+@media (min-width:960px){
+  /* #75 사이드바 순서: 달력 → 날짜 이동 바(카드 폭에 꽉 차게) → 이 날 요약 → 보기 도구 */
+  #pcSide .pcs-datebar{display:flex;align-items:center;gap:6px;padding:8px 9px;margin-left:auto;margin-right:auto;width:100%;box-sizing:border-box}
+  #pcSide .pcs-datebar .wt-today{flex:0 0 auto;width:56px;height:32px;border-radius:10px;font-size:11.5px;font-weight:900;letter-spacing:-.03em;line-height:1;color:var(--teal-3);background:#fff;border:1px solid var(--line);margin-left:0}
+  #pcSide .pcs-datebar .wt-today:active{background:var(--teal-soft)}
+  #pcSide .pcs-datebar .dnav{width:32px;height:32px;flex:0 0 32px;border-radius:10px;background:#fff;border:1px solid var(--line);font-size:16px;display:grid;place-items:center;line-height:1;color:var(--ink-2)}
+  #pcSide .pcs-datebar .dnav:active{background:var(--teal-soft)}
+  #pcSide .pcs-datebar .pcs-dt{flex:1 1 auto;min-width:0;display:flex;align-items:baseline;justify-content:center;gap:4px;white-space:nowrap;overflow:hidden}
+  #pcSide .pcs-datebar .pcs-dt b{font-size:17px;font-weight:900;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+  #pcSide .pcs-datebar .pcs-dt .wd{font-size:11.5px;color:var(--muted);font-weight:800}
+  #pcSide .pcs-datebar .badge{flex:0 0 auto;font-size:8.5px;padding:1px 4px;border-radius:5px;background:var(--sun);color:#7a5a12}
+  /* #72 보기 모드의 검색·기간·복사/PDF·영역 필터가 사이드바에 앉을 때 */
+  #pcSide .pcs-tools{display:flex;flex-direction:column;gap:7px}
+  #pcSide .pcs-tools[hidden]{display:none !important}
+  #pcSide .pcs-tools .vt-right{gap:7px;min-width:0}
+  #pcSide .pcs-tools .vt-right .search-box{height:34px;border-radius:10px;padding:0 10px}
+  #pcSide .pcs-tools .vt-right .search-box input{font-size:12.5px}
+  #pcSide .pcs-tools .range-chips{flex-wrap:wrap;overflow:visible;gap:4px}
+  #pcSide .pcs-tools .rchip{font-size:11px;height:26px;line-height:24px;padding:0 9px;border-radius:8px}
+  #pcSide .pcs-tools .range-custom{flex-wrap:wrap}
+  #pcSide .pcs-tools .date-inp{height:30px;font-size:11px}
+  #pcSide .pcs-tools .vt-acts{gap:6px}
+  #pcSide .pcs-tools .vt-acts .act-btn{flex:1 1 0;padding:7px 4px;font-size:10.5px;border-radius:9px}
+  #pcSide .pcs-tools .vt-cats{flex-wrap:wrap;gap:5px;align-items:flex-start;min-height:0}
+  #pcSide .pcs-tools .vt-cats .result-count{flex:1 1 100%;font-size:10.5px}
+  #pcSide .pcs-tools .vt-cats .cat-chips{flex:1 1 100%;flex-wrap:wrap;overflow:visible;gap:4px}
+  #pcSide .pcs-tools .cchip{font-size:10.5px;padding:4px 7px;border-radius:8px}
+  /* 도구가 사이드바로 가면 본문 위 카드는 통째로 숨긴다 */
+  #view-read .view-tools{display:none}
+}
+#view-shelf .shelf-tools{justify-content:flex-end}
 </style>
 </head>
 <body>
@@ -1917,7 +1979,6 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
       <button class="tab active" id="tabRecord" data-tab="record" role="tab" aria-selected="true" title="한 번 더 누르면 쓰기 ↔ 보기"><span class="tl tl-long">📝 기록</span><span class="tl tl-short">📝 기록</span></button>
       <button class="tab" id="tabShelf" data-tab="shelf" role="tab" aria-selected="false"><span class="tl tl-long">📚 책장</span><span class="tl tl-short">📚 책장</span></button>
       <button class="tab" id="tabFood" data-tab="food" role="tab" aria-selected="false"><span class="tl tl-long">🍳 음식</span><span class="tl tl-short">🍳 음식</span></button>
-      <button class="tab" id="tabExp" data-tab="exp" role="tab" aria-selected="false"><span class="tl tl-long">🧭 체험</span><span class="tl tl-short">🧭 체험</span></button>
     </div>
   </header>
 
@@ -1934,6 +1995,7 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
       <div class="kid-tabs" role="tablist" aria-label="아이 페이지">
         <button class="kid-tab on" id="kidTabGrowth" type="button" data-kid="growth" role="tab" aria-selected="true">📏 성장</button>
         <button class="kid-tab" id="kidTabMemo" type="button" data-kid="memo" role="tab" aria-selected="false">📝 메모장</button>
+        <button class="kid-tab" id="kidTabExp" type="button" data-kid="exp" role="tab" aria-selected="false">🧭 체험</button>
       </div>
     </div>
     <div class="kid-body">
@@ -1960,12 +2022,42 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
           </div>
         </section>
       </div>
+      <!-- #71 🧭 체험 — 메인 탭에서 빼고 래니😚 페이지 안으로 옮겼다 (데이터·찜/다녀옴 그대로) -->
+      <div class="kid-pane" id="kidPaneExp" hidden>
+        <section id="view-exp">
+          <div class="card exp-top">
+            <div class="exp-head">
+              <div class="shelf-sum" id="expSum"><b>🧭 0곳</b><span>잠수네 체험·캠프 모음</span></div>
+              <button class="mini-btn exp-only" id="expStarOnly" type="button" aria-pressed="false">⭐ 찜만</button>
+            </div>
+            <div class="wish-folds exp-folds" id="expCat" role="group" aria-label="체험 종류"></div>
+            <div class="wish-folds exp-folds" id="expRegion" role="group" aria-label="지역"></div>
+            <div class="shelf-linerow exp-sortrow">
+              <div class="shelf-sort"><span class="sort-dec" aria-hidden="true">▾</span>
+                <select id="expSort" aria-label="체험 정렬">
+                  <option value="cat">종류순</option>
+                  <option value="name">이름순</option>
+                  <option value="region">지역순</option>
+                  <option value="star">찜 먼저</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div id="expBody"></div>
+        </section>
+      </div>
     </div>
   </div>
 
   <main>
-    <!-- PC(넓은 화면) 전용 왼쪽 고정 사이드바: 미니 달력 · Today 요약 · 날짜 이동 (#61) -->
-    <aside id="pcSide" aria-label="날짜와 오늘 요약"></aside>
+    <!-- PC(넓은 화면) 전용 왼쪽 고정 사이드바 — #75 순서: 달력 → 날짜 이동 → 이 날 요약 → (보기) 검색·기간·복사/PDF·영역 필터 -->
+    <aside id="pcSide" aria-label="날짜와 오늘 요약">
+      <div class="card pcs-card"><div class="vt-cal pcs-cal" id="pcsCal"></div></div>
+      <div class="card pcs-datebar" id="pcsDatebar"></div>
+      <div class="card pcs-card" id="pcsToday"><div class="td-mini pcs-mini" id="pcsMini"></div></div>
+      <div id="pcReadTools" class="pcs-tools" hidden></div>
+      <div class="pcs-hint" id="pcsHint"><b>Ctrl+S</b> 저장 · <b>Ctrl+V</b> 사진 붙여넣기</div>
+    </aside>
     <section class="card cal-card" id="calCard" aria-label="월간 달력">
       <div class="cal-head">
         <button class="cal-nav" data-nav="-12" aria-label="1년 전">«</button>
@@ -2001,6 +2093,7 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
           <div class="td-mini" id="wtMini" aria-live="polite"></div>
         </div>
         <div class="wt-datebar">
+          <button class="wt-today" id="btnTodayW" type="button">오늘로</button>
           <button class="dnav" id="prevDay" aria-label="전날">‹</button>
           <div class="datebar-mid">
             <b id="writeDate">11/22</b>
@@ -2008,7 +2101,6 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
             <span class="badge" id="draftBadge" hidden>임시저장본</span>
           </div>
           <button class="dnav" id="nextDay" aria-label="다음날">›</button>
-          <button class="wt-today" id="btnTodayW" type="button">오늘로</button>
         </div>
       </div>
 
@@ -2036,15 +2128,16 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
           <div class="td-mini" id="vtMini" aria-live="polite"></div>
         </div>
         <div class="wt-datebar">
+          <button class="wt-today" id="btnTodayR" type="button">오늘로</button>
           <button class="dnav" id="vtPrevDay" aria-label="전날">‹</button>
           <div class="datebar-mid">
             <b id="readDate">11/22</b>
             <span class="wd" id="readWeekday">(일)</span>
           </div>
           <button class="dnav" id="vtNextDay" aria-label="다음날">›</button>
-          <button class="wt-today" id="btnTodayR" type="button">오늘로</button>
+          <button class="vt-fold-btn" id="vtFoldBtn" type="button" aria-expanded="false" aria-controls="vtTools">🔍 검색·필터</button>
         </div>
-        <div class="vt-right vt-body">
+        <div class="vt-right vt-body" id="vtTools">
             <div class="search-box">
               <span class="ic" aria-hidden="true">🔍</span>
               <input id="searchInput" type="search" placeholder="검색 — 학습, 독서, 한자…" autocomplete="off" enterkeyhint="search" aria-label="기록 검색">
@@ -2069,7 +2162,7 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
               <button class="act-btn pdf" data-act="printview">🖨️ PDF 저장</button>
             </div>
         </div>
-        <div class="vt-cats">
+        <div class="vt-cats" id="vtCats">
           <span class="result-count" id="rangeInfo"></span>
           <div class="cat-chips" id="viewCatChips" role="group" aria-label="영역 거르기"></div>
         </div>
@@ -2106,8 +2199,7 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
             <button class="mini-btn" type="button" data-wishjson aria-label="목록 JSON 불러오기">⬆️ JSON</button>
           </div>
           <div class="shelf-tools" id="shelfTools">
-            <button class="mini-btn" id="shelfHiddenBtn" type="button" hidden>🙈 숨긴 0개</button>
-            <button class="mini-btn" id="shelfSelBtn" type="button" aria-pressed="false" title="여러 개를 골라 합치거나 숨기기">☑️ 선택</button>
+            <button class="mini-btn" id="shelfSelBtn" type="button" aria-pressed="false" title="여러 개를 골라 합치거나 지우기">☑️ 선택</button>
           </div>
         </form>
         <div class="wish-folds" id="wishFolds" hidden></div>
@@ -2138,7 +2230,7 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
       <div id="wishBody" hidden></div>
       <div class="sel-bar" id="shelfSelBar" hidden>
         <button class="merge" type="button" data-selact="merge">🔗 합치기 (0개)</button>
-        <button class="hide" type="button" data-selact="hide">🙈 숨기기 (0개)</button>
+        <button class="del" type="button" data-selact="del">🗑 삭제 (0개)</button>
         <button class="x" type="button" data-selact="cancel" aria-label="선택 취소">✕</button>
       </div>
     </section>
@@ -2163,29 +2255,6 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
         </div>
       </div>
       <div id="recipeBody"></div>
-    </section>
-
-    <!-- ══ 🧭 체험 ══ -->
-    <section id="view-exp" hidden>
-      <div class="card exp-top">
-        <div class="exp-head">
-          <div class="shelf-sum" id="expSum"><b>🧭 0곳</b><span>잠수네 체험·캠프 모음</span></div>
-          <button class="mini-btn exp-only" id="expStarOnly" type="button" aria-pressed="false">⭐ 찜만</button>
-        </div>
-        <div class="wish-folds exp-folds" id="expCat" role="group" aria-label="체험 종류"></div>
-        <div class="wish-folds exp-folds" id="expRegion" role="group" aria-label="지역"></div>
-        <div class="shelf-linerow exp-sortrow">
-          <div class="shelf-sort"><span class="sort-dec" aria-hidden="true">▾</span>
-            <select id="expSort" aria-label="체험 정렬">
-              <option value="cat">종류순</option>
-              <option value="name">이름순</option>
-              <option value="region">지역순</option>
-              <option value="star">찜 먼저</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div id="expBody"></div>
     </section>
   </main>
 </div>
@@ -2263,7 +2332,7 @@ function defaultState(){
     bookshelf:[],
     settings:{ calCollapsed:false, tipDismissed:false, lastBackupAt:0,
       shelfTab:'book', shelfSub:{book:'read', video:'read'}, shelfLang:'all', videoGroup:'title', videoFilter:'all', shelfSort:'new',
-      shelfGroups:[], shelfHidden:[], shelfOverrides:{}, shelfExtra:{}, templates:{},
+      shelfGroups:[], shelfRemoved:[], shelfOverrides:{}, shelfExtra:{}, templates:{},
       shelfRatings:{}, wishlist:[], wishAt:0, memos:[], memoAt:0, memoPhotos:{},
       recipes:[], recipeAt:0, recipeFolders:[], recipeSort:'new', recipePhotos:{},
       growthRecords:[], growthAt:0, growthSeed:0,
@@ -2561,7 +2630,11 @@ function normalizeState(s){
   /* 책장 표시 설정 — 원문(entries·photos)은 건드리지 않고 여기서만 관리한다 */
   var st=out.settings;
   st.shelfGroups=normShelfGroups(st.shelfGroups);
-  st.shelfHidden=strList(st.shelfHidden, 3000);
+  /* #69 숨김 기능을 없애고 삭제로 바꿨다 — 예전에 숨겨 둔 항목(shelfHidden)은
+     그대로 ‘책장에서 지운 항목’으로 옮겨 두어 갑자기 되살아나지 않게 한다. */
+  st.shelfRemoved=strList(st.shelfRemoved, 3000);
+  strList(st.shelfHidden, 3000).forEach(function(k){ if(st.shelfRemoved.indexOf(k)<0) st.shelfRemoved.push(k); });
+  st.shelfHidden=[];
   st.shelfOverrides=normShelfOverrides(st.shelfOverrides);
   st.shelfExtra=normCountMap(st.shelfExtra);
   st.templates=normTemplates(st.templates);
@@ -4105,24 +4178,39 @@ function setHTMLIfChanged(el, html){
   el.__h=html;
   el.innerHTML=html;
 }
-function pcSideHTML(){
-  var isWrite=(activeTab==='write');
-  var secs=isWrite? (current? current.sections : {}) : readMiniSections();
-  var h='';
-  h+='<div class="card pcs-card"><div class="vt-cal pcs-cal">'+miniCalHTML(isWrite)+'</div></div>';
-  h+='<div class="card pcs-card"><div class="td-mini pcs-mini">'+miniTodayHTML(secs)+'</div></div>';
-  h+='<div class="card pcs-datebar">'
+function pcSideDatebarHTML(){
+  var draft=(current && current.isDraft)? '<span class="badge">임시저장본</span>' : '';
+  return '<button class="wt-today" type="button" data-pctoday>오늘로</button>'
     +'<button class="dnav" type="button" data-pcprev aria-label="전날">‹</button>'
-    +'<b>'+fmtMD(selected)+'</b><span class="wd">('+DOW[parseYmd(selected).getDay()]+')</span>'
+    +'<span class="pcs-dt"><b>'+fmtMD(selected)+'</b><span class="wd">('+DOW[parseYmd(selected).getDay()]+')</span></span>'
     +'<button class="dnav" type="button" data-pcnext aria-label="다음날">›</button>'
-    +(current && current.isDraft? '<span class="badge">임시저장본</span>' : '')
-    +'<button class="wt-today" type="button" data-pctoday>오늘로</button>'
-  +'</div>';
-  h+='<div class="pcs-hint"><b>Ctrl+S</b> 저장 · <b>Ctrl+V</b> 사진 붙여넣기</div>';
-  return h;
+    +draft;
+}
+/* #72 보기 모드의 검색·기간·복사/PDF·영역 필터 블록을 사이드바로 옮겼다 되돌린다 */
+function syncReadToolsPlacement(){
+  var host=$('pcReadTools');
+  var tools=document.querySelector('#view-read .view-tools');
+  var vr=$('vtTools'), vc=$('vtCats');
+  if(!host || !tools || !vr || !vc) return;
+  var pc=false;
+  try{ pc=window.matchMedia('(min-width:960px)').matches; }catch(e){}
+  var put=(pc && activeTab==='read');
+  if(put){
+    if(vr.parentNode!==host){ host.appendChild(vr); host.appendChild(vc); }
+    host.hidden=false;
+  } else {
+    if(vr.parentNode!==tools){ tools.appendChild(vr); tools.appendChild(vc); }
+    host.hidden=true;
+  }
 }
 function renderPcSide(){
-  setHTMLIfChanged($('pcSide'), pcSideHTML());
+  if(!$('pcSide')) return;
+  var isWrite=(activeTab==='write');
+  var secs=isWrite? (current? current.sections : {}) : readMiniSections();
+  setHTMLIfChanged($('pcsCal'), miniCalHTML(isWrite));
+  setHTMLIfChanged($('pcsDatebar'), pcSideDatebarHTML());
+  setHTMLIfChanged($('pcsMini'), miniTodayHTML(secs));
+  syncReadToolsPlacement();
 }
 
 /* ────────────────────────────── render: write ────────────────────────────── */
@@ -4572,7 +4660,8 @@ function miniTodayHTML(secs){
   }
   var head='<div class="tdm-h">이 날 <b>'+rows.length+'</b>개 영역 · <b>'+fmtMin(tot)+'</b></div>';
   var body=rows.slice(0,MINI_LIMIT).map(function(r){
-    return '<div class="tdm-row'+(isEnglish(r.c)?'':' other')+'"><i class="gdd"></i><span class="nmm">'+esc(catBase(r.c))+'</span><b>'+fmtMin(r.m)+'</b></div>';
+    /* #73 영역 줄을 누르면 오른쪽 본문의 그 영역 카드로 이동 */
+    return '<div class="tdm-row'+(isEnglish(r.c)?'':' other')+'" role="button" tabindex="0" data-tdmcat="'+esc(r.c.id)+'" title="'+esc(catBase(r.c)+' 영역으로 이동')+'"><i class="gdd"></i><span class="nmm">'+esc(catBase(r.c))+'</span><b>'+fmtMin(r.m)+'</b></div>';
   }).join('');
   var more=rows.length>MINI_LIMIT? '<div class="tdm-more">+'+(rows.length-MINI_LIMIT)+'개 더</div>' : '';
   return head+body+more;
@@ -4790,7 +4879,7 @@ function readSectionHTML(c, s, ds){
     ? '<span class="tm'+(m?'':' none')+'">'+(m? fmtMin(m) : '시간 없음')+'</span>'
     : '<span class="tm none">메모</span>';
   if(ds) body=cbIndexHTML(body, ds, c.id);
-  return '<section class="read-sec'+(pids.length?' has-photos':'')+'"><div class="rh">'
+  return '<section class="read-sec'+(pids.length?' has-photos':'')+'" data-rcat="'+esc(c.id)+'"'+(ds? ' data-rdate="'+esc(ds)+'"':'')+'><div class="rh">'
     +'<div class="nm">'+secNameHTML(c)+(isPrivate(c)?'<span class="private-tag">비공개</span>':'')+'</div>'
     +tm
     +'</div><div class="body">'+body+'</div></section>';
@@ -5127,6 +5216,7 @@ function snippetHTML(text, q){
 var searchTimer=null;
 function runSearch(){
   var q=searchQuery.trim();
+  syncVtFold();
   if(!q){
     $('searchResults').hidden=true;
     $('searchResults').innerHTML='';
@@ -5170,6 +5260,22 @@ function runSearch(){
   }
   $('searchResults').innerHTML=html;
   setMeta('‘'+q+'’ '+days.length+'일 · '+totals.sections+'건');
+  syncVtFold();
+}
+/* #78 모바일 보기 — 검색·필터 박스 접기/펴기 (기본은 접힘) */
+var vtFoldOpen=false;
+function vtFilterActive(){ return !!(String(searchQuery||'').trim() || viewRange!=='day' || viewCat); }
+function syncVtFold(){
+  var tools=document.querySelector('#view-read .view-tools');
+  var btn=$('vtFoldBtn');
+  var act=vtFilterActive();
+  if(tools) tools.classList.toggle('vt-closed', !vtFoldOpen);
+  if(btn){
+    btn.classList.toggle('on', vtFoldOpen);
+    btn.setAttribute('aria-expanded', vtFoldOpen?'true':'false');
+    btn.innerHTML='🔍 검색·필터'+(act? '<i class="ffdot" aria-hidden="true"></i>' : '');
+    btn.title=act? '검색·기간·영역 필터가 켜져 있어요' : '';
+  }
 }
 function renderRead(){
   if(activeTab!=='read') return;
@@ -5177,12 +5283,117 @@ function renderRead(){
   renderCumStats();
   renderMiniSummary();
   renderReadDateBar();
+  syncVtFold();
   var q=searchQuery.trim();
   if(q){ runSearch(); return; }
   $('searchResults').hidden=true;
   $('searchResults').innerHTML='';
   $('readContent').hidden=false;
   renderView();
+}
+/* ── #73 왼쪽 요약의 영역 줄 → 그 영역 카드로 / #74 보기 카드 두 번 두드리기 → 기록 화면 ── */
+function cssEsc(v){
+  var s=String(v||'');
+  if(window.CSS && CSS.escape) return CSS.escape(s);
+  return s.replace(/["\\]/g,'\\$&');
+}
+function sectionScrollTarget(cid){
+  if(!cid) return null;
+  if(activeTab==='read'){
+    var list=document.querySelectorAll('#readContent .read-sec[data-rcat="'+cssEsc(cid)+'"]');
+    for(var i=0;i<list.length;i++){ if(list[i].getAttribute('data-rdate')===selected) return list[i]; }
+    return list.length? list[0] : null;
+  }
+  if(activeTab==='write') return document.querySelector('#sections .sec[data-cat="'+cssEsc(cid)+'"]');
+  return null;
+}
+function flashEl(el){
+  if(!el) return;
+  el.classList.remove('sec-flash');
+  void el.offsetWidth;
+  el.classList.add('sec-flash');
+  setTimeout(function(){ el.classList.remove('sec-flash'); }, 1300);
+}
+function smoothTo(el){
+  if(!el) return;
+  try{ el.scrollIntoView({behavior:'smooth', block:'start'}); }
+  catch(e){ try{ el.scrollIntoView(); }catch(e2){} }
+}
+function goToSection(cid){
+  var el=sectionScrollTarget(cid);
+  if(!el){ toast('이 화면에서 그 영역을 찾지 못했어요', 2200); return false; }
+  smoothTo(el);
+  if(activeTab==='write') flashEl(el);
+  return true;
+}
+/* 두드린 자리의 글자 위치를 저장 글자 기준 오프셋으로 어림한다 (-1이면 못 찾음) */
+function readTapTextOffset(e, sec){
+  try{
+    var x=e.clientX, y=e.clientY, r=null;
+    if(document.caretRangeFromPoint) r=document.caretRangeFromPoint(x, y);
+    else if(document.caretPositionFromPoint){ var p=document.caretPositionFromPoint(x, y); if(p) r={startContainer:p.offsetNode, startOffset:p.offset}; }
+    if(!r || !r.startContainer) return -1;
+    var txtEl=sec.querySelector('.txt');
+    if(!txtEl || !txtEl.contains(r.startContainer)) return -1;
+    var node=r.startContainer;
+    if(node.nodeType!==3) return -1;
+    var full=String(node.nodeValue||''), off=Math.max(0, Math.min(r.startOffset||0, full.length));
+    var ls=full.lastIndexOf('\n', off-1)+1;
+    var le=full.indexOf('\n', ls); if(le<0) le=full.length;
+    var lineText=full.slice(ls, le), prefix=full.slice(ls, off);
+    var head=lineText.replace(/^\s+/,'');
+    if(!head) return -1;
+    var cid=sec.getAttribute('data-rcat')||'';
+    var ds=sec.getAttribute('data-rdate')||selected;
+    var raw=String(((sectionsOf(ds)||{})[cid]||{}).t||'');
+    var lead=lineText.length-head.length;
+    for(var n=Math.min(18, head.length); n>=3; n--){
+      var probe=head.slice(0, n);
+      var idx=raw.indexOf(probe);
+      if(idx>=0) return Math.max(0, Math.min(raw.length, idx + Math.max(0, prefix.length-lead)));
+    }
+    return -1;
+  }catch(err){ return -1; }
+}
+/* #74 보기 모드에서 그 영역 카드로 거슬러 올라가 기록 화면을 열고 커서를 둔다 */
+function openWriteAtSection(cid, pos, dateStr){
+  var ds=(/^\d{4}-\d{2}-\d{2}$/.test(String(dateStr||'')))? dateStr : selected;
+  if(ds!==selected) selectDate(ds);
+  if(!current || current.date!==selected) loadEditor(selected);
+  if(activeTab!=='write') switchTab('write');
+  setTimeout(function(){
+    var art=sectionScrollTarget(cid);
+    if(!art){ toast('그 영역 칸을 찾지 못했어요', 2000); return; }
+    var ed=art.querySelector('.sec-text');
+    smoothTo(art);
+    flashEl(art);
+    if(ed){
+      try{ ed.focus({preventScroll:true}); }catch(err){ ed.focus(); }
+      var at=(pos>=0)? pos : String((ensureSec(cid)||{}).t||'').length;
+      try{ if(typeof richSetCaretByOffset==='function') richSetCaretByOffset(ed, at); }catch(err){}
+      setTimeout(function(){ try{ ed.focus({preventScroll:true}); }catch(err){} }, 90);
+    }
+    toast('📝 기록 화면으로 왔어요', 1800);
+  }, 70);
+}
+var readTap={t:0, x:0, y:0, key:''};
+function readSecTapHandler(e){
+  if(activeTab!=='read') return;
+  var t=e.target;
+  if(!t || !t.closest) return;
+  /* 체크박스·사진·버튼·링크 같은 누를 것들은 두 번 두드리기에서 제외 */
+  if(t.closest('button,a,input,textarea,select,label,summary,.cb-g,[data-act],[data-cbx]')) return;
+  var sec=t.closest('#readContent .read-sec');
+  if(!sec) return;
+  var cid=sec.getAttribute('data-rcat')||'';
+  if(!cid) return;
+  var now=Date.now(), x=e.clientX||0, y=e.clientY||0;
+  var twice=(now-readTap.t<340 && Math.abs(x-readTap.x)<34 && Math.abs(y-readTap.y)<34 && readTap.key===cid);
+  readTap={t:now, x:x, y:y, key:cid};
+  if(!twice) return;
+  readTap.t=0;
+  var pos=readTapTextOffset(e, sec);
+  openWriteAtSection(cid, pos, sec.getAttribute('data-rdate'));
 }
 /* ────────────────────────────── lightbox ────────────────────────────── */
 var lbPids=[], lbIdx=0;
@@ -5407,7 +5618,7 @@ function applyNavState(s){
     if(sheetEl && !s.sheet){ closeSheet(true); changed=true; }
     var wantKid=String(s.kid||'');
     if(wantKid !== (kidOpen? kidTab : '')){
-      if(wantKid){ kidOpen=true; kidTab=(wantKid==='memo')?'memo':'growth'; renderKid(); }
+      if(wantKid){ kidOpen=true; kidTab=kidTabName(wantKid); renderKid(); }
       else hideKidPage();
       changed=true;
     }
@@ -5486,29 +5697,37 @@ function closeSheet(internal){
 }
 
 
-/* ────────────────────────────── 🧒 아이 페이지 (래니😚 → 📏 성장 · 📝 메모장) ────────────────────────────── */
+/* ────────────────────────────── 🧒 아이 페이지 (래니😚 → 📏 성장 · 📝 메모장 · 🧭 체험) ────────────────────────────── */
 var kidOpen=false, kidTab='growth';
+var KID_TABS={growth:1, memo:1, exp:1};
+function kidTabName(t){ return KID_TABS[t]? t : 'growth'; }
 function renderKid(){
   var pg=$('kidPage'); if(!pg) return;
   pg.hidden=!kidOpen;
   if(!kidOpen) return;
-  var g=(kidTab==='growth');
-  if($('kidTabGrowth')){ $('kidTabGrowth').classList.toggle('on', g); $('kidTabGrowth').setAttribute('aria-selected', g?'true':'false'); }
-  if($('kidTabMemo')){ $('kidTabMemo').classList.toggle('on', !g); $('kidTabMemo').setAttribute('aria-selected', g?'false':'true'); }
-  if($('kidPaneGrowth')) $('kidPaneGrowth').hidden=!g;
-  if($('kidPaneMemo')) $('kidPaneMemo').hidden=g;
+  kidTab=kidTabName(kidTab);
+  ['growth','memo','exp'].forEach(function(k){
+    var btn=$(k==='growth'? 'kidTabGrowth' : (k==='memo'? 'kidTabMemo':'kidTabExp'));
+    var on=(kidTab===k);
+    if(btn){ btn.classList.toggle('on', on); btn.setAttribute('aria-selected', on?'true':'false'); }
+    var pane=$(k==='growth'? 'kidPaneGrowth' : (k==='memo'? 'kidPaneMemo':'kidPaneExp'));
+    if(pane) pane.hidden=!on;
+  });
   var nm=state.child.name||'우리 아이';
   if($('kidName')) $('kidName').textContent=nm+'😚';
   var latest=gLatest(), mo=latest? gMonthsOn(latest.date) : null;
-  if($('kidSub')) $('kidSub').textContent=[state.child.grade||'', mo!=null? '만 '+gAgeText(mo) : '', '기록 '+growthList().length+'개'].filter(Boolean).join(' · ');
-  if(g) renderGrowth();
+  var sub=[state.child.grade||'', mo!=null? '만 '+gAgeText(mo) : '', '기록 '+growthList().length+'개'].filter(Boolean).join(' · ');
+  if($('kidSub')) $('kidSub').textContent=(kidTab==='exp')? '잠수네 체험·캠프 모음' : sub;
+  if(kidTab==='growth') renderGrowth();
+  else if(kidTab==='exp') renderExp();
   else { if($('view-memo')) $('view-memo').hidden=false; renderMemo(); }
 }
 function showKidPage(tab){
   var was=kidOpen;
   kidOpen=true;
-  kidTab=(tab==='memo')? 'memo' : 'growth';
+  kidTab=kidTabName(tab);
   if(kidTab==='memo') memoOpenId='';
+  if(kidTab==='exp') memoOpenId='';
   renderKid();
   if(!was) histPushNav(); else histReplaceNav();
 }
@@ -6531,8 +6750,9 @@ function mergeBackupIntoState(src, plan){
     normShelfGroups(ss.shelfGroups).forEach(function(g){ if(!haveG[g.id]){ state.settings.shelfGroups.push(g); haveG[g.id]=1; } });
     state.settings.shelfGroups=normShelfGroups(state.settings.shelfGroups);
   }
-  if(Array.isArray(ss.shelfHidden) && ss.shelfHidden.length){
-    state.settings.shelfHidden=strList((state.settings.shelfHidden||[]).concat(ss.shelfHidden), 3000);
+  if(Array.isArray(ss.shelfRemoved) || Array.isArray(ss.shelfHidden)){
+    var rmB=strList((ss.shelfRemoved||[]).concat(ss.shelfHidden||[]), 3000);
+    state.settings.shelfRemoved=strList((state.settings.shelfRemoved||[]).concat(rmB), 3000);
   }
   var ovB=normShelfOverrides(ss.shelfOverrides);
   Object.keys(ovB).forEach(function(k){ if(!state.settings.shelfOverrides[k]) state.settings.shelfOverrides[k]=ovB[k]; });
@@ -6712,6 +6932,7 @@ function selectDate(ds){
   renderWrite();
   updateDraftBadge();
   if(activeTab==='read') renderRead();
+  renderPcSide();
   if(changed) histPushNav();
   uiPersistNow();
 }
@@ -6737,18 +6958,18 @@ function syncTabUI(name){
   if($('tabShelf')){ $('tabShelf').classList.toggle('active', name==='shelf'); $('tabShelf').setAttribute('aria-selected', name==='shelf'?'true':'false'); }
   if($('tabMemo')){ $('tabMemo').classList.toggle('active', name==='memo'); $('tabMemo').setAttribute('aria-selected', name==='memo'?'true':'false'); }
   if($('tabFood')){ $('tabFood').classList.toggle('active', name==='food'); $('tabFood').setAttribute('aria-selected', name==='food'?'true':'false'); }
-  if($('tabExp')){ $('tabExp').classList.toggle('active', name==='exp'); $('tabExp').setAttribute('aria-selected', name==='exp'?'true':'false'); }
   if($('view-write')) $('view-write').hidden = name!=='write';
   if($('view-read')) $('view-read').hidden = name!=='read';
   if($('view-shelf')) $('view-shelf').hidden = name!=='shelf';
   if($('view-food')) $('view-food').hidden = name!=='food';
-  if($('view-exp')) $('view-exp').hidden = name!=='exp';
+  /* #71 🧭 체험는 메인 탭에서 빠져 래니😚 페이지 안에서 열린다 (view-exp 는 kidPaneExp 안) */
   /* 달력은 쓰기·보기 상단의 초소형 달력 하나로 통일했다 */
   if($('calCard')) $('calCard').style.display='none';
 }
 function switchTab(name){
   if(name==='memo'){ showKidPage('memo'); return; }
-  if(name!=='write' && name!=='read' && name!=='shelf' && name!=='food' && name!=='exp') name='write';
+  if(name==='exp'){ showKidPage('exp'); return; }   /* #71 체험은 래니😚 페이지 안에서 */
+  if(name!=='write' && name!=='read' && name!=='shelf' && name!=='food') name='write';
   var changed=(name!==activeTab);
   activeTab=name;
   if(name==='write' || name==='read') recordLast=name;
@@ -6762,8 +6983,6 @@ function switchTab(name){
     renderMemo();
   } else if(name==='food'){
     renderFood();
-  } else if(name==='exp'){
-    renderExp();
   } else {
     renderShelf();
   }
@@ -8348,17 +8567,18 @@ function keyedSig(o){
 }
 function shelfSettingsSig(){
   var s=state.settings||{};
-  return JSON.stringify([normShelfGroups(s.shelfGroups), strList(s.shelfHidden,3000), keyedSig(normShelfOverrides(s.shelfOverrides)), keyedSig(normCountMap(s.shelfExtra)), keyedSig(normTemplates(s.templates)), keyedSig(normRatings(s.shelfRatings)), s.shelfLang||'all', s.videoGroup||'title', s.shelfSort||'new']);
+  return JSON.stringify([normShelfGroups(s.shelfGroups), strList(s.shelfRemoved,3000), keyedSig(normShelfOverrides(s.shelfOverrides)), keyedSig(normCountMap(s.shelfExtra)), keyedSig(normTemplates(s.templates)), keyedSig(normRatings(s.shelfRatings)), s.shelfLang||'all', s.videoGroup||'title', s.shelfSort||'new']);
 }
 function cloudShelfSig(cs){
   cs=cs||{};
-  return JSON.stringify([normShelfGroups(cs.shelfGroups), strList(cs.shelfHidden,3000), keyedSig(normShelfOverrides(cs.shelfOverrides)), keyedSig(normCountMap(cs.shelfExtra)), keyedSig(normTemplates(cs.templates)), keyedSig(normRatings(cs.shelfRatings)), cs.shelfLang||'all', cs.videoGroup||'title', cs.shelfSort||'new']);
+  return JSON.stringify([normShelfGroups(cs.shelfGroups), strList(cs.shelfRemoved,3000).concat(strList(cs.shelfHidden,3000)).filter(function(v,i,a){ return a.indexOf(v)===i; }), keyedSig(normShelfOverrides(cs.shelfOverrides)), keyedSig(normCountMap(cs.shelfExtra)), keyedSig(normTemplates(cs.templates)), keyedSig(normRatings(cs.shelfRatings)), cs.shelfLang||'all', cs.videoGroup||'title', cs.shelfSort||'new']);
 }
 function applyCloudShelfSettings(cs){
   cs=cs||{};
   var s=state.settings;
   s.shelfGroups=normShelfGroups(cs.shelfGroups);
-  s.shelfHidden=strList(cs.shelfHidden,3000);
+  s.shelfRemoved=strList(cs.shelfRemoved,3000);
+  strList(cs.shelfHidden,3000).forEach(function(k){ if(s.shelfRemoved.indexOf(k)<0) s.shelfRemoved.push(k); });
   s.shelfOverrides=normShelfOverrides(cs.shelfOverrides);
   s.shelfExtra=normCountMap(cs.shelfExtra);
   s.templates=normTemplates(cs.templates);
@@ -8596,9 +8816,9 @@ function shelfView(kind, opts){
   });
   base.forEach(function(it){ if(!used[it.key]) out.push(it); });
   if(kind==='video' && state.settings.videoGroup==='channel' && !opts.raw) out=channelize(out);
-  if(!opts.includeHidden){
-    var hid=state.settings.shelfHidden||[];
-    out=out.filter(function(it){ return hid.indexOf(it.key)<0; });
+  if(!opts.includeRemoved){
+    var gone=shelfRemovedList();
+    out=out.filter(function(it){ return gone.indexOf(it.key)<0; });
   }
   out.sort(function(a,b){
     if((a.last||'')!==(b.last||'')) return (a.last||'')<(b.last||'')? 1 : -1;
@@ -8613,9 +8833,9 @@ function findShelfItem(key){
   var order=(k.indexOf('v:')===0 || k.indexOf('ch:')===0)? ['video','book'] : ['book','video'];
   for(var n=0;n<order.length;n++){
     var kind=order[n];
-    var list=shelfView(kind, {includeHidden:true, raw:true});
+    var list=shelfView(kind, {includeRemoved:true, raw:true});
     for(var i=0;i<list.length;i++){ if(list[i].key===key) return list[i]; }
-    list=shelfView(kind, {includeHidden:true});
+    list=shelfView(kind, {includeRemoved:true});
     for(var j=0;j<list.length;j++){ if(list[j].key===key) return list[j]; }
   }
   return null;
@@ -8832,8 +9052,6 @@ function syncShelfTabs(){
   if(sortSel) sortSel.value=state.settings.shelfSort||'new';
   var sel=$('shelfSelBtn');
   if(sel) sel.hidden=!!wt;
-  var hidBtn=$('shelfHiddenBtn');
-  if(hidBtn && wt) hidBtn.hidden=true;
   syncWishTools();
 }
 /* 위시리스트 버튼 줄(찜하기·선택·JSON) — 개수 줄 바로 아래 */
@@ -8848,7 +9066,7 @@ function syncWishTools(){
   }
 }
 function syncShelfBar(){
-  var sel=$('shelfSelBtn'), hidBtn=$('shelfHiddenBtn'), bar=$('shelfSelBar');
+  var sel=$('shelfSelBtn'), bar=$('shelfSelBar');
   if(wishTypeOfSub()){ if(bar) bar.hidden=true; if(sel) sel.hidden=true; return; }
   var n=shelfSelCount();
   if(sel){
@@ -8858,15 +9076,13 @@ function syncShelfBar(){
     sel.setAttribute('aria-pressed', shelfSelectMode? 'true':'false');
     var blocked=(shelfTab==='video' && state.settings.videoGroup==='channel');
     sel.disabled=blocked;
-    sel.title=blocked? '채널별로 묶은 보기에서는 합치기를 쓸 수 없어요' : '여러 개를 골라 합치거나 숨기기';
+    sel.title=blocked? '채널별로 묶은 보기에서는 합치기를 쓸 수 없어요' : '여러 개를 골라 합치거나 지우기';
   }
-  var hc=(state.settings.shelfHidden||[]).length;
-  if(hidBtn){ hidBtn.hidden=!hc; hidBtn.textContent='🙈 숨긴 '+hc+'개'; }
   if(bar){
     bar.hidden=!shelfSelectMode;
-    var m=bar.querySelector('[data-selact="merge"]'), h=bar.querySelector('[data-selact="hide"]');
+    var m=bar.querySelector('[data-selact="merge"]'), dl=bar.querySelector('[data-selact="del"]');
     if(m){ m.textContent='🔗 합치기 ('+n+'개)'; m.disabled=n<2; }
-    if(h){ h.textContent='🙈 숨기기 ('+n+'개)'; h.disabled=n<1; }
+    if(dl){ dl.textContent='🗑 삭제 ('+n+'개)'; dl.disabled=n<1; }
   }
 }
 function setShelfTab(t){
@@ -8973,9 +9189,8 @@ function openItemSheet(key){
     +(it.group? '<button class="btn-line" type="button" data-itemunmerge="'+esc(it.key)+'" style="margin-bottom:8px">🔗 병합 해제</button>':'')
     +(isVid? '<button class="btn-line" type="button" data-itembig="'+esc(it.key)+'" style="margin-bottom:8px">🖼️ 사진으로 크게 보기</button>':'')
     +'<div class="two-btns">'
-      +'<button class="btn-line" type="button" data-itemhide="'+esc(it.key)+'">🙈 책장에서 숨기기</button>'
-      +(it.real? '<button class="btn-line danger" type="button" data-itemdel="'+esc(it.key)+'">책 삭제</button>'
-                : '<button class="btn-line" type="button" data-close>닫기</button>')
+      +'<button class="btn-line danger" type="button" data-itemdel="'+esc(it.key)+'">🗑 삭제</button>'
+      +'<button class="btn-line" type="button" data-close>닫기</button>'
     +'</div>';
   openSheet(html, function(root){
     root.addEventListener('click', function(e){
@@ -9038,23 +9253,10 @@ function openItemSheet(key){
         openLightbox(pids, 0);
         return;
       }
-      var hd=e.target.closest('[data-itemhide]');
-      if(hd){
-        e.preventDefault();
-        hideShelfKeys([it.key]);
-        closeSheetUI(); renderShelf();
-        toast('책장에서 숨겼어요 · 🙈 숨긴 항목에서 되살릴 수 있어요', 3000);
-        return;
-      }
       var dl=e.target.closest('[data-itemdel]');
       if(dl){
         e.preventDefault();
-        if(!it.real) return;
-        if(!window.confirm('‘'+it.title+'’을(를) 책장에서 지울까요?\n\n다이어리 기록과 사진은 그대로 남아요.')) return;
-        shelfDelete(it.bookId);
-        closeSheetUI(); renderShelf();
-        shelfTouch(); scheduleSave(); Cloud.pushProfile();
-        toast('책장에서 지웠어요');
+        shelfDeleteOne(it, function(){ closeSheetUI(); renderShelf(); });
         return;
       }
     });
@@ -9110,64 +9312,56 @@ function openItemEditor(key){
     });
   }, 'edit');
 }
-function hideShelfKeys(keys){
+/* ── #69 숨김을 없애고 ‘삭제’로 — 목록에서 바로 지운다 (다이어리 기록·사진은 그대로) ── */
+function shelfRemovedList(){
+  if(!Array.isArray(state.settings.shelfRemoved)) state.settings.shelfRemoved=strList(state.settings.shelfRemoved, 3000);
+  return state.settings.shelfRemoved;
+}
+function shelfRemoveKeys(keys){
   if(!Array.isArray(keys) || !keys.length) return;
-  if(!Array.isArray(state.settings.shelfHidden)) state.settings.shelfHidden=[];
-  keys.forEach(function(k){ if(state.settings.shelfHidden.indexOf(k)<0) state.settings.shelfHidden.push(k); });
+  var list=shelfRemovedList();
+  keys.forEach(function(k){ k=String(k||''); if(k && list.indexOf(k)<0) list.push(k); });
+}
+function shelfRemoveItem(it){
+  if(!it) return;
+  if(it.real && it.bookId){
+    shelfDelete(it.bookId);
+    /* 같은 제목 표지가 본문에 남아 자동 카드로 되살아나지 않게 */
+    if(it.title) shelfRemoveKeys(['c:'+normKey(it.title)]);
+    return;
+  }
+  if(it.group){
+    state.settings.shelfGroups=(state.settings.shelfGroups||[]).filter(function(g){ return 'g:'+g.id!==it.key; });
+    return;
+  }
+  if(it.channelGroup && it.members && it.members.length){ shelfRemoveKeys(it.members); return; }
+  shelfRemoveKeys([it.key]);
+}
+function shelfDeleteItems(items){
+  var list=(items||[]).filter(Boolean);
+  if(!list.length) return 0;
+  list.forEach(shelfRemoveItem);
   shelfTouch(); scheduleSave(); Cloud.pushProfile();
   if(shelfSelectMode){ shelfSel={}; shelfSelectMode=false; document.body.classList.remove('shelf-sel','sel-mode'); }
+  renderShelf();
+  return list.length;
 }
-function openHiddenSheet(){
-  var hid=(state.settings.shelfHidden||[]).slice();
-  if(!hid.length){ toast('숨긴 항목이 없어요'); return; }
-  var map={};
-  shelfView('book',{includeHidden:true}).concat(shelfView('video',{includeHidden:true}))
-    .concat(shelfView('book',{includeHidden:true,raw:true})).concat(shelfView('video',{includeHidden:true,raw:true}))
-    .forEach(function(it){ if(it && it.key && !map[it.key]) map[it.key]=it; });
-  var rows=hid.map(function(k){
-    var it=map[k];
-    return { key:k, title: it? it.title : k.replace(/^[a-z]+:/,''), kind: it? it.kind : '' };
-  });
-  var html='<div class="grab"></div>'
-    +'<div class="sheet-head"><h2>🙈 숨긴 항목</h2><button class="x" data-close aria-label="닫기">✕</button></div>'
-    +'<div class="sheet-block">'
-      +'<p class="hint">책장에서만 숨긴 항목이에요. 다이어리 기록과 사진은 그대로 있고, 되살리면 다시 보여요.</p>'
-      +'<div style="margin-top:9px">'+rows.map(function(r){
-        return '<div class="cat-row"><div class="cm"><b style="font-size:13.5px;font-weight:800">'+esc(r.title)+'</b>'
-          +'<span style="font-size:11px;color:var(--muted)">'+(r.kind==='video'? '🎬 영상':'📚 책')+'</span></div>'
-          +'<button class="mini-btn" type="button" data-unhide="'+esc(r.key)+'">되살리기</button></div>';
-      }).join('')+'</div>'
-      +'<button class="btn-line teal" type="button" data-unhideall style="margin-top:10px">모두 되살리기 ('+rows.length+'개)</button>'
-    +'</div>';
-  openSheet(html, function(root){
-    root.addEventListener('click', function(e){
-      var un=e.target.closest('[data-unhide]');
-      if(un){
-        e.preventDefault();
-        var k=un.getAttribute('data-unhide');
-        state.settings.shelfHidden=(state.settings.shelfHidden||[]).filter(function(x){ return x!==k; });
-        shelfTouch(); scheduleSave(); Cloud.pushProfile();
-        closeSheet(true); renderShelf();
-        toast('되살렸어요');
-        return;
-      }
-      if(e.target.closest('[data-unhideall]')){
-        e.preventDefault();
-        state.settings.shelfHidden=[];
-        shelfTouch(); scheduleSave(); Cloud.pushProfile();
-        closeSheet(true); renderShelf();
-        toast('숨긴 항목을 모두 되살렸어요');
-        return;
-      }
-    });
-  }, 'hidden');
+function shelfDeleteOne(it, after){
+  if(!it) return;
+  var msg='‘'+it.title+'’을(를) 책장에서 지울까요?\n\n다이어리 기록과 사진은 그대로 남아요.';
+  if(it.channelGroup) msg='‘'+it.title+'’ 채널의 영상 '+(it.members||[]).length+'편을 책장에서 지울까요?\n\n다이어리 기록과 사진은 그대로 남아요.';
+  else if(it.group) msg='‘'+it.title+'’ 합친 카드를 지울까요?\n\n합쳐 두었던 항목이 원래대로 따로 보여요. 다이어리 기록은 그대로예요.';
+  if(!window.confirm(msg)) return;
+  shelfDeleteItems([it]);
+  if(after) after();
+  toast(it.group? '합친 카드를 지웠어요' : ('‘'+it.title+'’을(를) 책장에서 지웠어요'), 2600);
 }
 /* ── 다중 선택 → 하나로 합치기 ── */
 function openMergeSheet(){
   var keys=selKeys();
   if(keys.length<2){ toast('두 개 이상 골라 주세요'); return; }
   var kind=(shelfTab==='video')? 'video':'book';
-  var list=shelfView(kind, {includeHidden:true}).filter(function(it){ return shelfSel[it.key]; });
+  var list=shelfView(kind, {includeRemoved:true}).filter(function(it){ return shelfSel[it.key]; });
   if(list.length<2){ toast('다시 골라 주세요'); return; }
   var defName=list[0].title;
   var covers=list.filter(function(it){ return (it.photo && PhotoCache.has(it.photo)) || it.coverUrl; });
@@ -9849,12 +10043,18 @@ function memoTextHTML(text, memo){
   if(tail) out+=memoPlainHTML(tail);
   return out;
 }
-function memoBodyHTML(text, memo){
+function memoBodyHTML(text, memo, opt){
   var src=legacyToggleToFold(memoToggleBlocks(text));
   var m=memo||{id:'', photos:[]};
+  var openT=(opt && opt.openTitles) || null;
   return memoBlocks(src).map(function(b){
     if(!b.f) return memoTextHTML(b.text, m);
-    return '<details class="memo-tg"><summary><span class="mtg-ic" aria-hidden="true">▸</span>'+esc(b.title)+'</summary>'
+    var op=false;
+    if(openT && b.title){
+      var tt=String(b.title);
+      for(var i=0;i<openT.length;i++){ if(tt.indexOf(openT[i])>=0){ op=true; break; } }
+    }
+    return '<details class="memo-tg"'+(op?' open':'')+'><summary><span class="mtg-ic" aria-hidden="true">▸</span>'+esc(b.title)+'</summary>'
       +'<div class="memo-tg-b">'+(b.body.trim()? memoTextHTML(b.body, m) : '<div class="memo-p" style="color:var(--muted);font-size:12px">내용이 없어요</div>')+'</div></details>';
   }).join('');
 }
@@ -10929,7 +11129,7 @@ function renderExp(){
       if(rb) rb.addEventListener('click', function(){ EXP.fail=false; renderExp(); });
       return;
     }
-    if(!EXP.loading && activeTab==='exp'){
+    if(!EXP.loading && kidOpen && kidTab==='exp'){
       body.innerHTML='<div class="card x-empty"><b>체험 목록을 불러오는 중…</b></div>';
       expLoad(function(){ renderExp(); if(EXP.items) expSeedPhotos(); });
     }
@@ -11041,7 +11241,7 @@ function expSheetHTML(it){
       +((pdfs.length>1)? '<div class="xd-pdfs">원본 PDF '+pdfs.length+'개: '+pdfs.map(function(p,i){
           return '<a href="https://drive.google.com/file/d/'+esc(p.id)+'/view" target="_blank" rel="noopener noreferrer">'+(i+1)+'부</a>';
         }).join(' · ')+'</div>' : '')
-      +'<div class="xd-body">'+memoBodyHTML(it.body||'', {id:'exp-'+it.id, photos:[]})+'</div>'
+      +'<div class="xd-body">'+memoBodyHTML(it.body||'', {id:'exp-'+it.id, photos:[]}, {openTitles:['기본 정보','어떤 곳인가요','핵심 꿀팁']})+'</div>'
     +'</div>';
 }
 function openExpSheet(id){
@@ -11142,8 +11342,6 @@ function bindShelf(){
     if(shelfSelectMode){ shelfSelectMode=false; shelfSel={}; document.body.classList.remove('shelf-sel','sel-mode'); renderShelf(); return; }
     toggleShelfSelect();
   });
-  var hidBtn=$('shelfHiddenBtn');
-  if(hidBtn) hidBtn.addEventListener('click', openHiddenSheet);
   var bar=$('shelfSelBar');
   if(bar) bar.addEventListener('click', function(e){
     var b=e.target.closest('[data-selact]');
@@ -11152,13 +11350,13 @@ function bindShelf(){
     var a=b.getAttribute('data-selact');
     if(a==='cancel'){ shelfSelectMode=false; shelfSel={}; document.body.classList.remove('shelf-sel','sel-mode'); renderShelf(); return; }
     if(a==='merge'){ openMergeSheet(); return; }
-    if(a==='hide'){
+    if(a==='del'){
       var keys=selKeys();
-      if(!keys.length){ toast('숨길 카드를 먼저 골라 주세요'); return; }
-      if(!window.confirm(keys.length+'개를 책장에서 숨길까요?\n\n다이어리 기록과 사진은 그대로이고, 🙈 숨긴 항목에서 되살릴 수 있어요.')) return;
-      hideShelfKeys(keys);
-      renderShelf();
-      toast(keys.length+'개를 책장에서 숨겼어요', 2600);
+      if(!keys.length){ toast('지울 카드를 먼저 골라 주세요'); return; }
+      if(!window.confirm(keys.length+'개를 책장에서 지울까요?\n\n다이어리 기록과 사진은 그대로 남아요.')) return;
+      var items=keys.map(findShelfItem).filter(Boolean);
+      shelfDeleteItems(items);
+      toast(items.length+'개를 책장에서 지웠어요', 2600);
       return;
     }
   });
@@ -11393,7 +11591,6 @@ function bindEvents(){
   if($('tabShelf')) $('tabShelf').addEventListener('click', function(){ switchTab('shelf'); });
   if($('tabMemo')) $('tabMemo').addEventListener('click', function(){ switchTab('memo'); });
   if($('tabFood')) $('tabFood').addEventListener('click', function(){ switchTab('food'); });
-  if($('tabExp')) $('tabExp').addEventListener('click', function(){ switchTab('exp'); });
   bindExp();
   bindShelf();
 
@@ -11404,12 +11601,13 @@ function bindEvents(){
   if(kidTabs) kidTabs.addEventListener('click', function(e){
     var b=e.target.closest('[data-kid]');
     if(!b) return;
-    var t=(b.getAttribute('data-kid')==='memo')? 'memo':'growth';
+    var t=kidTabName(b.getAttribute('data-kid'));
     if(kidOpen && t===kidTab) return;
     kidTab=t;
-    if(t==='memo') memoOpenId='';
+    if(t==='memo' || t==='exp') memoOpenId='';
     renderKid();
     histReplaceNav();
+    if(t==='exp'){ var kb=$('kidPage'); if(kb) kb.scrollTop=0; }
   });
   var kback=$('kidBack');
   if(kback) kback.addEventListener('click', function(){ closeKidPage(); });
@@ -11780,6 +11978,14 @@ function bindEvents(){
     $('searchInput').focus();
   });
 
+  /* #78 모바일 `🔍 검색·필터` 접기/펴기 */
+  var foldBtn=$('vtFoldBtn');
+  if(foldBtn) foldBtn.addEventListener('click', function(e){
+    e.preventDefault();
+    vtFoldOpen=!vtFoldOpen;
+    syncVtFold();
+  });
+
   /* 기간 · 영역 칩 */
   $('rangeChips').addEventListener('click', function(e){
     var b=e.target.closest('[data-range]');
@@ -11831,8 +12037,7 @@ function bindEvents(){
   /* 보기 탭 안 버튼 */
   $('readContent').addEventListener('click', function(e){
     var act=e.target.closest('[data-act]');
-    if(!act) return;
-    var a=act.getAttribute('data-act');
+    if(!act) return;    var a=act.getAttribute('data-act');
     if(a==='openday'){
       var ds=act.getAttribute('data-date');
       viewRange='day'; saveView(); syncRangeUI();
@@ -11852,6 +12057,27 @@ function bindEvents(){
     }
     if(a==='copyall'){ copyText(buildViewText(viewModel())); }
     else if(a==='printview'){ doPrintView(); }
+  });
+
+  /* #74 보기 화면 영역 카드를 두 번 두드리면 기록 화면으로 */
+  $('readContent').addEventListener('click', readSecTapHandler);
+
+  /* #73 왼쪽 `이 날 N개 영역` 즐 → 그 영역 카드로 */
+  ['wtMini','vtMini','pcSide'].forEach(function(id){
+    var el=$(id); if(!el) return;
+    el.addEventListener('click', function(e){
+      var row=e.target.closest('[data-tdmcat]');
+      if(!row) return;
+      e.preventDefault();
+      goToSection(row.getAttribute('data-tdmcat'));
+    });
+    el.addEventListener('keydown', function(e){
+      if(e.key!=='Enter' && e.key!==' ') return;
+      var row=e.target.closest('[data-tdmcat]');
+      if(!row) return;
+      e.preventDefault();
+      goToSection(row.getAttribute('data-tdmcat'));
+    });
   });
 
   /* 라이트박스 */
@@ -12228,7 +12454,7 @@ async function pushProfileNow(){
   var body={user_id:CLOUD.uid, settings:{child:{name:state.child.name||'', grade:state.child.grade||''}, categories:cats, bookshelf:(state.bookshelf||[]).map(function(b){
     return {id:b.id, key:b.key, title:b.title, author:b.author, coverUrl:b.coverUrl, dates:b.dates, extraCount:b.extraCount, updatedAt:b.updatedAt};
   }),
-    shelfGroups:st.shelfGroups||[], shelfHidden:st.shelfHidden||[], shelfOverrides:st.shelfOverrides||{},
+    shelfGroups:st.shelfGroups||[], shelfRemoved:strList(st.shelfRemoved,3000), shelfOverrides:st.shelfOverrides||{},
     shelfExtra:st.shelfExtra||{}, templates:st.templates||{},
     shelfLang:st.shelfLang||'all', videoGroup:st.videoGroup||'title', shelfAt:Number(st.shelfAt)||0,
     shelfRatings:normRatings(st.shelfRatings), shelfSort:st.shelfSort||'new', videoFilter:st.videoFilter||'all',
@@ -12820,7 +13046,6 @@ function restoreActiveView(){
     if(activeTab==='read') renderRead();
     else if(activeTab==='shelf') renderShelf();
     else if(activeTab==='food') renderFood();
-    else if(activeTab==='exp') renderExp();
     else {
       var bar=document.querySelector('.actionbar'); if(bar) bar.style.display='flex';
       renderWrite();
@@ -12833,10 +13058,13 @@ async function boot(){
   shelfTab=(state.settings && state.settings.shelfTab==='video')? 'video' : 'book';
   /* #54 새로고침해도 보던 탭· 쓰기/보기·날짜 그대로 */
   var ui=uiRestore();
+  var bootKid='';
   if(ui){
     selected=ui.date;
-    activeTab=ui.tab;
-    recordLast=(ui.tab==='read')? 'read' : ((ui.tab==='write')? 'write' : (ui.mode==='read'? 'read':'write'));
+    /* 예전 버전에서 `🧭 체험` 탭을 보던 상태면 래니😚 페이지의 체험으로 이어서 열어 준다 (#71) */
+    if(ui.tab==='exp'){ bootKid='exp'; activeTab=(ui.mode==='read')? 'read':'write'; }
+    else activeTab=ui.tab;
+    recordLast=(activeTab==='read')? 'read' : ((activeTab==='write')? 'write' : (ui.mode==='read'? 'read':'write'));
   }
   var td=parseYmd(selected);
   viewY=td.getFullYear(); viewM=td.getMonth();
@@ -12855,6 +13083,7 @@ async function boot(){
   applyTip();
   renderCumStats();
   restoreActiveView();
+  if(bootKid){ kidOpen=true; kidTab=kidTabName(bootKid); renderKid(); }
   if(!storageUsable()){
     var tb=$('tipBanner');
     tb.hidden=false;
@@ -12863,6 +13092,7 @@ async function boot(){
   }
   syncStickyTop();
   window.addEventListener('resize', syncStickyTop);
+  window.addEventListener('resize', function(){ syncReadToolsPlacement(); renderPcSide(); });
   window.addEventListener('orientationchange', function(){ setTimeout(syncStickyTop, 250); });
   if(!idb) console.info('IndexedDB unavailable — using localStorage');
   appRendered=true;
