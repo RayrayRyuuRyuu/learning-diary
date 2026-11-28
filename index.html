@@ -3200,7 +3200,7 @@ function richLeaf(text, fmt, out){
 }
 /* 저장 글자(서식 코드) → 편집창 HTML */
 /* 글 속 사진 칩 하나(편집창) — #100 그리드 묶음에서는 span(6칸 중 차지)을 달아 준다 */
-function richPhChip(op, pid, span){
+function richPhChip(op, pid, span, zoom){
   var ref=state.photoRefs[pid]||{};
   var thumb=isThumbPhoto(pid);
   var cls='re-ph'+(thumb? ' th' : '')+(ref.kind==='youtube'? ' yt' : '');
@@ -3211,7 +3211,7 @@ function richPhChip(op, pid, span){
     +(big? '<button class="reph-b" type="button" data-phact="crop" data-n="'+op.n+'" aria-label="사진 '+op.n+' 자르기" title="자르기">✂</button>' : '')
     +'<button class="reph-b rm" type="button" data-phact="del" data-n="'+op.n+'" aria-label="사진 '+op.n+' 삭제" title="사진 삭제">✕</button>'
     +(canTitle? '<button class="reph-b" type="button" data-phact="title" data-n="'+op.n+'" aria-label="제목 고치기" title="제목 고치기">🏷</button>' : '')
-    +(big? '<button class="reph-b zoom" type="button" data-phact="zoom" data-n="'+op.n+'" aria-label="사진 '+op.n+' 크게 보기" title="크게 보기">⤢</button>' : '')
+    +(big && zoom? '<button class="reph-b zoom" type="button" data-phact="zoom" data-n="'+op.n+'" aria-label="사진 '+op.n+' 크게 보기" title="크게 보기">⤢</button>' : '')
     +'</span>';
   return '<span class="'+cls+'" contenteditable="false" data-n="'+op.n+'"'+(span? ' data-span="'+span+'"':'')+' title="사진 '+op.n+'"'+(big? photoWAttr(pid):'')+'>'
     +photoImgHTML(pid,'사진 '+op.n)+chipBar
@@ -3239,7 +3239,7 @@ function richHTML(text, pids, opt){
   opt=opt||{};
   var ops=[];
   richCollect(String(text==null? '' : text), {b:false,u:false,c:''}, ops, 0);
-  var gridOn=!!opt.grid;
+  var gridOn=!!opt.grid, zoomOn=!!opt.phzoom;
   var out='';
   var lastKind=(ops.length? ops[ops.length-1].k : '');
   var skipLine=false, atLineStart=true;
@@ -3268,7 +3268,7 @@ function richHTML(text, pids, opt){
             var g='<span class="re-grid" contenteditable="false">';
             for(var k=0;k<runOps.length;k++){
               if(k>0) g+=richGapHTML(ops, between[k-1][0], between[k-1][1]);
-              g+=richPhChip(runOps[k], (pids||[])[runOps[k].n-1], spans[k]);
+              g+=richPhChip(runOps[k], (pids||[])[runOps[k].n-1], spans[k], zoomOn);
             }
             out+=g+'</span>';
             /* 마지막 사진 뒤의 줄바꿈은 묶음에 넣지 않고 그대로 둔다 (직렬화 보존) */
@@ -3276,7 +3276,7 @@ function richHTML(text, pids, opt){
             continue;
           }
         }
-        out+=richPhChip(op, pid, 0);
+        out+=richPhChip(op, pid, 0, zoomOn);
       } else out+=esc(photoMark(op.n));
       atLineStart=false;
       continue;
@@ -3777,7 +3777,7 @@ function checklistConvert(ed, pids){
   if(!m) return false;
   /* #80 상자 칩(.cb-g)이 이미 오른쪽 여백 4px 을 갖고 있어 뒤 공백은 넣지 않는다 */
   var head=m[1]+(m[2]? CB_ON : CB_OFF);
-  ed.innerHTML=richHTML(t.slice(0, ls)+head+t.slice(off), pids||[], {grid:richGridOn(ed)});
+  ed.innerHTML=richHTML(t.slice(0, ls)+head+t.slice(off), pids||[], {grid:richGridOn(ed), phzoom:true});
   ed.classList.remove('is-empty');
   try{ ed.focus({preventScroll:true}); }catch(e){}
   richSetCaretByOffset(ed, Math.min(ls+head.length, richEditorText(ed).length));
@@ -5023,7 +5023,7 @@ function sectionHTML(c){
       +fmtRowHTML(c)
       +photosTopBarHTML(sec)
       +'<div class="sec-scroll">'
-        +'<div class="sec-text rich'+(String(sec.t||'').trim()? '':' is-empty')+'" data-field="t" contenteditable="true" role="textbox" aria-multiline="true" spellcheck="false" data-ph="'+esc(ph)+'" aria-label="'+esc(catBase(c)+' 내용')+'">'+richHTML(sec.t, sec.p, {grid:sec.pg!=='big'})+'</div>'
+        +'<div class="sec-text rich'+(String(sec.t||'').trim()? '':' is-empty')+'" data-field="t" contenteditable="true" role="textbox" aria-multiline="true" spellcheck="false" data-ph="'+esc(ph)+'" aria-label="'+esc(catBase(c)+' 내용')+'">'+richHTML(sec.t, sec.p, {grid:sec.pg!=='big', phzoom:true})+'</div>'
         +'<div class="photos'+(photoCardsGridOn(sec)?' pgg':'')+'">'+photosEditHTML(sec)+'</div>'
       +'</div>'
     +'</div>'
@@ -12789,7 +12789,7 @@ function bindEvents(){
           var secCb=cidCb? ensureSec(cidCb) : null;
           if(next===2 && secCb && current) carryOverSkip(current.date, cidCb, String(secCb.t||''), nCb);
           /* ✕ 줄의 취소선은 그려진 모양이라 편집창을 다시 그린다(칩을 눌렀으므로 커서는 잃어도 된다) */
-          if(secCb){ ed.innerHTML=richHTML(secCb.t, secCb.p); autoGrow(ed); }
+          if(secCb){ ed.innerHTML=richHTML(secCb.t, secCb.p, {grid:secCb.pg!=='big', phzoom:true}); autoGrow(ed); }
         });
       }
       return;
