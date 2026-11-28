@@ -505,6 +505,10 @@ table.tbl{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-nume
 .photo-grid.pgg button[data-span="6"]{grid-column:span 6;aspect-ratio:16/10}
 .photo-grid.pgg button:active{opacity:.94}
 .photo-grid.pgg img{display:block;width:100%;height:100%;max-height:none;object-fit:cover;object-position:center 20%;background:#fff}
+/* #99 글 속에 이어 붙인 사진도 글 아래 사진과 같은 그리드 — 본문 안에서는 위아래 여백만 맞춘다 */
+.read-sec .txt .photo-grid.pgg{display:grid;margin:8px 0 10px}
+.read-sec .txt .photo-grid.pgg .txt-photo{margin:0;width:100%;max-width:none;border-radius:10px}
+.read-sec .txt .photo-grid.pgg .txt-photo img{width:100%;height:100%;object-fit:cover;object-position:center 20%}
 /* 사진 배치 바 — 쓰기·보기 모두 카드 안 사진 위/옆에 붙는 작은 버튼 줄 */
 .pl-bar{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin:8px 0 0}
 .pl-bar .pl-lab{font-size:10.5px;font-weight:800;color:var(--muted);margin-right:1px}
@@ -1094,6 +1098,8 @@ body.kb-open .actionbar{bottom:var(--kb,0px)}
     display:block !important;width:100% !important;height:100% !important;max-height:none !important;
     object-fit:cover !important;object-position:center 20% !important;margin:0 !important;
   }
+  /* #99 글 속 그리드도 고정 인쇄에서 같은 모양으로 */
+  #printArea .read-sec.pg-pin .photo-grid.pgg .txt-photo{margin:0 !important;border-radius:1mm !important}
   .read-sec.has-photos{break-inside:auto !important;page-break-inside:auto !important}
   .read-sec .txt .txt-photo{
     display:block !important;width:100% !important;margin:2mm 0 2.5mm !important;
@@ -4730,6 +4736,22 @@ function markIndexes(t){
   return out;
 }
 function hasPhotoMark(t,n){ return markIndexes(t).indexOf(n)>=0; }
+/* #99 글 속에 이어 붙은 큰 사진(사이에 공백·줄바꿈만) 묶음 중 가장 긴 길이.
+   쓰기 화면에서 '사진 배치' 바를 띄울지 판단한다. */
+function bigPhotoRunMax(txt, all){
+  var src=String(txt||''), re=new RegExp(PHOTO_MARK_RE.source,'g'), m, run=0, best=0, prevEnd=-1;
+  while((m=re.exec(src))!==null){
+    if(!m[0].length){ re.lastIndex++; continue; }
+    var pid=(all||[])[(+m[1])-1];
+    var big=!!pid && PhotoCache.has(pid) && !isThumbPhoto(pid);
+    var gap=(prevEnd>=0)? src.slice(prevEnd, m.index) : '';
+    if(big && run>0 && /^\s*$/.test(gap)) run++;
+    else run = big? 1 : 0;
+    if(run>best) best=run;
+    prevEnd=m.index+m[0].length;
+  }
+  return best;
+}
 function photosEditHTML(sec){
   var all=(sec.p||[]).slice();
   var txt=String(sec.t||'');
@@ -4738,6 +4760,10 @@ function photosEditHTML(sec){
     if(!PhotoCache.has(id)) return false;
     return !hasPhotoMark(txt, all.indexOf(id)+1);
   });
+  /* #99 글 속에 이어 붙인 큰 사진 2장 이상도 글 아래 사진과 똑같이 다룬다 */
+  var inlineRun=bigPhotoRunMax(txt, all);
+  var needBar=(inlineRun>=2 || pids.length>=2);
+  /* 글 속 사진만 있으면 카드가 없으므로 배치 바는 편집창 위(photosTopBarHTML)에 둔다 */
   if(!pids.length) return '';
   var cards=pids.map(function(id,i){
     var n=all.indexOf(id)+1;
@@ -4766,9 +4792,20 @@ function photosEditHTML(sec){
       +'</div>'
     +'</div>';
   }).join('');
-  if(pids.length<2) return cards;
   /* #93 사진이 2장 이상이면 카드 위에 배치 바(그리드/크게 · 📌 고정) */
-  return '<div class="pl-bar">'+writePgBarHTML(sec.pg!=='big', !!sec.pgp)+'</div>'+cards;
+  var bar=needBar? '<div class="pl-bar">'+writePgBarHTML(sec.pg!=='big', !!sec.pgp)+'</div>' : '';
+  return bar+cards;
+}
+/* #99 글 속에 이어 붙인 사진 2장 이상이면 편집창 위에 배치 바 — 사진 카드가 없어도 바로 보이게 */
+function photosTopBarHTML(sec){
+  var all=(sec.p||[]).slice(), txt=String(sec.t||'');
+  if(bigPhotoRunMax(txt, all)<2) return '';
+  for(var i=0;i<all.length;i++){
+    var id=all[i];
+    if(!PhotoCache.has(id)) continue;
+    if(!hasPhotoMark(txt, i+1)) return '';   /* 아래 카드가 있으면 그 카드 위 바가 맡는다 */
+  }
+  return '<div class="photos"><div class="pl-bar">'+writePgBarHTML(sec.pg!=='big', !!sec.pgp)+'</div></div>';
 }
 /* #93 쓰기 화면에서 그 영역의 사진 배치를 바꾼다 */
 function setSectionPg(cid, mode){
@@ -4857,6 +4894,7 @@ function sectionHTML(c){
     +'<div class="sec-body">'
       +(c.timer? timeRowHTML(c,m) : '')
       +fmtRowHTML(c)
+      +photosTopBarHTML(sec)
       +'<div class="sec-scroll">'
         +'<div class="sec-text rich'+(String(sec.t||'').trim()? '':' is-empty')+'" data-field="t" contenteditable="true" role="textbox" aria-multiline="true" spellcheck="false" data-ph="'+esc(ph)+'" aria-label="'+esc(catBase(c)+' 내용')+'">'+richHTML(sec.t, sec.p)+'</div>'
         +'<div class="photos">'+photosEditHTML(sec)+'</div>'
@@ -5293,7 +5331,8 @@ function cbSkipWrap(text){
   }
   return out.join('\n');
 }
-function renderTextWithPhotos(text, rawIds, used){
+function renderTextWithPhotos(text, rawIds, used, opt){
+  opt=opt||{};
   var src=String(text||'');
   var pids=rawIds.filter(function(id){ return PhotoCache.has(id); });
   var re=new RegExp(PHOTO_MARK_RE.source,'g');
@@ -5315,37 +5354,72 @@ function renderTextWithPhotos(text, rawIds, used){
     var nv=tokens[ti+1];
     if(nv && nv.x==='t' && nv.v.charAt(0)==='\n') nv.v=nv.v.slice(1);
   }
-  function btn(pid,n){
+  function btn(pid,n,span){
     var li=pids.indexOf(pid);
     var r=state.photoRefs[pid]||{};
     var big=!isThumbPhoto(pid);
-    var b='<button class="txt-photo'+(r.kind==='youtube'?' yt':'')+'" type="button" data-act="viewphoto" data-pids="'+esc(pids.join(','))+'" data-idx="'+(li<0?0:li)+'"'+(big? photoWAttr(pid):'')+' aria-label="'+esc(photoAlt(pid,n))+' 크게 보기">'+photoImgHTML(pid, photoAlt(pid,n))+'</button>';
+    var b='<button class="txt-photo'+(r.kind==='youtube'?' yt':'')+(span?' pgc':'')+'" type="button" data-act="viewphoto" data-pids="'+esc(pids.join(','))+'" data-idx="'+(li<0?0:li)+'"'+(span? ' data-span="'+span+'"':'')+((big && !span)? photoWAttr(pid):'')+' aria-label="'+esc(photoAlt(pid,n))+' 크게 보기">'+photoImgHTML(pid, photoAlt(pid,n))+'</button>';
     /* #41 옛 기록: 본문에 제목이 없어도 사진 정보에 제목이 있으면 썸네일 밑에 보여 준다 */
     var t=String(r.title||'').trim();
-    if(t && (r.kind==='poster' || r.kind==='youtube' || r.kind==='cover' || r.kind==='book') && src.indexOf(t)<0){
+    if(!span && t && (r.kind==='poster' || r.kind==='youtube' || r.kind==='cover' || r.kind==='book') && src.indexOf(t)<0){
       return '<span class="tfig">'+b+'<span class="tcap">'+esc(t)+'</span></span>';
     }
     return b;
   }
-  /* 연속된 썸네일은 한 줄(flex wrap)로 묶는다 */
+  /* #99 글 속 사진도 글 아래 사진과 같은 규칙으로 묶는다 —
+     공백·줄바꿈만 사이에 둔 큰 사진 2장 이상은 그리드(+배치 바), 한 장은 1열 큰 사진,
+     썸네일은 한 줄(flex wrap) */
+  var st=opt.state||{};
+  var gridOn=(opt.pg!=='big');
+  function barHTML(){
+    if(!opt.bar || st.shown) return '';
+    st.shown=true;
+    return '<div class="pl-bar">'+opt.bar(gridOn)+'</div>';
+  }
   var out='', group=null;
   function flush(){
     if(group && group.length) out+='<div class="txt-thumbs">'+group.join('')+'</div>';
     group=null;
   }
-  tokens.forEach(function(tk){
+  var i=0;
+  while(i<tokens.length){
+    var tk=tokens[i];
     if(tk.x==='t'){
-      if(!tk.v.trim()){ if(!group) out+=' '; return; }
+      if(!tk.v.trim()){ if(!group) out+=' '; i++; continue; }
       flush(); out+=cbRenderHTML(cbSkipWrap(jTagBreak(tk.v)));
-      return;
+      i++; continue;
     }
     if(isThumbPhoto(tk.id)){
       if(!group) group=[];
       group.push(btn(tk.id, tk.n));
-    } else {
-      flush(); out+=btn(tk.id, tk.n);
+      i++; continue;
     }
-  });
+    /* 큰 사진 — 이어지는 큰 사진(사이에 공백만)을 한 묶음으로 모은다 */
+    flush();
+    var run=[tk], j=i+1;
+    while(j<tokens.length){
+      var nx=tokens[j];
+      if(nx.x==='p'){
+        if(isThumbPhoto(nx.id)) break;
+        run.push(nx); j++; continue;
+      }
+      if(!nx.v.trim()){
+        var k=j+1;
+        while(k<tokens.length && tokens[k].x==='t' && !tokens[k].v.trim()) k++;
+        if(k<tokens.length && tokens[k].x==='p' && !isThumbPhoto(tokens[k].id)){ j=k; continue; }
+      }
+      break;
+    }
+    if(run.length>=2){
+      st.multi=true;
+      out+=barHTML();
+      var spans=gridOn? pgSpans(run.length) : [];
+      out+='<div class="photo-grid'+(gridOn?' pgg':'')+'">'+run.map(function(t2,idx){ return btn(t2.id, t2.n, spans[idx]||0); }).join('')+'</div>';
+    } else {
+      out+=btn(run[0].id, run[0].n);
+    }
+    i=j;
+  }
   flush();
   return out;
 }
@@ -5382,14 +5456,16 @@ function readSectionHTML(c, s, ds){
   var pids=raw.filter(function(id){ return PhotoCache.has(id); });
   var used=[];
   var body='';
-  if(s.t && s.t.trim()) body+='<div class="txt">'+renderTextWithPhotos(s.t, raw, used)+'</div>';
+  /* #99 글 속 사진 묶음이 배치 바를 이미 그렸는지·2장 이상 묶음이 있는지 */
+  var pst={shown:false, multi:false};
+  if(s.t && s.t.trim()) body+='<div class="txt">'+renderTextWithPhotos(s.t, raw, used, {pg:s.pg, state:pst, bar:function(isGrid){ return readPgBarHTML(c.id, ds, isGrid); }})+'</div>';
   var rest=pids.filter(function(id){ var i=raw.indexOf(id); return i<0 || !used[i]; });
   var restTh=rest.filter(function(id){ return isThumbPhoto(id); });
   var restBig=rest.filter(function(id){ return !isThumbPhoto(id); });
   var isYtPhoto=function(id){ var r=state.photoRefs[id]; return !!(r && r.kind==='youtube'); };
   var restYt=restTh.filter(isYtPhoto);
   var restTh2=restTh.filter(function(id){ return !isYtPhoto(id); });
-  var pinGrid=!!(s.pgp===1 && restBig.length>=2);   /* #93 📌 그리드 고정 — PDF에서도 그리드 유지 */
+  var pinGrid=!!(s.pgp===1 && (pst.multi || restBig.length>=2));   /* #93·#99 📌 그리드 고정 — PDF에서도 그리드 유지 */
   if(restYt.length){
     body+='<div class="photo-thumbs">'+restYt.map(function(id,i){
       return '<button class="yt" data-act="viewphoto" data-pids="'+esc(restYt.join(','))+'" data-idx="'+i+'">'+photoImgHTML(id,photoAlt(id, raw.indexOf(id)+1))+'</button>';
@@ -5404,7 +5480,11 @@ function readSectionHTML(c, s, ds){
     /* #93 글 아래 큰 사진이 2장 이상이면 사진 수에 맞춰 그리드로 묶는다(기본) — '크게 보기'를 고른 영역은 1열 */
     var bigGrid=(restBig.length>=2 && s.pg!=='big');
     var spans=bigGrid? pgSpans(restBig.length) : [];
-    if(restBig.length>=2) body+='<div class="pl-bar">'+readPgBarHTML(c.id, ds, bigGrid)+'</div>';
+    if(restBig.length>=2){
+      pst.multi=true;
+      /* 글 속 사진에 배치 바를 이미 달았으면 또 달지 않는다 */
+      if(!pst.shown){ body+='<div class="pl-bar">'+readPgBarHTML(c.id, ds, bigGrid)+'</div>'; pst.shown=true; }
+    }
     body+='<div class="photo-grid'+(bigGrid?' pgg':'')+'">'+restBig.map(function(id,i){
       var sp=spans.length? spans[i] : 0;
       return '<button'+(sp? ' data-span="'+sp+'"':'')+photoWAttr(id)+' data-act="viewphoto" data-pids="'+esc(restBig.join(','))+'">'+photoImgHTML(id,photoAlt(id, raw.indexOf(id)+1))+'</button>';
