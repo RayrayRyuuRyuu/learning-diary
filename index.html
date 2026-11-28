@@ -923,8 +923,8 @@ body.kb-open .sheet{max-height:calc(100% - 6px)}
 body.kb-open .actionbar{bottom:var(--kb,0px)}
 
 /* ── Lightbox ───────────────────────────── */
-.lightbox{position:fixed;inset:0;z-index:80;background:rgba(12,18,17,.96);display:flex;align-items:center;justify-content:center;animation:fade .16s ease}
-.lightbox img{max-width:100%;max-height:100%;object-fit:contain}
+.lightbox{position:fixed;inset:0;z-index:80;background:rgba(12,18,17,.96);display:flex;align-items:center;justify-content:center;animation:fade .16s ease;touch-action:pan-y pinch-zoom;overscroll-behavior:contain}
+.lightbox img{max-width:100%;max-height:100%;object-fit:contain;user-select:none;-webkit-user-select:none;-webkit-user-drag:none;will-change:transform}
 .lb-close{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));right:12px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:19px;display:grid;place-items:center}
 .lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:20px;display:grid;place-items:center}
 .lb-nav.prev{left:10px}
@@ -1686,6 +1686,29 @@ body.memo-order #memoBody{padding-bottom:64px}
   .rich .re-ph.th{width:58px}
   .rich .re-ph.th.yt{width:150px}
 }
+/* #100 쓰기 화면 — 글 속에 이어 붙인 사진도 보기 화면과 같은 6칸 그리드로 */
+.rich .re-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:8px 0}
+.rich .re-grid>.re-ph:not(.th){display:block;width:100%;max-width:none;margin:0;border-radius:10px;line-height:0;overflow:hidden}
+.rich .re-grid>.re-ph[data-span="3"]{grid-column:span 3;aspect-ratio:4/5}
+.rich .re-grid>.re-ph[data-span="2"]{grid-column:span 2;aspect-ratio:1/1}
+.rich .re-grid>.re-ph[data-span="6"]{grid-column:span 6;aspect-ratio:16/10}
+.rich .re-grid>.re-ph:not(.th) img{display:block;width:100%;height:100%;max-height:none;object-fit:cover;object-position:center 20%;background:#fff}
+.rich .re-grid>.re-ph .ph-rsz{display:none}
+.rich .re-grid>.rg-gap,.rich .re-grid>br{display:none}
+/* #100 쓰기 화면 사진 카드도 보기 화면과 같은 2·3열(6칸) 그리드로 */
+.photos.pgg{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.photos.pgg .pl-bar{grid-column:1/-1;margin:4px 0 0}
+.photos.pgg .pcard.thumb-card{grid-column:1/-1;width:auto}
+.photos.pgg .pcard.gc{grid-column:span 3;position:relative;aspect-ratio:4/5;border-radius:12px}
+.photos.pgg .pcard.gc[data-span="2"]{grid-column:span 2;aspect-ratio:1/1}
+.photos.pgg .pcard.gc[data-span="6"]{grid-column:span 6;aspect-ratio:16/10}
+.photos.pgg .pcard.gc .pimg{position:absolute;inset:0;display:block;width:100%;height:100%;background:#fff;padding:0;border:0}
+.photos.pgg .pcard.gc .pimg img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 20%;background:#fff}
+.photos.pgg .pcard.gc .del{top:4px;right:4px;width:22px;height:22px;font-size:11px}
+.photos.pgg .pcard.gc .pbar{position:absolute;left:0;right:0;bottom:0;z-index:2;border-top:0;gap:3px;flex-wrap:nowrap;justify-content:flex-end;padding:14px 5px 5px;background:linear-gradient(to top,rgba(12,18,17,.62),rgba(12,18,17,0))}
+.photos.pgg .pcard.gc .pbar .pn{margin-right:auto;color:#fff;font-size:10px;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.photos.pgg .pcard.gc .pbar button{height:21px;min-width:21px;padding:0 4px;margin:0;font-size:10px;border-radius:6px;line-height:1}
+.photos.pgg .pcard.gc .pbar .pmark{margin-left:0}
 /* #50 체크리스트 — 저장 글자의 ☐/☑ 를 편집창·보기·인쇄 모두 같은 네모 상자로 그린다 */
 .cb-g{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;width:16px;height:16px;min-width:16px;margin:0 4px 0 0;vertical-align:-3px;border:1.6px solid #96ada7;border-radius:4.5px;background:#fff;color:#fff;font-size:11px;font-weight:900;line-height:1;user-select:none;-webkit-user-select:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .cb-g::after{content:''}
@@ -2375,7 +2398,7 @@ body.ph-dragging,body.ph-dragging *{user-select:none !important;-webkit-user-sel
 </div>
 
 <div class="lightbox" id="lightbox" hidden>
-  <img id="lbImg" alt="첨부 사진 크게 보기">
+  <img id="lbImg" alt="첨부 사진 크게 보기" draggable="false">
   <button class="lb-close" id="lbClose" aria-label="닫기">✕</button>
   <button class="lb-nav prev" id="lbPrev" aria-label="이전 사진">‹</button>
   <button class="lb-nav next" id="lbNext" aria-label="다음 사진">›</button>
@@ -3064,18 +3087,21 @@ function focusEditorCaret(cid, pos, photoN){
   if(photoN!=null){
     var chip=ed.querySelector('.re-ph[data-n="'+photoN+'"]');
     if(chip && chip.parentNode){
+      /* #100 그리드 묶음 안의 칩이면 커서는 묶음 뒤로 (묶음 안에는 커서가 설 자리가 없다) */
+      var host=chip.parentNode;
+      var anchor=(host.classList && host.classList.contains('re-grid'))? host : chip;
       /* 칩이 글 맨 끝이면 커서 자리용 <br> 을 붙인다 — 없으면 이어 쓴 글이 사진 앞으로 들어간다 */
-      var nxs=chip.nextSibling;
-      if(!nxs || (nxs.nodeType===3 && !nxs.data) || (nxs.nodeType===1 && nxs.classList && nxs.classList.contains('re-ph'))){
+      var nxs=anchor.nextSibling;
+      if(!nxs || (nxs.nodeType===3 && !nxs.data) || (nxs.nodeType===1 && nxs.classList && (nxs.classList.contains('re-ph')||nxs.classList.contains('re-grid')))){
         try{
           /* #79 data-filler — 커서 자리용 표시. 저장 글자로 바꿀 때 진짜 줄바꿈으로 세지 않는다 */
           var fbr=document.createElement('br');
           fbr.setAttribute('data-filler','1');
-          chip.parentNode.insertBefore(fbr, chip.nextSibling);
+          anchor.parentNode.insertBefore(fbr, anchor.nextSibling);
         }catch(e){}
       }
       var sel=window.getSelection(), nr=document.createRange();
-      nr.setStartAfter(chip); nr.collapse(true);
+      nr.setStartAfter(anchor); nr.collapse(true);
       sel.removeAllRanges(); sel.addRange(nr);
       autoGrow(ed);
       return;
@@ -3173,9 +3199,47 @@ function richLeaf(text, fmt, out){
   return out;
 }
 /* 저장 글자(서식 코드) → 편집창 HTML */
-function richHTML(text, pids){
+/* 글 속 사진 칩 하나(편집창) — #100 그리드 묶음에서는 span(6칸 중 차지)을 달아 준다 */
+function richPhChip(op, pid, span){
+  var ref=state.photoRefs[pid]||{};
+  var thumb=isThumbPhoto(pid);
+  var cls='re-ph'+(thumb? ' th' : '')+(ref.kind==='youtube'? ' yt' : '');
+  var canTitle=!!(ref.title || ref.kind==='poster' || ref.kind==='youtube' || ref.kind==='cover' || ref.kind==='book');
+  var big=!thumb;   /* #63 큰 사진만 모서리 크기 조절 */
+  var chipBar='<span class="reph-bar" contenteditable="false">'
+    +'<button class="reph-b" type="button" data-phact="rot" data-n="'+op.n+'" aria-label="사진 '+op.n+' 90도 회전" title="90도 회전">↻</button>'
+    +(big? '<button class="reph-b" type="button" data-phact="crop" data-n="'+op.n+'" aria-label="사진 '+op.n+' 자르기" title="자르기">✂</button>' : '')
+    +'<button class="reph-b rm" type="button" data-phact="del" data-n="'+op.n+'" aria-label="사진 '+op.n+' 삭제" title="사진 삭제">✕</button>'
+    +(canTitle? '<button class="reph-b" type="button" data-phact="title" data-n="'+op.n+'" aria-label="제목 고치기" title="제목 고치기">🏷</button>' : '')
+    +(big? '<button class="reph-b zoom" type="button" data-phact="zoom" data-n="'+op.n+'" aria-label="사진 '+op.n+' 크게 보기" title="크게 보기">⤢</button>' : '')
+    +'</span>';
+  return '<span class="'+cls+'" contenteditable="false" data-n="'+op.n+'"'+(span? ' data-span="'+span+'"':'')+' title="사진 '+op.n+'"'+(big? photoWAttr(pid):'')+'>'
+    +photoImgHTML(pid,'사진 '+op.n)+chipBar
+    +(big? '<span class="ph-rsz" contenteditable="false" data-phrsz="1" aria-hidden="true"></span>' : '')+'</span>';
+}
+/* #100 그리드 묶음 안의 빈 자리(공백·줄바꿈) — 화면에서는 숨기고 저장 글자로는 그대로 살린다 */
+function richGapHTML(ops, from, to){
+  var s='';
+  for(var i=from;i<to;i++){
+    var o=ops[i];
+    if(!o) continue;
+    if(o.k==='br') s+='<br>';
+    else if(o.k==='t') s+=esc(o.v);
+  }
+  return s? '<span class="rg-gap" contenteditable="false">'+s+'</span>' : '';
+}
+/* 편집창이 속한 영역이 지금 그리드 배치인지 (#100) */
+function richGridOn(ed){
+  var art=ed && ed.closest? ed.closest('[data-cat]') : null;
+  var cid=art? art.getAttribute('data-cat') : '';
+  var sec=(cid && current && current.sections)? current.sections[cid] : null;
+  return !!(sec && sec.pg!=='big');
+}
+function richHTML(text, pids, opt){
+  opt=opt||{};
   var ops=[];
   richCollect(String(text==null? '' : text), {b:false,u:false,c:''}, ops, 0);
+  var gridOn=!!opt.grid;
   var out='';
   var lastKind=(ops.length? ops[ops.length-1].k : '');
   var skipLine=false, atLineStart=true;
@@ -3185,18 +3249,34 @@ function richHTML(text, pids){
     if(op.k==='ph'){
       var pid=(pids||[])[op.n-1];
       if(pid && PhotoCache.has(pid)){
-        var ref=state.photoRefs[pid]||{};
-        var cls='re-ph'+(isThumbPhoto(pid)? ' th' : '')+(ref.kind==='youtube'? ' yt' : '');
-        var canTitle=!!(ref.title || ref.kind==='poster' || ref.kind==='youtube' || ref.kind==='cover' || ref.kind==='book');
-        var big=!isThumbPhoto(pid);   /* #63 큰 사진만 모서리 크기 조절 */
-        var chipBar='<span class="reph-bar" contenteditable="false">'
-          +'<button class="reph-b" type="button" data-phact="rot" data-n="'+op.n+'" aria-label="사진 '+op.n+' 90도 회전" title="90도 회전">↻</button>'
-          +(big? '<button class="reph-b" type="button" data-phact="crop" data-n="'+op.n+'" aria-label="사진 '+op.n+' 자르기" title="자르기">✂</button>' : '')
-          +'<button class="reph-b rm" type="button" data-phact="del" data-n="'+op.n+'" aria-label="사진 '+op.n+' 삭제" title="사진 삭제">✕</button>'
-          +(canTitle? '<button class="reph-b" type="button" data-phact="title" data-n="'+op.n+'" aria-label="제목 고치기" title="제목 고치기">🏷</button>' : '')
-          +'</span>';
-        out+='<span class="'+cls+'" contenteditable="false" data-n="'+op.n+'" title="사진 '+op.n+'"'+(big? photoWAttr(pid):'')+'>'+photoImgHTML(pid,'사진 '+op.n)+chipBar
-          +(big? '<span class="ph-rsz" contenteditable="false" data-phrsz="1" aria-hidden="true"></span>' : '')+'</span>';
+        /* #100 사이에 공백·줄바꿈만 둔 큰 사진 2장 이상은 보기 화면과 같은 6칸 그리드로 묶는다 */
+        if(gridOn && !isThumbPhoto(pid)){
+          var runOps=[op], between=[], j=i+1, segFrom=j, lastEnd=i+1;
+          while(j<ops.length){
+            var nx=ops[j];
+            if(nx.k==='ph'){
+              var np=(pids||[])[nx.n-1];
+              if(!np || !PhotoCache.has(np) || isThumbPhoto(np)) break;
+              between.push([segFrom, j]);
+              runOps.push(nx); j++; segFrom=j; lastEnd=j; continue;
+            }
+            if(nx.k==='br' || (nx.k==='t' && !String(nx.v||'').trim())){ j++; continue; }
+            break;
+          }
+          if(runOps.length>=2){
+            var spans=pgSpans(runOps.length);
+            var g='<span class="re-grid" contenteditable="false">';
+            for(var k=0;k<runOps.length;k++){
+              if(k>0) g+=richGapHTML(ops, between[k-1][0], between[k-1][1]);
+              g+=richPhChip(runOps[k], (pids||[])[runOps[k].n-1], spans[k]);
+            }
+            out+=g+'</span>';
+            /* 마지막 사진 뒤의 줄바꿈은 묶음에 넣지 않고 그대로 둔다 (직렬화 보존) */
+            atLineStart=false; i=lastEnd-1;
+            continue;
+          }
+        }
+        out+=richPhChip(op, pid, 0);
       } else out+=esc(photoMark(op.n));
       atLineStart=false;
       continue;
@@ -3697,7 +3777,7 @@ function checklistConvert(ed, pids){
   if(!m) return false;
   /* #80 상자 칩(.cb-g)이 이미 오른쪽 여백 4px 을 갖고 있어 뒤 공백은 넣지 않는다 */
   var head=m[1]+(m[2]? CB_ON : CB_OFF);
-  ed.innerHTML=richHTML(t.slice(0, ls)+head+t.slice(off), pids||[]);
+  ed.innerHTML=richHTML(t.slice(0, ls)+head+t.slice(off), pids||[], {grid:richGridOn(ed)});
   ed.classList.remove('is-empty');
   try{ ed.focus({preventScroll:true}); }catch(e){}
   richSetCaretByOffset(ed, Math.min(ls+head.length, richEditorText(ed).length));
@@ -3809,8 +3889,25 @@ function phMeasure(ed, x, y){
     else if(y<er.top+2) off=0;
     else return null;
   }
+  /* #100 그리드 묶음 위에 놓으면 가장 가까운 칸의 앞/뒤로 맞춘다 */
+  var elPt=document.elementFromPoint(x,y);
+  var rg=(elPt && elPt.closest)? elPt.closest('.re-grid') : null;
+  if(rg && phEditorOf(rg)===ed){
+    var chips=Array.prototype.slice.call(rg.querySelectorAll('.re-ph'));
+    var pick=null, after=0;
+    for(var ci=0;ci<chips.length;ci++){
+      var cr0=chips[ci].getBoundingClientRect();
+      if(x < cr0.left + cr0.width/2){ pick=chips[ci]; after=0; break; }
+    }
+    if(!pick && chips.length){ pick=chips[chips.length-1]; after=1; }
+    if(pick){
+      var b0=richTextFromEl(ed,{caret:{node:pick.parentNode, off:phChildIndex(pick)+after}}).caretAt;
+      var rr0=pick.getBoundingClientRect();
+      if(b0!=null){ off=b0; rect={left: after? rr0.right : rr0.left, top:rr0.top, height:Math.min(rr0.height,44)}; }
+    }
+  }
   /* 사진 칩의 왼쪽 절반을 가리키면 그 사진 앞으로 (칩은 통째로 한 글자로 다룬다) */
-  var chip=phChipOf(document.elementFromPoint(x,y));
+  var chip=phChipOf(elPt);
   if(chip && phEditorOf(chip)===ed){
     var cr=chip.getBoundingClientRect();
     if(x < cr.left + cr.width/2){
@@ -4752,35 +4849,65 @@ function bigPhotoRunMax(txt, all){
   }
   return best;
 }
-function photosEditHTML(sec){
-  var all=(sec.p||[]).slice();
-  var txt=String(sec.t||'');
-  /* #42 본문 안에 이미 보이는 사진은 아래 카드를 숨긴다 (글 밖에 남은 사진만 카드로) */
-  var pids=all.filter(function(id){
+/* #42 본문 안에 이미 보이는 사진은 아래 카드를 숨긴다 (글 밖에 남은 사진만 카드로) */
+function unplacedPhotoIds(sec){
+  var all=(sec? sec.p : [])||[];
+  var txt=String((sec&&sec.t)||'');
+  return all.filter(function(id){
     if(!PhotoCache.has(id)) return false;
     return !hasPhotoMark(txt, all.indexOf(id)+1);
   });
+}
+/* #100 쓰기 화면 사진 카드도 그리드로 — ▦ 그리드이고 큰 사진이 2장 이상일 때 */
+function photoCardsGridOn(sec){
+  if(!sec || sec.pg==='big') return false;
+  var big=unplacedPhotoIds(sec).filter(function(id){ return !isThumbPhoto(id); });
+  return big.length>=2;
+}
+function photosEditHTML(sec){
+  var all=(sec.p||[]).slice();
+  var txt=String(sec.t||'');
+  var pids=unplacedPhotoIds(sec);
   /* #99 글 속에 이어 붙인 큰 사진 2장 이상도 글 아래 사진과 똑같이 다룬다 */
   var inlineRun=bigPhotoRunMax(txt, all);
   var needBar=(inlineRun>=2 || pids.length>=2);
   /* 글 속 사진만 있으면 카드가 없으므로 배치 바는 편집창 위(photosTopBarHTML)에 둔다 */
   if(!pids.length) return '';
+  /* #100 그리드 모드 — 보기 화면과 같은 2·3열(6칸) 비율로 나란히 */
+  var gc=photoCardsGridOn(sec);
+  var bigN=gc? pids.filter(function(id){ return !isThumbPhoto(id); }).length : 0;
+  var spans=gc? pgSpans(bigN) : [];
+  var bi=0;
   var cards=pids.map(function(id,i){
     var n=all.indexOf(id)+1;
     var used=hasPhotoMark(txt,n);
     var ref=state.photoRefs[id]||{};
     var yt=(ref.kind==='youtube');
     var thumb=isThumbPhoto(id);
-    var rotBtn='<button class="prot" type="button" data-act="rotphoto" data-pid="'+id+'" aria-label="사진 '+n+' 90도 회전" title="90도씩 시계 방향으로 돌리기">↻ 회전</button>';
-    var rotOv='<button class="prot ov" type="button" data-act="rotphoto" data-pid="'+id+'" aria-label="사진 '+n+' 90도 회전" title="90도씩 시계 방향으로 돌리기">↻ 회전</button>';
+    var span=(gc && !thumb)? (spans[bi++]||0) : 0;
     var isVideo=(ref.kind==='poster'||ref.kind==='youtube');
     var vTitle=isVideo? String(ref.title||'').trim() : '';
     var titleBtn=isVideo
       ? '<button class="pmark ptitle" type="button" data-act="edittitle" data-pid="'+id+'" aria-label="영상 제목 고치기">🏷 '
           +(vTitle? esc(vTitle.length>34? vTitle.slice(0,34)+'…' : vTitle) : '영상 제목 넣기')+'</button>'
       : '';
+    var viewBtn='<button class="pimg" type="button" data-act="viewphoto" data-pids="'+esc(pids.join(','))+'" data-idx="'+i+'" aria-label="'+esc(photoAlt(id,n))+' 크게 보기">'+photoImgHTML(id, photoAlt(id,n))+'</button>';
+    /* 그리드 칸은 사진이 주인공 — 조작은 칸 위/아래에 아이콘으로만 남긴다 */
+    if(span){
+      return '<div class="pcard gc" data-pid="'+id+'" data-span="'+span+'">'
+        +viewBtn
+        +'<button class="del" data-act="delphoto" data-pid="'+id+'" aria-label="사진 삭제">✕</button>'
+        +'<div class="pbar"><span class="pn">'+n+'</span>'
+          +'<button class="pmark" type="button" data-act="markphoto" data-n="'+n+'" aria-label="사진 '+n+'을 글 커서 위치에 넣기" title="글 커서 위치에 넣기">📍</button>'
+          +'<button class="pmark" type="button" data-act="cropphoto" data-pid="'+id+'" aria-label="사진 '+n+' 자르기" title="필요한 부분만 네모로 잘라내기">✂</button>'
+          +'<button class="prot" type="button" data-act="rotphoto" data-pid="'+id+'" aria-label="사진 '+n+' 90도 회전" title="90도씩 시계 방향으로 돌리기">↻</button>'
+        +'</div>'
+      +'</div>';
+    }
+    var rotBtn='<button class="prot" type="button" data-act="rotphoto" data-pid="'+id+'" aria-label="사진 '+n+' 90도 회전" title="90도씩 시계 방향으로 돌리기">↻ 회전</button>';
+    var rotOv='<button class="prot ov" type="button" data-act="rotphoto" data-pid="'+id+'" aria-label="사진 '+n+' 90도 회전" title="90도씩 시계 방향으로 돌리기">↻ 회전</button>';
     return '<div class="pcard'+(thumb?' thumb-card':'')+(yt?' yt-card':'')+'" data-pid="'+id+'">'
-      +'<button class="pimg" type="button" data-act="viewphoto" data-pids="'+esc(pids.join(','))+'" data-idx="'+i+'" aria-label="'+esc(photoAlt(id,n))+' 크게 보기">'+photoImgHTML(id, photoAlt(id,n))+'</button>'
+      +viewBtn
       +'<button class="del" data-act="delphoto" data-pid="'+id+'" aria-label="사진 삭제">✕</button>'
       +(thumb? '' : rotOv)
       +'<div class="pbar"><span class="pn">사진 '+n+'</span>'
@@ -4896,8 +5023,8 @@ function sectionHTML(c){
       +fmtRowHTML(c)
       +photosTopBarHTML(sec)
       +'<div class="sec-scroll">'
-        +'<div class="sec-text rich'+(String(sec.t||'').trim()? '':' is-empty')+'" data-field="t" contenteditable="true" role="textbox" aria-multiline="true" spellcheck="false" data-ph="'+esc(ph)+'" aria-label="'+esc(catBase(c)+' 내용')+'">'+richHTML(sec.t, sec.p)+'</div>'
-        +'<div class="photos">'+photosEditHTML(sec)+'</div>'
+        +'<div class="sec-text rich'+(String(sec.t||'').trim()? '':' is-empty')+'" data-field="t" contenteditable="true" role="textbox" aria-multiline="true" spellcheck="false" data-ph="'+esc(ph)+'" aria-label="'+esc(catBase(c)+' 내용')+'">'+richHTML(sec.t, sec.p, {grid:sec.pg!=='big'})+'</div>'
+        +'<div class="photos'+(photoCardsGridOn(sec)?' pgg':'')+'">'+photosEditHTML(sec)+'</div>'
       +'</div>'
     +'</div>'
   +'</article>';
@@ -6142,6 +6269,11 @@ function readSecTapHandler(e){
 }
 /* ────────────────────────────── lightbox ────────────────────────────── */
 var lbPids=[], lbIdx=0;
+function lbResetImg(anim){
+  var im=$('lbImg'); if(!im) return;
+  im.style.transition=anim? 'transform .16s ease' : 'none';
+  im.style.transform='';
+}
 function renderLightbox(){
   var id=lbPids[lbIdx];
   var url=id? PhotoStore.url(id) : '';
@@ -6149,6 +6281,7 @@ function renderLightbox(){
   $('lbCount').textContent = lbPids.length? (lbIdx+1)+' / '+lbPids.length : '';
   $('lbPrev').hidden = lbIdx<=0;
   $('lbNext').hidden = lbIdx>=lbPids.length-1;
+  lbResetImg(false);
 }
 function openLightbox(pids, idx){
   lbPids=(pids||[]).filter(function(id){ return PhotoStore.url(id); });
@@ -6175,6 +6308,40 @@ function lbStep(n){
   var next=lbIdx+n;
   if(next<0 || next>=lbPids.length) return;
   lbIdx=next; renderLightbox();
+}
+/* #101 좌우 스와이프 — 같은 목록(lbPids)의 이전·다음 사진. 터치·마우스 드래그 모두 */
+var lbSw=null, lbSwipedAt=0;
+function lbSwStart(e){
+  if(!e || (e.target && e.target.closest && e.target.closest('button'))) return;
+  if(e.pointerType==='mouse' && e.button!==0) return;
+  if(lbPids.length<2){ lbSw=null; return; }
+  lbSw={x0:e.clientX, y0:e.clientY, x:e.clientX, y:e.clientY, id:e.pointerId, horiz:false};
+  lbResetImg(false);
+}
+function lbSwMove(e){
+  var d=lbSw; if(!d) return;
+  if(d.id!=null && e.pointerId!=null && e.pointerId!==d.id) return;
+  var dx=e.clientX-d.x0, dy=e.clientY-d.y0;
+  if(!d.horiz){
+    if(Math.abs(dy)>16 && Math.abs(dy)>Math.abs(dx)){ lbSw=null; return; }   /* 세로 손짓은 그대로 */
+    if(Math.abs(dx)<12 || Math.abs(dx)<=Math.abs(dy)*1.2) return;
+    d.horiz=true;
+  }
+  d.x=e.clientX; d.y=e.clientY;
+  var edge=((dx>0 && lbIdx<=0) || (dx<0 && lbIdx>=lbPids.length-1));
+  var im=$('lbImg');
+  if(im){ im.style.transition='none'; im.style.transform='translateX('+Math.round(edge? dx*0.32 : dx)+'px)'; }
+}
+function lbSwEnd(){
+  var d=lbSw; lbSw=null;
+  if(!d) return;
+  if(!d.horiz){ lbResetImg(false); return; }
+  var dx=d.x-d.x0;
+  lbSwipedAt=Date.now();
+  var need=Math.max(34, Math.min(80, (window.innerWidth||360)*0.12));
+  lbResetImg(true);
+  if(dx<=-need && lbIdx<lbPids.length-1) lbStep(1);
+  else if(dx>=need && lbIdx>0) lbStep(-1);
 }
 
 /* ────────────────────────────── copy ────────────────────────────── */
@@ -12649,6 +12816,13 @@ function bindEvents(){
       if(aP==='del'){ removePhoto(cidP, pidP); return; }
       if(aP==='crop'){ openCropSheet(cidP, pidP); return; }
       if(aP==='title'){ editVideoTitle(cidP, pidP); return; }
+      if(aP==='zoom'){
+        /* #100·#101 칩에서 바로 크게 보기 → 좌우 스와이프로 영역의 다른 사진 */
+        var allP=(secP.p||[]).filter(function(id){ return PhotoCache.has(id); });
+        var zi=allP.indexOf(pidP);
+        if(allP.length) openLightbox(allP, zi<0? 0 : zi);
+        return;
+      }
       return;
     }
     var act=e.target.closest('[data-act]');
@@ -13117,8 +13291,18 @@ function bindEvents(){
     });
   });
   $('lightbox').addEventListener('click', function(e){
+    if(Date.now()-lbSwipedAt<450) return;   /* 방금 스와이프했으면 닫지 않는다 */
     if(e.target===$('lightbox')) closeLightbox();
   });
+  /* #101 좌우 스와이프 (터치·마우스 드래그) */
+  $('lightbox').addEventListener('pointerdown', lbSwStart);
+  window.addEventListener('pointermove', lbSwMove, true);
+  window.addEventListener('pointerup', lbSwEnd, true);
+  window.addEventListener('pointercancel', lbSwEnd, true);
+  $('lightbox').addEventListener('touchmove', function(e){
+    if(lbSw && lbSw.horiz && e.cancelable) e.preventDefault();   /* 브라우저 뒤로가기 손짓으로 새지 않게 */
+  }, {passive:false});
+  $('lightbox').addEventListener('dragstart', function(e){ e.preventDefault(); });
 
   /* 백업 파일 */
   $('importInput').addEventListener('change', function(e){
